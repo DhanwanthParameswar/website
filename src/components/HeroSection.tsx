@@ -100,13 +100,28 @@ export function HeroSection() {
 						style={{ perspective: 1200 }}
 						{...blurReveal(0.07, reduceMotion, { blurPx: 11, y: 10 })}
 					>
+						{/**
+						 * Avoid a refresh flash: the theme class is applied by an inline script in `BaseLayout`
+						 * before paint, but React islands can still SSR with a default theme.
+						 * Render both assets and let CSS decide instantly.
+						 */}
 						<img
-							src="/logo.svg"
+							src="/logo-light.svg"
 							alt="Dhanwanth Parameswar"
 							width={500}
 							height={78}
-							className="-rotate-[2deg] select-none md:-rotate-[2.5deg]"
+							className="-rotate-[2deg] select-none dark:hidden md:-rotate-[2.5deg]"
 							draggable={false}
+							decoding="async"
+						/>
+						<img
+							src="/logo-dark.svg"
+							alt="Dhanwanth Parameswar"
+							width={500}
+							height={78}
+							className="-rotate-[2deg] hidden select-none dark:block md:-rotate-[2.5deg]"
+							draggable={false}
+							decoding="async"
 						/>
 					</motion.span>
 				</h1>
@@ -148,9 +163,9 @@ export function HeroSection() {
 				{...scrollHintMotion(reduceMotion)}
 				aria-hidden
 			>
-				<span className="text-center font-sans font-normal text-white/25">Scroll Down</span>
+				<span className="text-center font-sans font-normal text-foreground/25">Scroll Down</span>
 				<CircleChevronDown
-					className="size-6 shrink-0 text-white/25"
+					className="size-6 shrink-0 text-foreground/25"
 					strokeWidth={1.5}
 					aria-hidden
 				/>

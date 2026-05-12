@@ -11,7 +11,7 @@ import { scrollRevealItemMotionProps } from '@/lib/scroll-reveal-variants';
 import { cn } from '@/lib/utils';
 
 const contactLink =
-	'rounded-sm text-foreground no-underline hover:opacity-70 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white/40';
+	'rounded-sm text-foreground no-underline hover:opacity-50 dark:hover:opacity-70 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-foreground/40';
 
 const labelType = 'font-sans font-normal text-[1.225rem] leading-[0.9] md:text-[1.4rem]';
 const valueType =

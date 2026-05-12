@@ -8,7 +8,7 @@ export type HeroBlobPalette = {
 	highlightColor: string;
 };
 
-export const HERO_BLOB_PALETTES: readonly HeroBlobPalette[] = [
+export const HERO_BLOB_PALETTES_DARK: readonly HeroBlobPalette[] = [
 	// Indigo → violet (original site direction)
 	{ colorA: '#1e3a8a', colorB: '#5b21b6', highlightColor: '#a5b4fc' },
 	// Deep ocean
@@ -31,5 +31,26 @@ export const HERO_BLOB_PALETTES: readonly HeroBlobPalette[] = [
 	{ colorA: '#164e63', colorB: '#0e7490', highlightColor: '#a5f3fc' },
 ] as const;
 
+export const HERO_BLOB_PALETTES_LIGHT: readonly HeroBlobPalette[] = [
+	/**
+	 * Light-mode palettes need enough chroma/contrast to survive blending on a near-white page.
+	 * Pastel tints tend to wash out (especially with soft-light), so these are "mid" tones
+	 * that still read as ambient when opacity is kept low.
+	 */
+	// Sky ink
+	{ colorA: '#38bdf8', colorB: '#60a5fa', highlightColor: '#93c5fd' },
+	// Rose ink
+	{ colorA: '#fb7185', colorB: '#f472b6', highlightColor: '#fda4af' },
+	// Emerald ink
+	{ colorA: '#34d399', colorB: '#22c55e', highlightColor: '#86efac' },
+	// Violet ink
+	{ colorA: '#a78bfa', colorB: '#818cf8', highlightColor: '#c4b5fd' },
+	// Amber ink
+	{ colorA: '#fbbf24', colorB: '#fb923c', highlightColor: '#fed7aa' },
+	// Slate ink (neutral option that still shows on white)
+	{ colorA: '#94a3b8', colorB: '#64748b', highlightColor: '#cbd5e1' },
+] as const;
+
 /** First palette: stable SSR / hydration default before client picks a random entry. */
-export const HERO_BLOB_PALETTE_SSR = HERO_BLOB_PALETTES[0];
+export const HERO_BLOB_PALETTE_SSR_DARK = HERO_BLOB_PALETTES_DARK[0];
+export const HERO_BLOB_PALETTE_SSR_LIGHT = HERO_BLOB_PALETTES_LIGHT[0];

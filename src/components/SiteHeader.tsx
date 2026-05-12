@@ -4,6 +4,7 @@ import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
 
 import { Button } from '@/components/Button';
 import { MenuMorphIcon } from '@/components/MenuMorphIcon';
+import { ThemeToggle } from '@/components/ThemeToggle';
 import { cn } from '@/lib/utils';
 import { menuToggleTransition } from '@/lib/motion-presets';
 
@@ -29,7 +30,7 @@ const barPillSurface = cn(
 );
 
 const mobilePanel = cn(
-	'flex w-full flex-col gap-1 overflow-hidden rounded-[var(--header-radius)] border-[0.5px] border-solid border-border-footer bg-[color:var(--surface-header-bar)] p-4 [backdrop-filter:blur(var(--header-backdrop-blur))] [-webkit-backdrop-filter:blur(var(--header-backdrop-blur))] md:hidden',
+	'flex w-full flex-col gap-1 overflow-hidden rounded-[var(--header-radius)] border-[0.5px] border-solid border-border-footer bg-[color:var(--surface-header-bar)] p-4 [backdrop-filter:blur(var(--header-backdrop-blur))] [-webkit-backdrop-filter:blur(var(--header-backdrop-blur))] lg:hidden',
 );
 
 const mobileMenuVariants = {
@@ -61,7 +62,7 @@ const mobileOverlayVariants = {
 } as const;
 
 const headerLinkChrome =
-	'rounded-sm hover:opacity-80 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white/40';
+	'rounded-sm hover:opacity-60 dark:hover:opacity-80 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-foreground/40';
 
 const navLink = cn(
 	'font-medium text-nav-link leading-[var(--text-nav-link--line-height)] text-foreground no-underline',
@@ -69,8 +70,8 @@ const navLink = cn(
 );
 
 const menuToggle = cn(
-	'link-hover-motion flex shrink-0 items-center justify-center rounded-sm p-2 text-foreground hover:opacity-80 md:hidden',
-	'focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white/40',
+	'link-hover-motion flex shrink-0 items-center justify-center rounded-sm p-2 text-foreground hover:opacity-60 dark:hover:opacity-80 lg:hidden',
+	'focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-foreground/40',
 );
 
 export function SiteHeader() {
@@ -156,7 +157,7 @@ export function SiteHeader() {
 					<motion.button
 						key="mobile-overlay"
 						type="button"
-						className="pointer-events-auto fixed inset-0 z-0 bg-black/35 md:hidden"
+						className="pointer-events-auto fixed inset-0 z-0 bg-black/35 lg:hidden"
 						aria-label="Close menu"
 						initial="hidden"
 						animate="shown"
@@ -186,23 +187,36 @@ export function SiteHeader() {
 								className={cn('flex min-w-0 shrink-0 items-center', headerLinkChrome)}
 								onClick={() => setMenuOpen(false)}
 							>
-								<img
-									src="/logo.svg"
-									alt="Dhanwanth Parameswar — Home"
-									width={164}
-									height={23}
-									className="h-[22.7px] w-[min(164px,calc(75vw-8rem))] max-w-full object-contain object-left"
-									decoding="async"
-								/>
+								<span className="relative block h-[22.7px] w-[min(164px,calc(75vw-8rem))] max-w-full">
+									<img
+										src="/logo-light.svg"
+										alt="Dhanwanth Parameswar — Home"
+										width={164}
+										height={23}
+										className="absolute inset-0 h-full w-full object-contain object-left opacity-100 dark:opacity-0"
+										decoding="async"
+									/>
+									<img
+										src="/logo-dark.svg"
+										alt=""
+										width={164}
+										height={23}
+										className="absolute inset-0 h-full w-full object-contain object-left opacity-0 dark:opacity-100"
+										decoding="async"
+										aria-hidden="true"
+									/>
+								</span>
 							</a>
 						</div>
 
-						<div className="hidden h-[43px] shrink-0 items-center justify-end gap-[var(--header-column-gap)] md:flex">
+						<div className="hidden h-[43px] shrink-0 items-center justify-end gap-[var(--header-column-gap)] lg:flex">
 							{NAV_LINKS.map(({ href, label }) => (
 								<a key={href} href={href} tabIndex={chromeTabHidden ? -1 : undefined} className={navLink}>
 									{label}
 								</a>
 							))}
+
+							<ThemeToggle tabIndex={chromeTabHidden ? -1 : undefined} />
 
 							<div className="flex h-[43px] items-center">
 								<Button
@@ -215,7 +229,7 @@ export function SiteHeader() {
 								>
 									Resume
 									<FileDown
-										className="link-hover-motion shrink-0 opacity-100 group-hover:opacity-80"
+										className="link-hover-motion shrink-0 text-white opacity-100 dark:text-black"
 										width={19}
 										height={19}
 										strokeWidth={1.5}
@@ -225,18 +239,22 @@ export function SiteHeader() {
 							</div>
 						</div>
 
-						<button
-							ref={menuButtonRef}
-							type="button"
-							className={menuToggle}
-							tabIndex={chromeTabHidden ? -1 : undefined}
-							aria-label={menuOpen ? 'Close menu' : 'Open menu'}
-							aria-expanded={menuOpen}
-							aria-controls={menuOpen ? MOBILE_NAV_ID : undefined}
-							onClick={() => setMenuOpen((o) => !o)}
-						>
-							<MenuMorphIcon open={menuOpen} />
-						</button>
+						<div className="flex shrink-0 items-center gap-2 lg:hidden">
+							<ThemeToggle tabIndex={chromeTabHidden ? -1 : undefined} />
+
+							<button
+								ref={menuButtonRef}
+								type="button"
+								className={menuToggle}
+								tabIndex={chromeTabHidden ? -1 : undefined}
+								aria-label={menuOpen ? 'Close menu' : 'Open menu'}
+								aria-expanded={menuOpen}
+								aria-controls={menuOpen ? MOBILE_NAV_ID : undefined}
+								onClick={() => setMenuOpen((o) => !o)}
+							>
+								<MenuMorphIcon open={menuOpen} />
+							</button>
+						</div>
 					</div>
 				</motion.div>
 
@@ -277,7 +295,7 @@ export function SiteHeader() {
 									>
 										Resume
 										<FileDown
-											className="link-hover-motion shrink-0 opacity-100 group-hover:opacity-80"
+											className="link-hover-motion shrink-0 text-white opacity-100 dark:text-black"
 											width={19}
 											height={19}
 											strokeWidth={1.5}

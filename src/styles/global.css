@@ -84,6 +84,31 @@
 		background-size: 256px 256px;
 	}
 
+	.viewport-bottom-fade::before,
+	.viewport-bottom-fade::after {
+		position: absolute;
+		inset: 0;
+		content: "";
+	}
+
+	.viewport-bottom-fade::before {
+		background-image: linear-gradient(to top, rgb(250 250 250), transparent);
+		opacity: 1;
+	}
+
+	.viewport-bottom-fade::after {
+		background-image: linear-gradient(to top, rgb(0 0 0), transparent);
+		opacity: 0;
+	}
+
+	:root.dark .viewport-bottom-fade::before {
+		opacity: 0;
+	}
+
+	:root.dark .viewport-bottom-fade::after {
+		opacity: 1;
+	}
+
 	@media (pointer: fine) {
 		html.has-custom-cursor,
 		html.has-custom-cursor body,
@@ -106,10 +131,43 @@
 		transition-property: color, opacity, text-decoration-color, border-color, box-shadow, filter, transform;
 	}
 
+	/*
+	 * Theme toggles animate only during an intentional switch. Keep this off for
+	 * first paint so saved/system theme loads immediately without a flash.
+	 */
+	/*
+	 * Site-wide theme transition: animate colors/backgrounds during an intentional switch.
+	 */
+	html.theme-transitioning,
+	html.theme-transitioning *,
+	html.theme-transitioning *::before,
+	html.theme-transitioning *::after {
+		transition-delay: 0s !important;
+		transition-duration: 320ms !important;
+		transition-timing-function: var(--ease-link) !important;
+		transition-property:
+			background-color,
+			border-color,
+			box-shadow,
+			color,
+			fill,
+			opacity,
+			outline-color,
+			stroke,
+			text-decoration-color !important;
+	}
+
 	@media (prefers-reduced-motion: reduce) {
 		a[href],
 		.link-hover-motion {
 			transition-duration: 0.01ms;
+		}
+
+		html.theme-transitioning,
+		html.theme-transitioning *,
+		html.theme-transitioning *::before,
+		html.theme-transitioning *::after {
+			transition-duration: 0.01ms !important;
 		}
 	}
 
