@@ -1,0 +1,14 @@
+---
+description: How to replicate Framer sections and effects faithfully
+globs: "**/*.{astro,tsx,css}"
+alwaysApply: false
+---
+
+# Framer parity
+
+- **Clean code over cargo-cult**: Framer layers and values are often “tacked together.” Normalize into semantic tokens and components; **prioritize maintainability**—diverge from Framer’s internal structure when useful. Preserve **user-visible** layout, type, color, and motion intent unless asked otherwise.
+- **Order of work**: Global styles & tokens → layout grid/max-width → typography → section backgrounds → interactive/motion layers.
+- **Measurements**: Match max-width, padding, gap, font-size/line-height, letter-spacing, and breakpoint switches to Framer; note Framer often uses scale and opacity on scroll — replicate with Intersection Observer or scroll-driven CSS/JS, not vague “similar” motion.
+- **Effects**: Blur, gradients, and particles are separate layers; identify in Framer whether an effect is CSS (`filter`, `backdrop-filter`) vs canvas/WebGL vs Lottie before picking libraries.
+- **Assets**: Export SVG/PNG/WebP from Framer or source files; keep filenames stable under `public/` or `src/assets/`.
+- **LLM use**: Paste computed styles, screenshots, or short screen recordings for ambiguous sections; don’t rely on the model to invent Framer’s easing or stagger without a reference. If a **Framer MCP** server is connected, treat its tools as an extra reference alongside the live site and canvas.

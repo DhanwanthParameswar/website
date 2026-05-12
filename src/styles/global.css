@@ -1,0 +1,66 @@
+@import "@fontsource-variable/inter/wght.css";
+@import "./tokens.css";
+@import "tailwindcss";
+
+@layer base {
+	/*
+	 * Framer Main template — desktop baseline (Styles: fill → page bg, overflow visible).
+	 */
+	html {
+		font-size: 16px;
+		overflow: visible;
+		-webkit-font-smoothing: antialiased;
+		-moz-osx-font-smoothing: grayscale;
+		scroll-padding-top: var(--site-header-clearance);
+	}
+
+	body {
+		overflow: visible;
+		@apply min-h-dvh bg-background font-sans text-foreground;
+	}
+
+	@media (pointer: fine) {
+		html.has-custom-cursor,
+		html.has-custom-cursor body,
+		html.has-custom-cursor a,
+		html.has-custom-cursor button,
+		html.has-custom-cursor [role='button'],
+		html.has-custom-cursor [role='link'] {
+			cursor: none;
+		}
+	}
+
+	/* Framer: link hover — ease in-out (0.44, 0, 0.56, 1), 0.2s, delay 0. Omits background-color so motion CTAs keep their own spring. */
+	a[href],
+	.link-hover-motion {
+		transition-delay: 0s;
+		transition-duration: var(--duration-link);
+		transition-timing-function: var(--ease-link);
+		transition-property: color, opacity, text-decoration-color, border-color, box-shadow, filter, transform;
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		a[href],
+		.link-hover-motion {
+			transition-duration: 0.01ms;
+		}
+	}
+
+	::selection {
+		background-color: var(--selection-background);
+		color: var(--selection-color);
+	}
+
+	::-moz-selection {
+		background-color: var(--selection-background);
+		color: var(--selection-color);
+	}
+
+	/*
+	 * Sensible block rhythm when migrating copy-heavy sections from Framer.
+	 * Prefer Tailwind gap on stacks where layout already owns spacing.
+	 */
+	.typography-portfolio p + p {
+		margin-top: var(--paragraph-gap-md);
+	}
+}

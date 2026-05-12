@@ -1,17 +1,59 @@
 ---
-
+import { HeroSection } from '@/components/HeroSection';
+import BaseLayout from '../layouts/BaseLayout.astro';
 ---
 
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="icon" href="/favicon.ico" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
-	</head>
-	<body>
-		<h1>Astro</h1>
-	</body>
-</html>
+<BaseLayout title="Portfolio">
+	<HeroSection client:visible />
+	<main class="mx-auto max-w-2xl space-y-6 p-6 pb-32">
+		<h2 id="work" class="sr-only">Work</h2>
+		<h2 id="about" class="sr-only">About</h2>
+		<h2 id="contact" class="sr-only">Contact</h2>
+		<div class="grid gap-4 sm:grid-cols-2">
+			<a
+				href="#work"
+				class="group block overflow-hidden rounded-[18px] border border-white/10 bg-surface"
+				data-cursor-tooltip="View"
+			>
+				<img
+					src="https://picsum.photos/seed/work/900/650"
+					alt="Test image: View"
+					class="aspect-[4/3] w-full object-cover opacity-90 transition-opacity group-hover:opacity-100"
+					loading="lazy"
+					decoding="async"
+				/>
+			</a>
+			<a
+				href="https://picsum.photos"
+				target="_blank"
+				rel="noopener noreferrer"
+				class="group block overflow-hidden rounded-[18px] border border-white/10 bg-surface"
+				data-cursor-tooltip="Go"
+			>
+				<img
+					src="https://picsum.photos/seed/go/900/650"
+					alt="Test image: Go"
+					class="aspect-[4/3] w-full object-cover opacity-90 transition-opacity group-hover:opacity-100"
+					loading="lazy"
+					decoding="async"
+				/>
+			</a>
+		</div>
+		<div class="rounded-[18px] bg-white p-6 text-black">
+			<p class="text-body-md font-medium">Cursor difference test zone</p>
+			<p class="text-body-sm">Hover the cursor here: it should invert to black.</p>
+		</div>
+		<p class="text-body-md text-muted">
+			Long placeholder copy so you can scroll and check the top progressive blur against moving content.
+		</p>
+		{
+			Array.from({ length: 24 }, (_, i) => (
+				<p class="text-body-md text-foreground">
+					Block {i + 1}. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor
+					incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation
+					ullamco laboris nisi ut aliquip ex ea commodo consequat.
+				</p>
+			))
+		}
+	</main>
+</BaseLayout>

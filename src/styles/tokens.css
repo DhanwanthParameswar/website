@@ -1,0 +1,139 @@
+/*
+ * Portfolio design tokens
+ *
+ * Values trace back to Framer color/text styles (Unframer MCP). Names here are
+ * semantic so components stay readable. Swap --font-family-sans to Familjen
+ * Grotesk / Geist later without renaming utilities if you change the primary face.
+ */
+
+:root {
+	color-scheme: dark;
+
+	/* Surfaces — Framer: /Background, /Foreground */
+	--surface-page: rgb(0 0 0);
+	--surface-elevated: rgb(15 15 15);
+
+	/* Text — Framer: /Text, /Text 40%, /Text 10% */
+	--text-primary: rgb(255 255 255);
+	--text-secondary: rgb(245 245 245 / 40%);
+	--text-tertiary: rgb(245 245 245 / 10%);
+
+	/* Border — Framer: /Border */
+	--border-default: rgb(34 34 37);
+
+	/* Footer card — Framer Desktop|Inverse / Phone|Inverse (subtle hairline on elevated surface) */
+	--border-footer: rgb(245 245 245 / 10%);
+
+	/* CTA / pill buttons — Framer hero (Desktop primary & secondary) */
+	--cta-radius: 22px;
+	--cta-padding-x: 26px;
+	--cta-padding-y: 12px;
+	--cta-gap: 5px;
+	--cta-label-size: 16px;
+	--cta-label-line-height: 1.2;
+	--cta-primary-bg: rgb(255 255 255);
+	--cta-primary-bg-hover: rgb(255 255 255 / 60%);
+	--cta-primary-fg: rgb(0 0 0);
+	--cta-primary-border: var(--border-footer);
+	--cta-secondary-bg: transparent;
+	--cta-secondary-bg-hover: rgb(255 255 255 / 40%);
+	--cta-secondary-fg: rgb(255 255 255);
+	--cta-secondary-border: rgb(255 255 255);
+
+	/* Selection — Framer Main template / Styles (desktop): invert while selecting */
+	--selection-background: rgb(255 255 255);
+	--selection-color: rgb(0 0 0);
+
+	/* Site header — Framer Desktop nav (pill bar) */
+	--surface-header-bar: rgb(15 15 15 / 85%);
+	--header-backdrop-blur: 14px;
+	--header-bar-height: 60px;
+	--header-radius: 30px;
+	--header-padding-y: 15px;
+	--header-padding-x: 25px;
+	--header-column-gap: 20px;
+	/* Fixed header + top inset — used for main offset + scroll-margin */
+	--site-header-clearance: calc(1.25rem + var(--header-bar-height) + 0.75rem);
+
+	/* Link hover — Framer: Ease In Out, bezier (0.44, 0, 0.56, 1), time 0.2s, delay 0 */
+	--ease-link: cubic-bezier(0.44, 0, 0.56, 1);
+	--duration-link: 0.2s;
+
+	/* Paragraph rhythm — Framer paragraphSpacing (px → rem) */
+	--paragraph-gap-tight: 0rem;
+	--paragraph-gap-md: 1.25rem; /* 20px */
+	--paragraph-gap-lg: 2.5rem; /* 40px */
+
+	--font-family-sans:
+		"Inter Variable", Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji",
+		"Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+}
+
+/*
+ * Tailwind theme wiring — utilities such as bg-background, text-muted, text-display-xl
+ */
+@theme inline {
+	--font-sans: var(--font-family-sans);
+
+	--color-background: var(--surface-page);
+	--color-surface: var(--surface-elevated);
+	--color-foreground: var(--text-primary);
+	--color-muted: var(--text-secondary);
+	--color-subtle: var(--text-tertiary);
+	--color-border: var(--border-default);
+	--color-border-footer: var(--border-footer);
+
+	/* Display — Framer: /H1 Familjen Grotesk 5 */
+	--text-display-xl: 5rem;
+	--text-display-xl--line-height: 0.9;
+
+	/* Display — Framer: /H1 Familjen Grotesk 2.6 */
+	--text-display-lg: 2.6rem;
+	--text-display-lg--line-height: 0.9;
+
+	/* Hero heading — Framer: /Hero Title */
+	--text-hero-title: 4rem;
+	--text-hero-title--line-height: 0.9;
+
+	/* headings — Framer: /H3 … 2.2, /H2 … 1.4 */
+	--text-heading-lg: 2.2rem;
+	--text-heading-lg--line-height: 1.2;
+
+	--text-heading-md: 1.4rem;
+	--text-heading-md--line-height: 0.9;
+
+	/* Footer headline — Framer: 2.2rem (phone) / 2.5rem (desktop), /H3-like tracking */
+	--text-footer-headline-sm: 2.2rem;
+	--text-footer-headline-sm--line-height: 0.9;
+	--text-footer-headline-lg: 2.5rem;
+	--text-footer-headline-lg--line-height: 0.9;
+
+	/* Footer copyright — Framer phone ~0.88 root em */
+	--text-footer-copyright: 0.88rem;
+	--text-footer-copyright--line-height: 1;
+
+	/* Intro — Framer: /Hero Intro */
+	--text-intro: 1.9rem;
+	--text-intro--line-height: 1.2;
+
+	/* Body — Framer: /Body, /About Text uses same line-height as Body md sizes */
+	--text-body-lg: 1.6rem;
+	--text-body-lg--line-height: 1.2;
+
+	--text-body-md: 1.4rem;
+	--text-body-md--line-height: 1.2;
+
+	--text-body-sm: 1rem;
+	--text-body-sm--line-height: 1.2;
+
+	/* Supporting — Framer: /Hero Subtitle */
+	--text-subtitle: 1.2rem;
+	--text-subtitle--line-height: 1.2;
+
+	/* Nav text — Framer header links */
+	--text-nav-link: 14px;
+	--text-nav-link--line-height: 1.2;
+
+	/* Heading tracking — Framer: -0.04em on hero/display headings */
+	--tracking-display: -0.04em;
+}

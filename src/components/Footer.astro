@@ -1,0 +1,39 @@
+---
+/**
+ * Site footer — Framer "Desktop | Inverse" / "Phone | Inverse" (refactored).
+ * Outer band: page black; inner card: elevated surface, subtle border, rounded corners.
+ */
+interface Props {
+	headline?: string;
+	copyrightName?: string;
+}
+
+const { headline = 'See you soon!', copyrightName = 'Dhanwanth Parameswar' } = Astro.props;
+const year = new Date().getFullYear();
+---
+
+<footer class="relative z-50 flex w-full flex-col items-center bg-background text-foreground">
+	<div
+		class="box-border flex w-full max-w-[1440px] flex-col items-center gap-2.5 px-[15px] pb-[15px] pt-0 md:px-[30px] md:pb-[30px] lg:px-[40px] lg:pb-[40px]"
+	>
+		<div
+			class="box-border flex w-full flex-col items-start rounded-[17px] border-[0.5px] border-solid border-border-footer bg-surface px-5 md:rounded-[18px] md:px-[30px]"
+		>
+			<div
+				class="flex w-full flex-col items-start gap-2 py-[30px] md:flex-row md:items-center md:justify-between md:gap-x-6 md:gap-y-4"
+			>
+				<div class="flex min-w-0 flex-col items-start gap-3">
+					<p class="font-medium tracking-display text-footer-headline-sm md:text-footer-headline-lg">
+						{headline}
+					</p>
+					<p class="font-normal leading-none text-footer-copyright text-foreground opacity-70 md:hidden">
+						© {year} All rights reserved.
+					</p>
+				</div>
+				<p class="shrink-0 font-normal leading-none text-footer-copyright text-foreground opacity-70 hidden md:block">
+					© {year} {copyrightName}
+				</p>
+			</div>
+		</div>
+	</div>
+</footer>

@@ -1,0 +1,13 @@
+---
+description: Core project goals, stack, and editing principles for this Astro site
+alwaysApply: true
+---
+
+# Website — core
+
+- **Objective**: Framer portfolio → custom Astro + React islands + Tailwind v4 + framer-motion, with **visual and motion parity**.
+- **Editing**: Small, reviewable diffs; match existing file style. Framer exports may be ad hoc—**refactor for readability** (names, structure, deduped styles) when it helps; skip unrelated files and gratuitous churn.
+- **Components**: Prefer `.astro` for static structure; use `.tsx` + `client:*` only where motion, particles, or DOM listeners require it.
+- **Icons**: Lucide only — `lucide-react` in React islands; match Lucide strokes in `.astro` when inlining SVG.
+- **Tokens first**: Centralize colors, typography, radii, and spacing (CSS variables / Tailwind theme) before cloning each section.
+- **Parity checks**: Compare against the live Framer deployment; use devtools for computed styles and breakpoints, not guesses.

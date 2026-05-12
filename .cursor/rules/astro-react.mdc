@@ -1,0 +1,13 @@
+---
+description: Astro layouts, pages, and React island patterns
+globs: "**/*.{astro,tsx,ts}"
+alwaysApply: false
+---
+
+# Astro + React
+
+- Use **content islands**: default to static HTML from Astro; add `client:load` only when necessary; prefer `client:visible` or `client:media` for below-the-fold or motion-heavy widgets.
+- Pass minimal props from Astro into React; avoid duplicating large markup in both layers.
+- **Imports**: Use `@/` only if `tsconfig`/`astro.config` defines it; otherwise use relative paths consistent with the repo.
+- **Tailwind v4**: Colocate utility classes on elements; extract components when a pattern repeats three or more times.
+- **Motion**: Use `framer-motion` in React; respect `prefers-reduced-motion` for major animations when implementing parity.

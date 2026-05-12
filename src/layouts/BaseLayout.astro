@@ -1,0 +1,55 @@
+---
+import '../styles/global.css';
+
+import Footer from '@/components/Footer.astro';
+import { CustomCursor } from '@/components/CustomCursor';
+import { LenisSmoothScroll } from '@/components/LenisSmoothScroll';
+import { SiteHeader } from '@/components/SiteHeader';
+import { ProgressiveBlur } from '@/components/ui/progressive-blur';
+
+interface Props {
+	title?: string;
+	description?: string;
+}
+
+const {
+	title = 'Dhanwanth Parameswar',
+	description = `Hey! I'm a Computer Engineering student with a passion for building innovative software. On this personal website, you can discover my work, learn more about me, and get in touch with me.`,
+} = Astro.props;
+
+/** Framer marketplace progressive blur ~50px max; Magic UI default curve scaled to cap at 50 */
+const viewportTopBlurLevels = [0.4, 0.8, 1.5, 3, 6, 12.5, 25, 50];
+---
+
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<link rel="icon" href="/favicon.ico" />
+		<meta name="viewport" content="width=device-width" />
+		<meta name="generator" content={Astro.generator} />
+		{description ? <meta name="description" content={description} /> : null}
+		<title>{title}</title>
+	</head>
+	<body>
+		<CustomCursor client:load />
+		<LenisSmoothScroll client:load />
+		<ProgressiveBlur
+			client:load
+			position="top"
+			height="60px"
+			blurLevels={viewportTopBlurLevels}
+			className="fixed inset-x-0 top-0 z-40"
+		/>
+		<div
+			class="pointer-events-none fixed inset-x-0 bottom-0 z-40 h-[60px] bg-linear-to-t from-[#000000] to-transparent"
+			aria-hidden="true"
+		/>
+		<SiteHeader client:load />
+		<div class="pt-[var(--site-header-clearance)]">
+			<slot />
+		</div>
+		<Footer />
+	</body>
+</html>
