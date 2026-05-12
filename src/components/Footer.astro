@@ -26,6 +26,62 @@ const year = new Date().getFullYear();
 					<p class="font-medium tracking-display text-footer-headline-sm md:text-footer-headline-lg">
 						{headline}
 					</p>
+					<p class="font-normal leading-none text-footer-copyright text-foreground opacity-70">
+						Built with
+						<a
+							href="https://astro.build/"
+							target="_blank"
+							rel="noreferrer"
+							class="underline decoration-transparent underline-offset-[3px] transition-[text-decoration-color,opacity] hover:decoration-current hover:opacity-100"
+							>Astro</a
+						>,{' '}
+						<a
+							href="https://tailwindcss.com/"
+							target="_blank"
+							rel="noreferrer"
+							class="underline decoration-transparent underline-offset-[3px] transition-[text-decoration-color,opacity] hover:decoration-current hover:opacity-100"
+							>Tailwind CSS</a
+						>,{' '}
+						<a
+							href="https://docs.astro.build/en/guides/framework-components/"
+							target="_blank"
+							rel="noreferrer"
+							class="underline decoration-transparent underline-offset-[3px] transition-[text-decoration-color,opacity] hover:decoration-current hover:opacity-100"
+							>React islands</a
+						>, and{' '}
+						<a
+							href="https://www.framer.com/motion/"
+							target="_blank"
+							rel="noreferrer"
+							class="underline decoration-transparent underline-offset-[3px] transition-[text-decoration-color,opacity] hover:decoration-current hover:opacity-100"
+							>Framer Motion</a
+						>.
+						<a
+							href="https://github.com/DhanwanthParameswar/website"
+							target="_blank"
+							rel="noreferrer"
+							aria-label="View Repo"
+							title="View Repo"
+							data-cursor-tooltip="View Repo"
+							class="mt-2 block w-fit align-middle opacity-80 transition-[opacity] hover:opacity-100 md:mt-0 md:ml-2 md:inline-flex"
+						>
+							<svg
+								xmlns="http://www.w3.org/2000/svg"
+								viewBox="0 0 24 24"
+								fill="none"
+								stroke="currentColor"
+								stroke-width="2"
+								stroke-linecap="round"
+								stroke-linejoin="round"
+								class="h-[16px] w-[16px]"
+								aria-hidden="true"
+							>
+								<path
+									d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"
+								/>
+							</svg>
+						</a>
+					</p>
 					<p class="font-normal leading-none text-footer-copyright text-foreground opacity-70 md:hidden">
 						© {year} All rights reserved.
 					</p>

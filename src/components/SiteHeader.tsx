@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { FileDown } from 'lucide-react';
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
 
@@ -78,6 +78,8 @@ export function SiteHeader() {
 	const [headerRevealed, setHeaderRevealed] = useState(false);
 	const reduceMotion = useReducedMotion();
 	const panelTransition = reduceMotion ? { duration: 0.01 } : menuToggleTransition;
+	const menuButtonRef = useRef<HTMLButtonElement>(null);
+	const mobileNavFirstLinkRef = useRef<HTMLAnchorElement>(null);
 
 	useEffect(() => {
 		const marker = document.getElementById(HERO_REVEAL_ID);
@@ -112,7 +114,10 @@ export function SiteHeader() {
 	useEffect(() => {
 		if (!menuOpen) return;
 		const onKeyDown = (e: KeyboardEvent) => {
-			if (e.key === 'Escape') setMenuOpen(false);
+			if (e.key === 'Escape') {
+				setMenuOpen(false);
+				queueMicrotask(() => menuButtonRef.current?.focus());
+			}
 		};
 		window.addEventListener('keydown', onKeyDown);
 		return () => window.removeEventListener('keydown', onKeyDown);
@@ -122,18 +127,29 @@ export function SiteHeader() {
 		if (!menuOpen) return;
 		const prev = document.documentElement.style.overflow;
 		document.documentElement.style.overflow = 'hidden';
+		const id = requestAnimationFrame(() => {
+			mobileNavFirstLinkRef.current?.focus();
+		});
 		return () => {
+			cancelAnimationFrame(id);
 			document.documentElement.style.overflow = prev;
 		};
 	}, [menuOpen]);
 
 	const headerShown = headerRevealed || menuOpen;
+	/** Bar is visually hidden before hero reveal — keep nav in the a11y tree but out of tab order until visible (or menu open). */
+	const chromeTabHidden = !headerShown;
+
+	const closeOverlayFocusMenuButton = () => {
+		setMenuOpen(false);
+		queueMicrotask(() => menuButtonRef.current?.focus());
+	};
 
 	return (
 		<nav
+			id="site-navigation"
 			className="pointer-events-none fixed inset-x-0 top-0 z-[100] flex justify-center px-4 pt-5"
 			aria-label="Main"
-			aria-hidden={!headerShown}
 		>
 			<AnimatePresence initial={false}>
 				{menuOpen ? (
@@ -147,7 +163,7 @@ export function SiteHeader() {
 						exit="hidden"
 						variants={mobileOverlayVariants}
 						transition={reduceMotion ? { duration: 0.01 } : panelTransition}
-						onClick={() => setMenuOpen(false)}
+						onClick={closeOverlayFocusMenuButton}
 					/>
 				) : null}
 			</AnimatePresence>
@@ -164,13 +180,15 @@ export function SiteHeader() {
 					<div className="relative z-10 flex h-full w-full min-w-0 items-center gap-[var(--header-column-gap)]">
 						<div className="flex min-w-0 flex-1 items-center gap-2.5">
 							<a
+								id="site-nav-first"
 								href="/#top"
+								tabIndex={chromeTabHidden ? -1 : undefined}
 								className={cn('flex min-w-0 shrink-0 items-center', headerLinkChrome)}
 								onClick={() => setMenuOpen(false)}
 							>
 								<img
 									src="/logo.svg"
-									alt="Dhanwanth Parameswar"
+									alt="Dhanwanth Parameswar — Home"
 									width={164}
 									height={23}
 									className="h-[22.7px] w-[min(164px,calc(75vw-8rem))] max-w-full object-contain object-left"
@@ -181,7 +199,7 @@ export function SiteHeader() {
 
 						<div className="hidden h-[43px] shrink-0 items-center justify-end gap-[var(--header-column-gap)] md:flex">
 							{NAV_LINKS.map(({ href, label }) => (
-								<a key={href} href={href} className={navLink}>
+								<a key={href} href={href} tabIndex={chromeTabHidden ? -1 : undefined} className={navLink}>
 									{label}
 								</a>
 							))}
@@ -192,6 +210,7 @@ export function SiteHeader() {
 									variant="primary"
 									target="_blank"
 									rel="noopener noreferrer"
+									tabIndex={chromeTabHidden ? -1 : undefined}
 									className="group h-[75%] min-h-0 py-0 leading-[var(--cta-label-line-height)]"
 								>
 									Resume
@@ -207,8 +226,10 @@ export function SiteHeader() {
 						</div>
 
 						<button
+							ref={menuButtonRef}
 							type="button"
 							className={menuToggle}
+							tabIndex={chromeTabHidden ? -1 : undefined}
 							aria-label={menuOpen ? 'Close menu' : 'Open menu'}
 							aria-expanded={menuOpen}
 							aria-controls={menuOpen ? MOBILE_NAV_ID : undefined}
@@ -224,7 +245,6 @@ export function SiteHeader() {
 						<motion.div
 							key="mobile-nav"
 							id={MOBILE_NAV_ID}
-							role="menu"
 							className={mobilePanel}
 							initial="hidden"
 							animate="shown"
@@ -233,35 +253,39 @@ export function SiteHeader() {
 							transition={reduceMotion ? { duration: 0.01 } : panelTransition}
 							style={{ willChange: 'opacity, filter, transform' }}
 						>
-							{NAV_LINKS.map(({ href, label }) => (
-								<a
-									key={href}
-									href={href}
-									role="menuitem"
-									className={cn(navLink, 'block py-3')}
-									onClick={() => setMenuOpen(false)}
-								>
-									{label}
-								</a>
-							))}
-							<div className="pt-2" onClick={() => setMenuOpen(false)}>
-								<Button
-									href="https://resume.dhanwanth.com"
-									variant="primary"
-									target="_blank"
-									rel="noopener noreferrer"
-									className="group h-auto min-h-0 w-full justify-center py-3 leading-[var(--cta-label-line-height)]"
-								>
-									Resume
-									<FileDown
-										className="link-hover-motion shrink-0 opacity-100 group-hover:opacity-80"
-										width={19}
-										height={19}
-										strokeWidth={1.5}
-										aria-hidden
-									/>
-								</Button>
-							</div>
+							<ul className="m-0 list-none p-0">
+								{NAV_LINKS.map(({ href, label }, i) => (
+									<li key={href}>
+										<a
+											ref={i === 0 ? mobileNavFirstLinkRef : undefined}
+											href={href}
+											className={cn(navLink, 'block py-3')}
+											onClick={() => setMenuOpen(false)}
+										>
+											{label}
+										</a>
+									</li>
+								))}
+								<li className="pt-2">
+									<Button
+										href="https://resume.dhanwanth.com"
+										variant="primary"
+										target="_blank"
+										rel="noopener noreferrer"
+										className="group h-auto min-h-0 w-full justify-center py-3 leading-[var(--cta-label-line-height)]"
+										onClick={() => setMenuOpen(false)}
+									>
+										Resume
+										<FileDown
+											className="link-hover-motion shrink-0 opacity-100 group-hover:opacity-80"
+											width={19}
+											height={19}
+											strokeWidth={1.5}
+											aria-hidden
+										/>
+									</Button>
+								</li>
+							</ul>
 						</motion.div>
 					) : null}
 				</AnimatePresence>

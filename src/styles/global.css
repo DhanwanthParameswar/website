@@ -1,6 +1,10 @@
 @import "@fontsource-variable/inter/wght.css";
 @import "./tokens.css";
 @import "tailwindcss";
+/*
+	 ---break---
+	 */
+@custom-variant dark (&:is(.dark *));
 
 @layer base {
 	/*
@@ -11,12 +15,73 @@
 		overflow: visible;
 		-webkit-font-smoothing: antialiased;
 		-moz-osx-font-smoothing: grayscale;
-		scroll-padding-top: var(--site-header-clearance);
 	}
 
 	body {
 		overflow: visible;
 		@apply min-h-dvh bg-background font-sans text-foreground;
+	}
+
+	/*
+	 * Skip links — first in tab order; visible only when focused (keyboard / SR).
+	 */
+	.skip-links {
+		position: absolute;
+		left: 1rem;
+		top: 1rem;
+		z-index: 200;
+		display: flex;
+		flex-direction: column;
+		align-items: flex-start;
+		gap: 0.5rem;
+		pointer-events: none;
+	}
+
+	.skip-links:focus-within {
+		pointer-events: auto;
+	}
+
+	.skip-link {
+		padding: 0.5rem 1rem;
+		border-radius: 0.375rem;
+		background-color: var(--cta-primary-bg);
+		color: var(--cta-primary-fg);
+		font-weight: 500;
+		text-decoration: none;
+		clip-path: inset(100% 0 0 0);
+		transition: clip-path var(--duration-link) var(--ease-link);
+		pointer-events: auto;
+	}
+
+	.skip-link:focus {
+		outline: 2px solid var(--cta-secondary-fg);
+		outline-offset: 2px;
+	}
+
+	.skip-link:focus-visible {
+		clip-path: inset(0 0 0 0);
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.skip-link {
+			transition-duration: 0.01ms;
+		}
+	}
+
+	/*
+	 * Subtle film grain — reduces “plastic” banding on gradients/blur; keep opacity low for type legibility.
+	 * SVG data URI is a small tiled fractalNoise tile (self-contained filter id).
+	 */
+	body > .site-grain {
+		position: fixed;
+		inset: 0;
+		z-index: 25;
+		pointer-events: none;
+		opacity: var(--site-grain-opacity);
+		mix-blend-mode: var(--site-grain-mix-blend);
+		background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='256' height='256'%3E%3Cfilter id='a'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23a)'/%3E%3C/svg%3E");
+		background-repeat: repeat;
+		background-size: 256px 256px;
 	}
 
 	@media (pointer: fine) {
@@ -25,7 +90,9 @@
 		html.has-custom-cursor a,
 		html.has-custom-cursor button,
 		html.has-custom-cursor [role='button'],
-		html.has-custom-cursor [role='link'] {
+		html.has-custom-cursor [role='link'],
+		/* Custom cursor: interactive regions that are not native links (e.g. work cards as article). */
+		html.has-custom-cursor [data-cursor] {
 			cursor: none;
 		}
 	}
@@ -62,5 +129,29 @@
 	 */
 	.typography-portfolio p + p {
 		margin-top: var(--paragraph-gap-md);
+	}
+
+	#main-content {
+		outline: none;
+	}
+
+	section[id] {
+		scroll-margin-top: var(--site-header-clearance);
+	}
+}
+
+/*
+	 ---break---
+	 */
+
+@theme inline {
+	--animate-blink-cursor: blink-cursor 1.2s step-end infinite;
+  @keyframes blink-cursor {
+  0%, 49% {
+    opacity: 1;
+		}
+  50%, 100% {
+    opacity: 0;
+		}
 	}
 }

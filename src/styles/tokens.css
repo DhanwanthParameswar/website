@@ -9,6 +9,10 @@
 :root {
 	color-scheme: dark;
 
+	/* Film grain — sits above page paint, below chrome (see BaseLayout z-index). Tune opacity first. */
+	--site-grain-opacity: 0.12;
+	--site-grain-mix-blend: soft-light;
+
 	/* Surfaces — Framer: /Background, /Foreground */
 	--surface-page: rgb(0 0 0);
 	--surface-elevated: rgb(15 15 15);
@@ -136,4 +140,21 @@
 
 	/* Heading tracking — Framer: -0.04em on hero/display headings */
 	--tracking-display: -0.04em;
+
+	/* Section title (Work / About / Contact) — Framer desktop canvas. Mobile override below. */
+	--text-work-section-title: 7rem;
+	--text-work-section-title--line-height: 0.9;
+	--text-work-status: 0.625rem;
+	--text-work-status--line-height: 1.2;
+}
+
+/*
+ * Framer phone breakpoint (<810px): shrinks the giant section title so
+ * "Contact" / "About" / "Work" fit inside their gutters. Line-height keeps
+ * its 0.9 ratio so the optical sizing stays consistent.
+ */
+@media (max-width: 809px) {
+	:root {
+		--text-work-section-title: 4.375rem;
+	}
 }

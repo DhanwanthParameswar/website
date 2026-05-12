@@ -27,16 +27,78 @@ export const menuToggleTransition: Transition = linkHoverTransition;
 
 /**
  * Hero blur-reveal — tweened opacity + blur + slight lift (no spring bounce).
- * Ease is a smooth “settle” curve; duration tuned for editorial / premium feel.
+ * Calm editorial ease-out; duration sits between “micro” and sluggish for a premium hero.
  */
 export const heroBlurReveal: Transition = {
-	duration: 0.88,
-	ease: [0.22, 1, 0.32, 1],
+	duration: 0.78,
+	ease: [0.16, 1, 0.3, 1],
 };
 
-/** Scroll hint — delayed, same language as hero reveal (no long spring settle). */
+/** `prefers-reduced-motion`: opacity-only, short and linear-feeling ease (no blur choreography). */
+export const heroBlurRevealReduced: Transition = {
+	duration: 0.42,
+	ease: [0.22, 1, 0.36, 1],
+};
+
+/**
+ * WebGPU hero backdrop — long opacity fade so the wash appears after layout, without competing with type.
+ */
+export const heroAmbientBackdrop: Transition = {
+	duration: 1.12,
+	delay: 0.1,
+	ease: [0.16, 1, 0.3, 1],
+};
+
+export const heroAmbientBackdropReduced: Transition = {
+	duration: 0.36,
+	delay: 0,
+	ease: [0.22, 1, 0.36, 1],
+};
+
+/**
+ * Scroll hint — enters after headline cluster finishes (blurReveal max delay + duration), same motion language.
+ */
 export const heroScrollHintReveal: Transition = {
-	duration: 1.05,
-	ease: [0.22, 1, 0.32, 1],
-	delay: 2.35,
+	duration: 0.72,
+	ease: [0.16, 1, 0.3, 1],
+	delay: 1.22,
+};
+
+export const heroScrollHintRevealReduced: Transition = {
+	duration: 0.4,
+	ease: [0.22, 1, 0.36, 1],
+	delay: 0.32,
+};
+
+/**
+ * Work grid card — glow opacity on hover.
+ * Slightly overdamped vs raw Framer physics (500/40/1) so opacity settles without wobble — reads more premium on UI chrome.
+ */
+export const workCardGlowHover: Transition = {
+	type: 'spring',
+	stiffness: 380,
+	damping: 52,
+	mass: 1,
+	delay: 0,
+};
+
+/** `prefers-reduced-motion`: calm ease, no spring. */
+export const workCardGlowHoverReduced: Transition = {
+	duration: 0.28,
+	ease: [0.4, 0, 0.2, 1],
+	delay: 0,
+};
+
+/**
+ * Below-the-fold sections — blur + lift on first scroll into view (same ease family as {@link heroBlurReveal}).
+ */
+export const sectionInViewReveal: Transition = {
+	duration: 0.72,
+	ease: [0.16, 1, 0.3, 1],
+};
+
+/** `prefers-reduced-motion`: opacity-only, shorter. */
+export const sectionInViewRevealReduced: Transition = {
+	duration: 0.38,
+	ease: [0.22, 1, 0.36, 1],
 };

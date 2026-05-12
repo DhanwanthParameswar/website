@@ -1,4 +1,4 @@
-import type { ReactNode } from 'react';
+import type { MouseEventHandler, ReactNode } from 'react';
 import { motion, useReducedMotion } from 'framer-motion';
 
 import { cn } from '@/lib/utils';
@@ -14,6 +14,9 @@ export interface ButtonProps {
 	target?: string;
 	rel?: string;
 	disabled?: boolean;
+	/** When set (e.g. `-1`), removes the control from sequential tab order until needed. */
+	tabIndex?: number;
+	onClick?: MouseEventHandler<HTMLAnchorElement | HTMLButtonElement>;
 	children: ReactNode;
 }
 
@@ -28,6 +31,8 @@ export function Button({
 	target,
 	rel: relProp,
 	disabled = false,
+	tabIndex,
+	onClick,
 	children,
 }: ButtonProps) {
 	const reduceMotion = useReducedMotion();
@@ -61,14 +66,21 @@ export function Button({
 
 	if (href) {
 		return (
-			<motion.a href={href} target={target} rel={rel} {...motionProps}>
+			<motion.a
+				href={href}
+				target={target}
+				rel={rel}
+				tabIndex={tabIndex}
+				onClick={onClick}
+				{...motionProps}
+			>
 				{children}
 			</motion.a>
 		);
 	}
 
 	return (
-		<motion.button type={type} disabled={disabled} {...motionProps}>
+		<motion.button type={type} disabled={disabled} tabIndex={tabIndex} onClick={onClick} {...motionProps}>
 			{children}
 		</motion.button>
 	);

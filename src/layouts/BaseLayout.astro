@@ -33,6 +33,11 @@ const viewportTopBlurLevels = [0.4, 0.8, 1.5, 3, 6, 12.5, 25, 50];
 		<title>{title}</title>
 	</head>
 	<body>
+		<div class="skip-links">
+			<a class="skip-link" href="#main-content">Skip to main content</a>
+			<a class="skip-link" href="#site-nav-first">Skip to navigation</a>
+		</div>
+		<div class="site-grain" aria-hidden="true"></div>
 		<CustomCursor client:load />
 		<LenisSmoothScroll client:load />
 		<ProgressiveBlur
@@ -48,7 +53,9 @@ const viewportTopBlurLevels = [0.4, 0.8, 1.5, 3, 6, 12.5, 25, 50];
 		/>
 		<SiteHeader client:load />
 		<div class="pt-[var(--site-header-clearance)]">
-			<slot />
+			<main id="main-content" tabindex="-1">
+				<slot />
+			</main>
 		</div>
 		<Footer />
 	</body>
