@@ -7,7 +7,12 @@
  */
 
 :root {
-	color-scheme: light;
+	/* 
+	 * Use 'light dark' so system elements (scrollbars) can adapt. We avoid toggling 
+	 * specific values on .dark because Chrome aggressively snaps text colors 
+	 * instantly when color-scheme changes, bypassing CSS transitions.
+	 */
+	color-scheme: light dark;
 
 	/* Film grain — sits above page paint, below chrome (see BaseLayout z-index). Tune opacity first. */
 	--site-grain-opacity: 0.08;
@@ -21,6 +26,7 @@
 	--text-primary: rgb(0 0 0);
 	--text-secondary: rgb(0 0 0 / 72%);
 	--text-tertiary: rgb(0 0 0 / 50%);
+	--text-muted-body: rgb(0 0 0 / 60%);
 
 	/* Border — Slate-200, Slate-300 */
 	--border-default: rgb(226 232 240);
@@ -47,13 +53,25 @@
 	--selection-background: rgb(0 0 0);
 	--selection-color: rgb(255 255 255);
 
+	/* Shiki syntax highlighting (github-light palette) */
+	--astro-code-foreground: #24292e;
+	--astro-code-background: var(--surface-elevated);
+	--astro-code-token-constant: #005cc5;
+	--astro-code-token-string: #032f62;
+	--astro-code-token-comment: #6a737d;
+	--astro-code-token-keyword: #d73a49;
+	--astro-code-token-parameter: #e36209;
+	--astro-code-token-function: #6f42c1;
+	--astro-code-token-string-expression: #22863a;
+	--astro-code-token-punctuation: #24292e;
+	--astro-code-token-link: #005cc5;
+	--astro-code-token-comment-font-style: italic;
+
 	/* Site header */
 	--surface-header-bar: rgb(255 255 255 / 85%);
 }
 
 :root.dark {
-	color-scheme: dark;
-
 	/* Film grain — sits above page paint, below chrome (see BaseLayout z-index). Tune opacity first. */
 	--site-grain-opacity: 0.12;
 	--site-grain-mix-blend: soft-light;
@@ -66,6 +84,7 @@
 	--text-primary: rgb(255 255 255);
 	--text-secondary: rgb(245 245 245 / 40%);
 	--text-tertiary: rgb(245 245 245 / 10%);
+	--text-muted-body: rgb(255 255 255 / 60%);
 
 	/* Border — Framer: /Border */
 	--border-default: rgb(34 34 37);
@@ -86,6 +105,20 @@
 	/* Selection — Framer Main template / Styles (desktop): invert while selecting */
 	--selection-background: rgb(255 255 255);
 	--selection-color: rgb(0 0 0);
+
+	/* Shiki syntax highlighting (github-dark palette) */
+	--astro-code-foreground: #e1e4e8;
+	--astro-code-background: var(--surface-elevated);
+	--astro-code-token-constant: #79b8ff;
+	--astro-code-token-string: #9ecbff;
+	--astro-code-token-comment: #6a737d;
+	--astro-code-token-keyword: #f97583;
+	--astro-code-token-parameter: #ffab70;
+	--astro-code-token-function: #b392f0;
+	--astro-code-token-string-expression: #85e89d;
+	--astro-code-token-punctuation: #e1e4e8;
+	--astro-code-token-link: #79b8ff;
+	--astro-code-token-comment-font-style: italic;
 
 	/* Site header — Framer Desktop nav (pill bar) */
 	--surface-header-bar: rgb(15 15 15 / 85%);
@@ -113,6 +146,10 @@
 	--font-family-sans:
 		"Inter Variable", Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji",
 		"Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+
+	/* Reveal — high performance scroll-in animations (zero JS runtime) */
+	--ease-reveal: cubic-bezier(0.16, 1, 0.3, 1);
+	--duration-reveal: 0.72s;
 }
 
 /*
@@ -198,5 +235,6 @@
 @media (max-width: 809px) {
 	:root {
 		--text-work-section-title: 4.375rem;
+		--text-display-xl: 4.5rem;
 	}
 }

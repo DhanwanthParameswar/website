@@ -1,6 +1,7 @@
 ---
 import '../styles/global.css';
 
+import { ClientRouter } from 'astro:transitions';
 import Footer from '@/components/Footer.astro';
 import { CustomCursor } from '@/components/CustomCursor';
 import { LenisSmoothScroll } from '@/components/LenisSmoothScroll';
@@ -10,11 +11,13 @@ import { ProgressiveBlur } from '@/components/ui/progressive-blur';
 interface Props {
 	title?: string;
 	description?: string;
+	isFooterInverse?: boolean;
 }
 
 const {
 	title = 'Dhanwanth Parameswar',
 	description = `Hey! I'm a Computer Engineering student with a passion for building innovative software. On this personal website, you can discover my work, learn more about me, and get in touch with me.`,
+	isFooterInverse = false
 } = Astro.props;
 
 /** Framer marketplace progressive blur ~50px max; Magic UI default curve scaled to cap at 50 */
@@ -31,13 +34,18 @@ const viewportTopBlurLevels = [0.4, 0.8, 1.5, 3, 6, 12.5, 25, 50];
 		<meta name="generator" content={Astro.generator} />
 		{description ? <meta name="description" content={description} /> : null}
 		<title>{title}</title>
+		<ClientRouter />
 		<script is:inline>
-			const theme = localStorage.getItem('theme');
-			if (theme === 'dark' || (!theme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-				document.documentElement.classList.add('dark');
-			} else {
-				document.documentElement.classList.remove('dark');
-			}
+			const applyTheme = () => {
+				const theme = localStorage.getItem('theme');
+				if (theme === 'dark' || (!theme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+					document.documentElement.classList.add('dark');
+				} else {
+					document.documentElement.classList.remove('dark');
+				}
+			};
+			applyTheme();
+			document.addEventListener('astro:after-swap', applyTheme);
 		</script>
 	</head>
 	<body>
@@ -45,26 +53,93 @@ const viewportTopBlurLevels = [0.4, 0.8, 1.5, 3, 6, 12.5, 25, 50];
 			<a class="skip-link" href="#main-content">Skip to main content</a>
 			<a class="skip-link" href="#site-nav-first">Skip to navigation</a>
 		</div>
-		<div class="site-grain" aria-hidden="true"></div>
-		<CustomCursor client:load />
-		<LenisSmoothScroll client:load />
+		<div class="site-grain" aria-hidden="true" transition:persist></div>
+		<CustomCursor client:load transition:persist />
+		<LenisSmoothScroll client:load transition:persist />
 		<ProgressiveBlur
 			client:load
 			position="top"
 			height="60px"
 			blurLevels={viewportTopBlurLevels}
 			className="fixed inset-x-0 top-0 z-40"
+			transition:persist
 		/>
 		<div
 			class="viewport-bottom-fade pointer-events-none fixed inset-x-0 bottom-0 z-40 h-[60px]"
 			aria-hidden="true"
+			transition:persist
 		/>
-		<SiteHeader client:load />
+		<SiteHeader client:load transition:persist />
 		<div class="pt-[var(--site-header-clearance)]">
 			<main id="main-content" tabindex="-1">
 				<slot />
 			</main>
 		</div>
-		<Footer />
+		<Footer isInverse={isFooterInverse} />
+
+		<script>
+			/**
+			 * High-performance scroll reveal observer.
+			 * Watches for .reveal-item elements and sets data-visible="true" when they enter the viewport.
+			 * This runs once on load and remains lightweight (native Intersection Observer).
+			 */
+			const observerOptions = {
+				root: null,
+				rootMargin: '0px 0px -10% 0px',
+				threshold: 0.05 // Lower threshold guarantees that tall cards trigger reveal reliably as soon as they enter
+			};
+
+			const observer = new IntersectionObserver((entries) => {
+				entries.forEach(entry => {
+					if (entry.isIntersecting) {
+						(entry.target as HTMLElement).dataset.visible = 'true';
+						observer.unobserve(entry.target);
+					}
+				});
+			}, observerOptions);
+
+			function setupReveals() {
+				document.querySelectorAll('.reveal-item, .prose > *').forEach(el => observer.observe(el));
+			}
+
+			// Viewport Bottom Fade Opacity controller based on Work Pagination position
+			function updateFadeOpacity() {
+				const fadeEl = document.querySelector('.viewport-bottom-fade') as HTMLElement;
+				const paginationEl = document.getElementById('work-pagination');
+				if (!fadeEl) return;
+				if (!paginationEl) {
+					fadeEl.style.opacity = '1';
+					return;
+				}
+				const rect = paginationEl.getBoundingClientRect();
+				const viewportHeight = window.innerHeight;
+				
+				if (rect.top >= viewportHeight) {
+					fadeEl.style.opacity = '1';
+				} else if (rect.bottom <= viewportHeight) {
+					fadeEl.style.opacity = '0';
+				} else {
+					const height = rect.bottom - rect.top;
+					if (height > 0) {
+						const progress = (viewportHeight - rect.top) / height;
+						fadeEl.style.opacity = Math.max(0, Math.min(1, 1 - progress)).toString();
+					}
+				}
+			}
+
+			// Initialize
+			setupReveals();
+			updateFadeOpacity();
+
+			// Listen for scroll & resize events
+			window.addEventListener('scroll', updateFadeOpacity, { passive: true });
+			window.addEventListener('resize', updateFadeOpacity, { passive: true });
+
+			// Handle Astro view transitions if they are added later
+			document.addEventListener('astro:after-swap', () => {
+				setupReveals();
+				updateFadeOpacity();
+			});
+		</script>
 	</body>
 </html>

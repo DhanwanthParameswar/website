@@ -1,9 +1,9 @@
-import { useState } from 'react';
-import { motion, useReducedMotion } from 'framer-motion';
+import { useState, useRef } from 'react';
+import { motion, useReducedMotion, useScroll, useTransform, useSpring, useMotionValue } from 'framer-motion';
 
 import { cn } from '@/lib/utils';
-import type { WorkProject } from '@/lib/work-projects';
-import { workProjectImageSrcset } from '@/lib/work-projects';
+import type { WorkProject } from '@/types/work';
+import { useIsDarkMode } from '@/lib/useIsDarkMode';
 import { workCardGlowHover, workCardGlowHoverReduced } from '@/lib/motion-presets';
 
 const cardShell =
@@ -14,16 +14,79 @@ type Props = {
 };
 
 export function WorkProjectCard({ project }: Props) {
+	const ref = useRef<HTMLDivElement>(null);
 	const reduceMotion = useReducedMotion();
+	const isDark = useIsDarkMode();
 	const [hovered, setHovered] = useState(false);
-	const { src, srcSet, sizes } = workProjectImageSrcset(project.imageFile);
+
+	const themeTransition = { duration: 0.4, ease: 'easeInOut' };
+
+	const { scrollYProgress } = useScroll({
+		target: ref,
+		offset: ['start end', 'end start'],
+	});
+
+	/**
+	 * Tilt logic:
+	 * - At progress 0 (top of card at bottom of viewport): rotateX is positive (tilts back)
+	 * - At progress 0.5 (center of viewport): rotateX is 0 (flat)
+	 * - At progress 1 (bottom of card at top of viewport): rotateX is negative (tilts forward)
+	 * Professional range: 6 to -6 degrees.
+	 */
+	const rotateXRaw = useTransform(scrollYProgress, [0, 1], [6, -6]);
+	const rotateX = useSpring(rotateXRaw, { stiffness: 90, damping: 25, restDelta: 0.001 });
+
+	/** Mouse tilt logic - made more subtle */
+	const mouseX = useMotionValue(0);
+	const mouseY = useMotionValue(0);
+
+	const mouseRotateX = useSpring(useTransform(mouseY, [-0.5, 0.5], [4, -4]), {
+		stiffness: 120,
+		damping: 25,
+	});
+	const mouseRotateY = useSpring(useTransform(mouseX, [-0.5, 0.5], [-4, 4]), {
+		stiffness: 120,
+		damping: 25,
+	});
+
+	/** Combine scroll and mouse tilt */
+	const combinedRotateX = useTransform([rotateX, mouseRotateX], ([scroll, mouse]) => {
+		return (scroll as number) + (mouse as number);
+	});
+
+	/** Shimmer/Glow shift - more subtle at 5% */
+	const glowX = useSpring(useTransform(mouseX, [-0.5, 0.5], ['-5%', '5%']), {
+		stiffness: 80,
+		damping: 30,
+	});
+	const glowY = useSpring(useTransform(mouseY, [-0.5, 0.5], ['-5%', '5%']), {
+		stiffness: 80,
+		damping: 30,
+	});
+
 	const glowTransition = reduceMotion ? workCardGlowHoverReduced : workCardGlowHover;
 	/** Stronger than the last pass, still capped so hover doesn’t blow out the card. */
 	const glowOpacity = 0.62;
 
+	const handleMouseMove = (e: React.MouseEvent) => {
+		if (reduceMotion || !ref.current) return;
+		const rect = ref.current.getBoundingClientRect();
+		const x = (e.clientX - rect.left) / rect.width - 0.5;
+		const y = (e.clientY - rect.top) / rect.height - 0.5;
+		mouseX.set(x);
+		mouseY.set(y);
+	};
+
+	const handleMouseLeave = () => {
+		setHovered(false);
+		mouseX.set(0);
+		mouseY.set(0);
+	};
+
 	const hoverHandlers = {
 		onHoverStart: () => setHovered(true),
-		onHoverEnd: () => setHovered(false),
+		onHoverEnd: handleMouseLeave,
+		onMouseMove: handleMouseMove,
 	};
 
 	/** Custom cursor: tooltip now; links / click handlers wired later per project. */
@@ -32,30 +95,76 @@ export function WorkProjectCard({ project }: Props) {
 		'data-cursor-tooltip': 'View',
 	} as const;
 
+
 	const media = (
-		<div className="relative isolate w-full">
+		<motion.div
+			className="relative isolate w-full [will-change:transform]"
+			style={{
+				rotateX: reduceMotion ? 0 : combinedRotateX,
+				rotateY: reduceMotion ? 0 : mouseRotateY,
+				transformPerspective: 1500,
+			}}
+		>
+			{/* Hover Glow - Light */}
 			<motion.div
 				className="pointer-events-none absolute inset-0 z-0 scale-[1.02] rounded-[20px] bg-cover bg-center blur-[56px] saturate-175 brightness-95"
-				style={{ backgroundImage: `url('${src}')` }}
+				style={{
+					backgroundImage: `url('${project.imageLight.src}')`,
+					x: reduceMotion ? 0 : glowX,
+					y: reduceMotion ? 0 : glowY,
+				}}
 				aria-hidden
-				animate={{ opacity: hovered ? glowOpacity : 0 }}
-				transition={glowTransition}
+				initial={false}
+				animate={{ 
+					opacity: !isDark && hovered ? glowOpacity : 0 
+				}}
+				transition={hovered ? glowTransition : themeTransition}
 			/>
+			{/* Hover Glow - Dark */}
+			<motion.div
+				className="pointer-events-none absolute inset-0 z-0 scale-[1.02] rounded-[20px] bg-cover bg-center blur-[56px] saturate-175 brightness-95"
+				style={{
+					backgroundImage: `url('${project.imageDark.src}')`,
+					x: reduceMotion ? 0 : glowX,
+					y: reduceMotion ? 0 : glowY,
+				}}
+				aria-hidden
+				initial={false}
+				animate={{ 
+					opacity: isDark && hovered ? glowOpacity : 0 
+				}}
+				transition={hovered ? glowTransition : themeTransition}
+			/>
+
 			<div className="relative z-[1] aspect-[295/240] w-full overflow-hidden rounded-[20px] border border-solid border-border-footer bg-black">
-				<img
-					className="h-full w-full object-cover object-center"
-					src={src}
-					srcSet={srcSet}
-					sizes={sizes}
+				<motion.img
+					className="absolute inset-0 h-full w-full object-cover object-center"
+					src={project.imageLight.src}
 					alt={project.title}
-					width={1920}
-					height={1440}
+					width={project.imageLight.width}
+					height={project.imageLight.height}
 					loading="lazy"
 					decoding="async"
+					initial={false}
+					animate={{ opacity: isDark ? 0 : 1 }}
+					transition={themeTransition}
+				/>
+				<motion.img
+					className="absolute inset-0 h-full w-full object-cover object-center"
+					src={project.imageDark.src}
+					alt={project.title}
+					width={project.imageDark.width}
+					height={project.imageDark.height}
+					loading="lazy"
+					decoding="async"
+					initial={false}
+					animate={{ opacity: isDark ? 1 : 0 }}
+					transition={themeTransition}
 				/>
 			</div>
-		</div>
+		</motion.div>
 	);
+
 
 	const copy = (
 		<div className="flex w-full flex-col items-start justify-center gap-0.5">
@@ -65,43 +174,31 @@ export function WorkProjectCard({ project }: Props) {
 				</p>
 				{project.status ? (
 					<span
-						className="inline-flex shrink-0 items-center justify-center whitespace-nowrap rounded-[13px] border border-solid border-black/20 dark:border-[rgb(245_245_245/0.4)] bg-transparent px-[10px] py-[5px] font-sans text-[length:var(--text-work-status)] leading-[var(--text-work-status--line-height)] font-normal text-text-secondary [text-rendering:optimizeLegibility]"
+						className="inline-flex shrink-0 items-center justify-center whitespace-nowrap rounded-[13px] border border-solid border-black/20 dark:border-[rgb(245_245_245/0.4)] bg-transparent px-[10px] py-[5px] font-sans text-[length:var(--text-work-status)] leading-[var(--text-work-status--line-height)] font-normal text-muted [text-rendering:optimizeLegibility]"
 					>
 						{project.status}
 					</span>
 				) : null}
 			</div>
-			<p className="w-full min-w-0 font-sans text-[length:var(--text-subtitle)] leading-[var(--text-subtitle--line-height)] font-normal break-words text-text-secondary [text-rendering:optimizeLegibility]">
+			<p className="w-full min-w-0 font-sans text-[length:var(--text-subtitle)] leading-[var(--text-subtitle--line-height)] font-normal break-words text-muted [text-rendering:optimizeLegibility]">
 				{project.description}
 			</p>
 		</div>
 	);
 
-	if (project.href) {
-		return (
-			<motion.a
-				href={project.href}
-				className={cn(cardShell)}
-				target={project.href.startsWith('http') ? '_blank' : undefined}
-				rel={project.href.startsWith('http') ? 'noopener noreferrer' : undefined}
-				{...cursorChrome}
-				{...hoverHandlers}
-			>
-				{media}
-				{copy}
-			</motion.a>
-		);
-	}
+	const targetHref = `/work/${project.slug}`;
 
 	return (
-		<motion.article
+		<motion.a
+			ref={ref}
+			href={targetHref}
 			className={cn(cardShell)}
-			aria-label={`${project.title}: ${project.description}`}
 			{...cursorChrome}
 			{...hoverHandlers}
 		>
 			{media}
 			{copy}
-		</motion.article>
+		</motion.a>
 	);
 }
+

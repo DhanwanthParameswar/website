@@ -2,9 +2,7 @@ import { motion, useReducedMotion } from 'framer-motion';
 
 import { WorkProjectCard } from '@/components/WorkProjectCard';
 import { scrollRevealItemMotionProps } from '@/lib/scroll-reveal-variants';
-import { WORK_PROJECTS } from '@/lib/work-projects';
-
-export function WorkSection() {
+export function WorkSection({ projects }: { projects: any[] }) {
 	const reduceMotion = useReducedMotion();
 	const reveal = scrollRevealItemMotionProps(reduceMotion);
 
@@ -18,7 +16,7 @@ export function WorkSection() {
 				>
 					Work
 				</motion.h2>
-				{WORK_PROJECTS.map((project) => (
+				{projects.map((project) => (
 					<motion.div key={project.slug} className="min-w-0" {...reveal}>
 						<WorkProjectCard project={project} />
 					</motion.div>

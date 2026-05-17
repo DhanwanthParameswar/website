@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { Moon, Sun } from 'lucide-react';
 import { motion, useReducedMotion } from 'framer-motion';
 import { cn } from '@/lib/utils';
+import { menuToggleTransition } from '@/lib/motion-presets';
 
 const ICON_SIZE = 18;
 const STROKE = 2;
@@ -12,8 +13,10 @@ let themeTransitionTimeout: ReturnType<typeof setTimeout> | undefined;
 export function ThemeToggle({ className, tabIndex }: { className?: string; tabIndex?: number }) {
 	const [theme, setTheme] = useState<'light' | 'dark' | null>(null);
 	const reduceMotion = useReducedMotion();
-	/** Instant icon swap — avoids motion churn when theme state updates alongside `html.theme-transitioning`. */
-	const iconTransition = reduceMotion ? { duration: 0.01 } : { duration: 0 };
+	/** 
+	 * Transition for icon morphing. Uses the same preset as the hamburger menu (0.2s).
+	 */
+	const iconTransition = reduceMotion ? { duration: 0.01 } : menuToggleTransition;
 
 	// Initialize theme state from document class
 	useEffect(() => {

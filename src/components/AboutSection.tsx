@@ -4,7 +4,7 @@ import { ABOUT_GREETING, ABOUT_PARAGRAPHS, ABOUT_SIGNOFF_LINES } from '@/lib/abo
 import { scrollRevealItemMotionProps } from '@/lib/scroll-reveal-variants';
 
 const proseClass =
-	'typography-portfolio w-full max-w-[1086px] text-pretty text-body-md leading-[var(--text-body-md--line-height)] text-foreground md:w-[80%]';
+	'm-0 typography-portfolio w-full max-w-[1086px] text-pretty text-body-md leading-[var(--text-body-md--line-height)] text-foreground md:w-[80%]';
 
 export function AboutSection() {
 	const reduceMotion = useReducedMotion();
@@ -35,8 +35,7 @@ export function AboutSection() {
 
 				<motion.p className={proseClass} {...reveal}>
 					{ABOUT_SIGNOFF_LINES[0]}
-				</motion.p>
-				<motion.p className={proseClass} {...reveal}>
+					<br />
 					{ABOUT_SIGNOFF_LINES[1]}
 				</motion.p>
 			</div>

@@ -83,22 +83,32 @@ export function SiteHeader() {
 	const mobileNavFirstLinkRef = useRef<HTMLAnchorElement>(null);
 
 	useEffect(() => {
-		const marker = document.getElementById(HERO_REVEAL_ID);
-		if (!marker) {
-			setHeaderRevealed(true);
-			return;
-		}
+		let observer: IntersectionObserver | null = null;
 
 		const sync = () => {
+			const marker = document.getElementById(HERO_REVEAL_ID);
+			if (!marker) {
+				setHeaderRevealed(true);
+				if (observer) {
+					observer.disconnect();
+					observer = null;
+				}
+				return;
+			}
+
+			if (!observer) {
+				observer = new IntersectionObserver(() => {
+					sync();
+				}, {
+					root: null,
+					rootMargin: '0px',
+					threshold: [0, 0.01, 0.5, 1],
+				});
+				observer.observe(marker);
+			}
 			setHeaderRevealed(marker.getBoundingClientRect().top <= 0);
 		};
 
-		const observer = new IntersectionObserver(sync, {
-			root: null,
-			rootMargin: '0px',
-			threshold: [0, 0.01, 0.5, 1],
-		});
-		observer.observe(marker);
 		sync();
 
 		const onResize = () => {
@@ -106,9 +116,32 @@ export function SiteHeader() {
 		};
 		window.addEventListener('resize', onResize, { passive: true });
 
+		const handleBeforePreparation = (e: any) => {
+			const toPath = e.to.pathname;
+			const toHash = e.to.hash;
+
+			if (toPath === '/' && toHash !== '#work' && toHash !== '#about' && toHash !== '#contact') {
+				// Navigating to the top of the homepage -> start exit animation immediately!
+				setHeaderRevealed(false);
+			} else {
+				// Navigating to a project page or a specific section -> ensure header stays or enters immediately
+				setHeaderRevealed(true);
+			}
+		};
+		document.addEventListener('astro:before-preparation', handleBeforePreparation);
+
+		const handlePageLoad = () => {
+			sync();
+		};
+		document.addEventListener('astro:page-load', handlePageLoad);
+
 		return () => {
-			observer.disconnect();
+			if (observer) {
+				observer.disconnect();
+			}
 			window.removeEventListener('resize', onResize);
+			document.removeEventListener('astro:before-preparation', handleBeforePreparation);
+			document.removeEventListener('astro:page-load', handlePageLoad);
 		};
 	}, []);
 

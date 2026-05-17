@@ -87,7 +87,7 @@ export function HeroSection() {
 					)}
 				>
 					<motion.span
-						className="block w-[70%] max-w-[53rem] text-center font-sans text-[length:var(--text-intro)] leading-[var(--text-intro--line-height)] will-change-[transform,filter]"
+						className="block w-[70%] max-w-[53rem] text-center font-sans text-[length:var(--text-intro)] leading-[var(--text-intro--line-height)] text-foreground will-change-[transform,filter]"
 						{...blurReveal(0, reduceMotion, { blurPx: 8, y: 8 })}
 					>
 						Hey! I&apos;m
@@ -163,9 +163,9 @@ export function HeroSection() {
 				{...scrollHintMotion(reduceMotion)}
 				aria-hidden
 			>
-				<span className="text-center font-sans font-normal text-foreground/25">Scroll Down</span>
+				<span className="text-center font-sans font-normal text-foreground opacity-25">Scroll Down</span>
 				<CircleChevronDown
-					className="size-6 shrink-0 text-foreground/25"
+					className="size-6 shrink-0 text-foreground opacity-25"
 					strokeWidth={1.5}
 					aria-hidden
 				/>

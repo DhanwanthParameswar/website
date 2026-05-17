@@ -1,0 +1,128 @@
+---
+import { cn } from '@/lib/utils';
+import { ArrowLeft, ArrowRight } from 'lucide-react';
+
+type ProjectNav = {
+	title: string;
+	slug: string;
+	color1: string;
+	color2: string;
+};
+
+interface Props {
+	prevProject?: ProjectNav;
+	nextProject?: ProjectNav;
+}
+
+const { prevProject, nextProject } = Astro.props;
+---
+
+<section 
+	id="work-pagination"
+	class="relative w-full px-6 py-24 md:py-32 overflow-hidden"
+>
+	<div class="mx-auto max-w-6xl">
+		<div class={cn(
+			"grid gap-8 md:gap-12",
+			prevProject && nextProject ? "grid-cols-1 md:grid-cols-2" : "grid-cols-1"
+		)}>
+			{/* Previous Project (Order + 1) - Older */}
+			{prevProject && (
+				<a 
+					href={`/work/${prevProject.slug}`}
+					data-cursor
+					data-cursor-tooltip="View"
+					class:list={[
+						"group relative flex flex-col items-start gap-4 rounded-3xl border border-border-footer p-8 transition-all duration-500 md:p-12 reveal-item",
+						"hover:border-transparent",
+						prevProject && !nextProject && "md:col-start-1"
+					]}
+				>
+					{/* Hover Gradient Background */}
+					<div 
+						class="absolute inset-0 -z-10 opacity-0 transition-opacity duration-500 group-hover:opacity-100 rounded-3xl"
+						style={{
+							background: `linear-gradient(135deg, ${prevProject.color1}22, ${prevProject.color2}22)`
+						}}
+					/>
+					
+					<div 
+						class="flex items-center gap-2 text-sm font-medium tracking-widest uppercase text-[#474747] dark:text-[#666666]"
+					>
+						<ArrowLeft size={16} className="transition-transform duration-300 group-hover:-translate-x-1" />
+						<span>Previous Project</span>
+					</div>
+					
+					<h3 class="font-sans text-3xl font-normal tracking-tight text-foreground md:text-5xl">
+						{prevProject.title}
+					</h3>
+
+					{/* Animated Underline */}
+					<div class="mt-auto h-px w-0 bg-foreground transition-all duration-500 group-hover:w-full" />
+				</a>
+			)}
+
+			{/* Next Project (Order - 1) - Newer */}
+			{nextProject && (
+				<a 
+					href={`/work/${nextProject.slug}`}
+					data-cursor
+					data-cursor-tooltip="View"
+					class:list={[
+						"group relative flex flex-col items-end text-right gap-4 rounded-3xl border border-border-footer p-8 transition-all duration-500 md:p-12 reveal-item",
+						"hover:border-transparent",
+						nextProject && !prevProject && "md:col-start-1"
+					]}
+					style={{ transitionDelay: prevProject ? '0.1s' : '0s' }}
+				>
+					{/* Hover Gradient Background */}
+					<div 
+						class="absolute inset-0 -z-10 opacity-0 transition-opacity duration-500 group-hover:opacity-100 rounded-3xl"
+						style={{
+							background: `linear-gradient(135deg, ${nextProject.color1}22, ${nextProject.color2}22)`
+						}}
+					/>
+
+					<div 
+						class="flex items-center gap-2 text-sm font-medium tracking-widest uppercase text-[#474747] dark:text-[#666666]"
+					>
+						<span>Next Project</span>
+						<ArrowRight size={16} className="transition-transform duration-300 group-hover:translate-x-1" />
+					</div>
+					
+					<h3 class="font-sans text-3xl font-normal tracking-tight text-foreground md:text-5xl">
+						{nextProject.title}
+					</h3>
+
+					{/* Animated Underline */}
+					<div class="mt-auto h-px w-0 bg-foreground transition-all duration-500 group-hover:w-full" />
+				</a>
+			)}
+		</div>
+	</div>
+</section>
+
+<style>
+	#work-pagination::before,
+	#work-pagination::after {
+		content: "";
+		position: absolute;
+		inset: 0;
+		pointer-events: none;
+	}
+
+	#work-pagination::before {
+		z-index: -20;
+		background: linear-gradient(to bottom, rgb(250 250 250), rgb(255 255 255));
+	}
+
+	#work-pagination::after {
+		z-index: -19;
+		background: linear-gradient(to bottom, rgb(0 0 0), rgb(15 15 15));
+		opacity: 0;
+	}
+
+	:global(.dark) #work-pagination::after {
+		opacity: 1;
+	}
+</style>

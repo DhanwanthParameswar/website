@@ -1,0 +1,138 @@
+---
+title: "Iris"
+description: "AI Interview Coach"
+imageLight: "./iris-final-scene-light.png"
+imageDark: "./iris-final-scene-dark.png"
+finalObjectLight: "./iris-final-object-light.png"
+finalObjectDark: "./iris-final-object-dark.png"
+objectLight: "./iris-final-object-light.png"
+objectDark: "./iris-final-object-dark.png"
+order: 3
+color1: "#178fff"
+color2: "#5686ff"
+client: "Personal Project"
+year: "2024"
+category: "AI / EdTech"
+href: "https://iris.demo"
+github: "https://github.com/DhanwanthParameswar/iris"
+techStack: ["Next.js", "OpenAI", "Whisper", "Tailwind CSS", "Framer Motion"]
+details: "Iris acts as a persistent, AI-powered mentor that listens, evaluates, and coaches you through complex technical scenarios in real-time. It bridges the gap between static practice and the high-pressure environment of a real interview."
+highlights:
+  - icon: "Bot"
+    title: "LLM Orchestration"
+    description: "Architected a custom prompt-chaining engine using GPT-4 to provide contextual follow-up questions."
+  - icon: "Mic"
+    title: "Audio Processing"
+    description: "Implemented real-time speech-to-text with Whisper API and custom noise-cancellation filters."
+  - icon: "Zap"
+    title: "Low Latency"
+    description: "Optimized response times to <2s using edge functions and efficient state management."
+---
+
+# Typography Kitchen Sink
+This section exhausts all Markdown features supported by the `prose` typography plugin to ensure everything renders correctly in our project detail pages.
+
+## Headings Test
+Below are the standard heading levels used for document hierarchy.
+
+### Level 3 Heading
+This is a standard sub-section heading.
+
+#### Level 4 Heading
+Used for fine-grained details within a section.
+
+##### Level 5 Heading
+Rarely used, but supported for deep hierarchies.
+
+###### Level 6 Heading
+The smallest heading level available.
+
+---
+
+## Text Formatting
+Markdown supports a variety of emphasis styles:
+- **Bold text** for strong emphasis.
+- *Italicized text* for subtle emphasis.
+- ***Bold and Italicized*** for extreme emphasis.
+- ~~Strikethrough text~~ for corrected or removed information.
+- `Inline code` for variables, file names, or short snippets.
+- [A clickable link](https://dhanwanth.com) to an external resource.
+
+## Blockquotes
+> "Good design is as little design as possible."
+> — Dieter Rams
+>
+> > This is a nested blockquote to test multi-level indentation and vertical border consistency.
+
+---
+
+## Lists and Tasks
+
+### Unordered Lists
+- Top level item
+- Another item
+  - Nested item level 1
+    - Nested item level 2
+- Back to top level
+
+### Ordered Lists
+1. First major step
+2. Second major step
+   1. Sub-step A
+   2. Sub-step B
+3. Final step
+
+### Task Lists
+- [x] Implement AI Orchestration
+- [/] Refine Typography (In Progress)
+- [ ] Add Analytics
+- [ ] Launch to Beta
+
+---
+
+## Code Blocks
+Here is an example of a TypeScript code block to test syntax highlighting and line-height.
+
+```typescript
+import { motion } from 'framer-motion';
+
+export const springTransition = {
+  type: 'spring',
+  duration: 0.8,
+  bounce: 0
+};
+
+function TechComponent() {
+  return (
+    <motion.div 
+      whileHover={{ scale: 1.05 }}
+      transition={springTransition}
+    >
+      Iris AI Engine
+    </motion.div>
+  );
+}
+```
+
+---
+
+## Data Tables
+Tables are used to display structured information clearly.
+
+| Feature | Support | Performance |
+| :--- | :---: | ---: |
+| LLM Processing | Native | < 500ms |
+| Voice Sync | Beta | < 200ms |
+| Mockup 3D | Stable | 60fps |
+| Edge Rendering | Native | Variable |
+
+---
+
+## Media Integration
+Testing local image resolution and captioning.
+
+![Iris Mockup Interface](./iris-final-scene-dark.png)
+*Figure 1: The Iris AI dashboard showing real-time feedback loops.*
+
+## Conclusion
+This document ensures that every element rendered via the `<Content />` component in our `[slug].astro` template respects the `prose-invert` styling, ensuring a premium reading experience across all projects.

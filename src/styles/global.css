@@ -1,6 +1,7 @@
 @import "@fontsource-variable/inter/wght.css";
 @import "./tokens.css";
 @import "tailwindcss";
+@plugin "@tailwindcss/typography";
 /*
 	 ---break---
 	 */
@@ -75,13 +76,27 @@
 	body > .site-grain {
 		position: fixed;
 		inset: 0;
-		z-index: 25;
+		z-index: 99; /* Higher than footer (z-50) but below custom cursor (z-9999) to texture footer backgrounds */
 		pointer-events: none;
 		opacity: var(--site-grain-opacity);
 		mix-blend-mode: var(--site-grain-mix-blend);
 		background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='256' height='256'%3E%3Cfilter id='a'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23a)'/%3E%3C/svg%3E");
 		background-repeat: repeat;
 		background-size: 256px 256px;
+	}
+
+	/* Ensure all horizontal and vertical rules (dividers) have rounded caps */
+	hr,
+	.prose hr {
+		border: none !important;
+		height: 1px !important;
+		background-color: var(--border-default) !important;
+		border-radius: 9999px !important;
+	}
+
+	.h-px,
+	.w-px {
+		border-radius: 9999px !important;
 	}
 
 	.viewport-bottom-fade::before,
@@ -137,9 +152,11 @@
 	 */
 	/*
 	 * Site-wide theme transition: animate colors/backgrounds during an intentional switch.
+	 * We exclude the theme toggle icon because it manages its own morphing via Framer Motion;
+	 * overlapping CSS transitions on the same properties (opacity/transform) cause flickering.
 	 */
 	html.theme-transitioning,
-	html.theme-transitioning *,
+	html.theme-transitioning *:not([data-theme-toggle-icon], [data-theme-toggle-icon] *),
 	html.theme-transitioning *::before,
 	html.theme-transitioning *::after {
 		transition-delay: 0s !important;
@@ -196,6 +213,39 @@
 	section[id] {
 		scroll-margin-top: var(--site-header-clearance);
 	}
+
+	/* 
+	 * High-performance scroll reveals.
+	 * Triggered by a tiny IntersectionObserver script in BaseLayout. 
+	 * This avoids React hydration overhead for static content sections.
+	 */
+	.reveal-item,
+	.prose > * {
+		opacity: 0;
+		transform: translateY(20px);
+		filter: blur(9px);
+		transition: 
+			opacity var(--duration-reveal) var(--ease-reveal),
+			transform var(--duration-reveal) var(--ease-reveal),
+			filter var(--duration-reveal) var(--ease-reveal);
+		will-change: opacity, transform, filter;
+	}
+
+	.reveal-item[data-visible="true"],
+	.prose > *[data-visible="true"] {
+		opacity: 1;
+		transform: translateY(0);
+		filter: blur(0px);
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.reveal-item,
+		.prose > * {
+			transform: none !important;
+			filter: none !important;
+			transition-duration: 0.38s;
+		}
+	}
 }
 
 /*
@@ -212,4 +262,130 @@
     opacity: 0;
 		}
 	}
+}
+
+/* 
+ * Premium, theme-matching typography overrides for Markdown content rendered by `@tailwindcss/typography`.
+ * Placing these outside `@layer base` ensures they take cascade precedence over the plugin's default utility rules.
+ */
+.prose,
+.prose-invert,
+.dark .prose {
+	--tw-prose-body: var(--text-primary);
+	--tw-prose-headings: var(--text-primary);
+	--tw-prose-lead: var(--text-secondary);
+	--tw-prose-links: var(--text-primary);
+	--tw-prose-bold: var(--text-primary);
+	--tw-prose-counters: var(--text-secondary);
+	--tw-prose-bullets: var(--text-secondary);
+	--tw-prose-hr: var(--border-default);
+	--tw-prose-quotes: var(--text-primary);
+	--tw-prose-quote-borders: var(--border-default);
+	--tw-prose-captions: var(--text-secondary);
+	--tw-prose-kbd: var(--text-primary);
+	--tw-prose-kbd-shadows: var(--text-primary);
+	--tw-prose-code: var(--text-primary);
+	--tw-prose-pre-code: var(--text-primary);
+	--tw-prose-pre-bg: var(--surface-elevated);
+	--tw-prose-th-borders: var(--border-default);
+	--tw-prose-td-borders: var(--border-default);
+
+	--tw-prose-invert-body: var(--text-primary);
+	--tw-prose-invert-headings: var(--text-primary);
+	--tw-prose-invert-lead: var(--text-secondary);
+	--tw-prose-invert-links: var(--text-primary);
+	--tw-prose-invert-bold: var(--text-primary);
+	--tw-prose-invert-counters: var(--text-secondary);
+	--tw-prose-invert-bullets: var(--text-secondary);
+	--tw-prose-invert-hr: var(--border-default);
+	--tw-prose-invert-quotes: var(--text-primary);
+	--tw-prose-invert-quote-borders: var(--border-default);
+	--tw-prose-invert-captions: var(--text-secondary);
+	--tw-prose-invert-kbd: var(--text-primary);
+	--tw-prose-invert-kbd-shadows: var(--text-primary);
+	--tw-prose-invert-code: var(--text-primary);
+	--tw-prose-invert-pre-code: var(--text-primary);
+	--tw-prose-invert-pre-bg: var(--surface-elevated);
+	--tw-prose-invert-th-borders: var(--border-default);
+	--tw-prose-invert-td-borders: var(--border-default);
+	font-family: var(--font-family-sans) !important;
+}
+
+.prose h1,
+.prose h2,
+.prose h3,
+.prose h4,
+.prose h5,
+.prose h6 {
+	font-weight: 500 !important;
+	letter-spacing: -0.02em !important;
+	color: var(--text-primary) !important;
+}
+
+.prose p,
+.prose li,
+.prose table,
+.prose figcaption {
+	color: var(--text-muted-body) !important;
+}
+
+.prose a {
+	color: var(--text-primary) !important;
+	text-underline-offset: 4px !important;
+	text-decoration-thickness: 1px !important;
+	font-weight: 500 !important;
+	transition: opacity var(--duration-link) var(--ease-link) !important;
+}
+
+.prose a:hover {
+	opacity: 0.7 !important;
+}
+
+.prose blockquote {
+	position: relative !important;
+	font-style: italic !important;
+	border-left: none !important;
+	color: var(--text-muted-body) !important;
+	padding-left: 1.5rem !important;
+}
+
+.prose blockquote::before {
+	content: "" !important;
+	position: absolute !important;
+	left: 0 !important;
+	top: 2px !important;
+	bottom: 2px !important;
+	width: 3px !important;
+	background-color: var(--text-muted-body) !important;
+	border-radius: 9999px !important;
+}
+
+/* Premium GitHub-style inline code blocks */
+.prose code::before,
+.prose code::after {
+	content: "" !important;
+}
+
+.prose :not(pre) > code {
+	background-color: var(--surface-elevated) !important;
+	color: var(--text-primary) !important;
+	border: 0.5px solid var(--border-footer) !important;
+	padding: 0.2em 0.4em !important;
+	border-radius: 0.25rem !important;
+	font-size: 0.85em !important;
+	font-weight: 500 !important;
+}
+
+/* Elevated code blocks matching the surface color schema */
+.prose pre {
+	background-color: var(--surface-elevated) !important;
+	border: 0.5px solid var(--border-footer) !important;
+	border-radius: 0.5rem !important;
+	padding: 1.25rem !important;
+	box-shadow: none !important;
+}
+
+/* Custom styling for images inside markdown to match code block rounded corners */
+.prose img {
+	border-radius: 0.5rem !important;
 }

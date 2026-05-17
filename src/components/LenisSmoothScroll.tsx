@@ -37,8 +37,19 @@ export function LenisSmoothScroll() {
 
 			for (const el of nodes) {
 				if (!(el instanceof HTMLElement)) continue;
+
+				// Explicitly skip code blocks, pre tags, and elements inside them so they never trap vertical scrolling
+				if (el.tagName === 'PRE' || el.tagName === 'CODE' || el.closest('pre')) {
+					continue;
+				}
+
 				const style = window.getComputedStyle(el);
-				if (style.overflow === 'auto' || style.overflow === 'scroll') {
+				const hasVerticalScroll = 
+					(style.overflowY === 'auto' || style.overflowY === 'scroll') && 
+					el.scrollHeight > el.clientHeight;
+				const isTextarea = el.tagName === 'TEXTAREA';
+
+				if (hasVerticalScroll || isTextarea) {
 					el.setAttribute('data-lenis-prevent', 'true');
 				}
 			}
@@ -56,6 +67,32 @@ export function LenisSmoothScroll() {
 			}
 		});
 		observer.observe(document.documentElement, { childList: true, subtree: true });
+
+		const scrollToHash = (targetHash?: string, immediate = true) => {
+			const hash = targetHash || window.location.hash;
+			if (!hash || hash === '#') return false;
+
+			const id = decodeURIComponent(hash.slice(1));
+			const el = document.getElementById(id);
+			if (el) {
+				const scrollOpts = immediate
+					? { immediate: true as const }
+					: { duration: 0.9 as const, easing: defaultEasing };
+
+				const sectionTop = el.getBoundingClientRect().top + window.scrollY;
+				lenis.scrollTo(Math.max(0, sectionTop), scrollOpts);
+				return true;
+			}
+			return false;
+		};
+
+		// Scroll to initial hash if present
+		if (window.location.hash) {
+			setTimeout(() => {
+				lenis.resize();
+				scrollToHash(undefined, true);
+			}, 100);
+		}
 
 		/** Block native hash jump; Lenis scrolls so the section top meets the viewport top. */
 		const onSameDocumentHashClickCapture = (event: MouseEvent) => {
@@ -84,25 +121,31 @@ export function LenisSmoothScroll() {
 					history.replaceState(null, '', `${url.pathname}${url.search}${hash}`);
 				}
 
-				const id = decodeURIComponent(hash.slice(1));
-				const el = id ? document.getElementById(id) : null;
-				const scrollOpts = reduceMotion
-					? { immediate: true as const }
-					: { duration: 0.9 as const, easing: defaultEasing };
-
-				if (el) {
-					const sectionTop = el.getBoundingClientRect().top + window.scrollY;
-					lenis.scrollTo(Math.max(0, sectionTop), scrollOpts);
-				}
-
+				scrollToHash(hash, reduceMotion);
 				break;
 			}
 		};
 
 		document.addEventListener('click', onSameDocumentHashClickCapture, { capture: true });
 
+		const handleAfterSwap = () => {
+			lenis.resize();
+			const scrolled = scrollToHash(undefined, true);
+			if (!scrolled) {
+				lenis.scrollTo(0, { immediate: true });
+			} else {
+				// Double-check the position in the next frames in case of layout shifts
+				requestAnimationFrame(() => {
+					lenis.resize();
+					scrollToHash(undefined, true);
+				});
+			}
+		};
+		document.addEventListener('astro:after-swap', handleAfterSwap);
+
 		return () => {
 			document.removeEventListener('click', onSameDocumentHashClickCapture, { capture: true });
+			document.removeEventListener('astro:after-swap', handleAfterSwap);
 			observer.disconnect();
 			cancelAnimationFrame(rafId);
 			lenis.destroy();

@@ -6,6 +6,12 @@ import react from '@astrojs/react';
 
 // https://astro.build/config
 export default defineConfig({
+  markdown: {
+    shikiConfig: {
+      theme: 'css-variables',
+    },
+  },
+
   vite: {
     plugins: [tailwindcss()]
   },

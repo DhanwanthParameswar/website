@@ -19,6 +19,7 @@ export interface ButtonProps {
 	tabIndex?: number;
 	onClick?: MouseEventHandler<HTMLAnchorElement | HTMLButtonElement>;
 	children: ReactNode;
+	'aria-hidden'?: boolean;
 }
 
 /**
@@ -41,6 +42,7 @@ function ButtonInstance({
 		tabIndex,
 		onClick,
 		children,
+		'aria-hidden': ariaHidden,
 	} = props;
 
 	const reduceMotion = useReducedMotion();
@@ -60,15 +62,14 @@ function ButtonInstance({
 		theme === 'light' && [
 			variant === 'primary' && 'border-0 bg-black text-[#fafafa] focus-visible:outline-black/25',
 			variant === 'secondary' && 'border border-solid border-black bg-transparent text-black focus-visible:outline-black/40',
-			'dark:hidden',
+			'opacity-100 dark:opacity-0 pointer-events-auto dark:pointer-events-none',
 		],
 		// Dark Mode Styles
 		theme === 'dark' && [
 			variant === 'primary' && 'border-0 bg-white text-black focus-visible:outline-white/25',
 			variant === 'secondary' && 'border border-solid border-white bg-transparent text-white focus-visible:outline-white/40',
-			'hidden dark:inline-flex',
+			'opacity-0 dark:opacity-100 pointer-events-none dark:pointer-events-auto',
 		],
-		disabled && 'pointer-events-none opacity-50',
 		className,
 	);
 
@@ -78,8 +79,8 @@ function ButtonInstance({
 	 * never sees a value change mid-transition when the theme toggles.
 	 */
 	const hoverColor = theme === 'light'
-		? (variant === 'primary' ? 'rgba(0, 0, 0, 0.6)' : 'rgba(0, 0, 0, 0.4)')
-		: (variant === 'primary' ? 'rgba(255, 255, 255, 0.6)' : 'rgba(255, 255, 255, 0.4)');
+		? (variant === 'primary' ? 'rgba(0, 0, 0, 0.6)' : 'rgba(0, 0, 0, 0.2)')
+		: (variant === 'primary' ? 'rgba(255, 255, 255, 0.6)' : 'rgba(255, 255, 255, 0.2)');
 
 	const motionProps = {
 		className: base,
@@ -88,6 +89,7 @@ function ButtonInstance({
 		initial: false,
 		whileHover: disabled ? undefined : { backgroundColor: hoverColor },
 		transition,
+		'aria-hidden': ariaHidden,
 	};
 
 	if (href) {
@@ -112,18 +114,35 @@ function ButtonInstance({
 	);
 }
 
-export function Button(props: ButtonProps) {
+export function Button({ className, disabled, ...props }: ButtonProps) {
 	const theme = useTheme();
 	const isSSR = theme === null;
 
+	// Extract classes that affect external layout so the wrapper takes the correct shape
+	const layoutClasses = className?.split(' ').filter(c => 
+		c.startsWith('w-') || c.startsWith('max-w-') || c.startsWith('min-w-') ||
+		c.startsWith('h-') || c.startsWith('max-h-') || c.startsWith('min-h-') ||
+		c.startsWith('flex-') || c.startsWith('basis-') || c === 'shrink-0' || c === 'grow'
+	).join(' ') || '';
+
 	return (
-		<>
-			{(isSSR || theme === 'light') && <ButtonInstance {...props} theme="light" key="light-btn" />}
-			{(isSSR || theme === 'dark') && <ButtonInstance {...props} theme="dark" key="dark-btn" />}
-		</>
+		<div className={cn("relative inline-flex shrink-0", disabled && "pointer-events-none opacity-50", layoutClasses)}>
+			<ButtonInstance 
+				{...props} 
+				disabled={disabled}
+				theme="light" 
+				className={cn(className, "w-full h-full")} 
+				tabIndex={theme === 'dark' ? -1 : props.tabIndex}
+				aria-hidden={theme === 'dark' ? true : undefined}
+			/>
+			<ButtonInstance 
+				{...props} 
+				disabled={disabled}
+				theme="dark" 
+				className={cn("absolute top-0 left-0", className, "w-full h-full")} 
+				tabIndex={(isSSR || theme === 'light') ? -1 : props.tabIndex}
+				aria-hidden={(isSSR || theme === 'light') ? true : undefined}
+			/>
+		</div>
 	);
 }
-
-
-
-

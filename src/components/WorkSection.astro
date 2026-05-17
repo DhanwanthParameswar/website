@@ -1,0 +1,25 @@
+---
+import { WorkProjectCard } from '@/components/WorkProjectCard';
+
+interface Props {
+	projects: any[];
+}
+
+const { projects } = Astro.props;
+---
+
+<section id="work" aria-labelledby="work-heading">
+	<div class="mx-auto box-border grid w-full max-w-[1440px] grid-cols-1 gap-[25px] px-10 py-24 md:grid-cols-2 md:py-[150px] md:mx-auto md:w-[80%]">
+		<h2
+			id="work-heading"
+			class="reveal-item col-span-full mb-[100px] w-full text-center font-sans font-normal text-[length:var(--text-work-section-title)] leading-[var(--text-work-section-title--line-height)] tracking-[-0.04em] text-foreground [text-rendering:optimizeLegibility]"
+		>
+			Work
+		</h2>
+		{projects.map((project, index) => (
+			<div class="min-w-0 reveal-item" style={`transition-delay: ${index * 0.1}s`}>
+				<WorkProjectCard client:visible project={project} />
+			</div>
+		))}
+	</div>
+</section>

@@ -1,14 +1,20 @@
 ---
-import { AboutSection } from '@/components/AboutSection';
-import { ContactSection } from '@/components/ContactSection';
+import { getCollection } from 'astro:content';
+import AboutSection from '@/components/AboutSection.astro';
+import ContactSection from '@/components/ContactSection.astro';
 import { HeroSection } from '@/components/HeroSection';
-import { WorkSection } from '@/components/WorkSection';
+import WorkSection from '@/components/WorkSection.astro';
 import BaseLayout from '../layouts/BaseLayout.astro';
+
+const projects = await getCollection('work');
+const sortedProjects = projects
+	.sort((a, b) => (a.data.order || 0) - (b.data.order || 0))
+	.map(p => ({ ...p.data, slug: p.id.replace(/\.(md|mdx)$/, '').replace(/\/index$/, '') }));
 ---
 
 <BaseLayout>
 	<HeroSection client:visible />
-	<WorkSection client:visible />
-	<AboutSection client:visible />
-	<ContactSection client:visible />
+	<WorkSection projects={sortedProjects} />
+	<AboutSection />
+	<ContactSection />
 </BaseLayout>

@@ -4,7 +4,9 @@ import { useEffect, useMemo, useState } from 'react';
 const SPRING = { type: 'spring', stiffness: 500, damping: 60, mass: 1 } as const;
 
 function isInteractive(el: Element | null) {
-	if (!el) return false;
+	if (!el || el.closest('[data-cursor-static]')) return false;
+	// Do not treat code blocks or scrollable pre elements with tabindex as interactive for custom cursor
+	if (el.closest('pre') || el.closest('code')) return false;
 	return Boolean(
 		el.closest(
 			[
@@ -40,15 +42,26 @@ export function CustomCursor() {
 	const [hoveringInteractive, setHoveringInteractive] = useState(false);
 	const [tooltip, setTooltip] = useState<string | null>(null);
 
-	const isBig = useMemo(() => Boolean(tooltip) || hoveringInteractive, [hoveringInteractive, tooltip]);
+	const [isStatic, setIsStatic] = useState(false);
+
+	const isBig = useMemo(() => !isStatic && (Boolean(tooltip) || hoveringInteractive), [hoveringInteractive, tooltip, isStatic]);
 	const baseSize = isBig ? 29 : 20;
 	const pressedSize = isBig ? 24 : 16;
 
 	useEffect(() => {
 		if (reduceMotion) return;
-		document.documentElement.classList.add('has-custom-cursor');
+
+		const applyCustomCursor = () => {
+			document.documentElement.classList.add('has-custom-cursor');
+		};
+
+		applyCustomCursor();
+
+		document.addEventListener('astro:after-swap', applyCustomCursor);
+
 		return () => {
 			document.documentElement.classList.remove('has-custom-cursor');
+			document.removeEventListener('astro:after-swap', applyCustomCursor);
 		};
 	}, [reduceMotion]);
 
@@ -78,12 +91,14 @@ export function CustomCursor() {
 			const interactive = isInteractive(target);
 			setHoveringInteractive(interactive);
 			setTooltip(getTooltip(target));
+			setIsStatic(Boolean(target?.closest('[data-cursor-static]')));
 		};
 
 		const onMouseOut = (e: MouseEvent) => {
 			const related = e.relatedTarget as Element | null;
 			setHoveringInteractive(isInteractive(related));
 			setTooltip(getTooltip(related));
+			setIsStatic(Boolean(related?.closest('[data-cursor-static]')));
 		};
 
 		const onMouseLeaveWindow = () => setVisible(false);

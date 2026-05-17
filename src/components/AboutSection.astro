@@ -1,0 +1,35 @@
+---
+import { ABOUT_GREETING, ABOUT_PARAGRAPHS, ABOUT_SIGNOFF_LINES } from '@/lib/about-copy';
+
+const proseClass =
+	'm-0 typography-portfolio w-full max-w-[1086px] text-pretty text-body-md leading-[var(--text-body-md--line-height)] text-foreground md:w-[80%]';
+---
+
+<section id="about" aria-labelledby="about-heading">
+	<div class="mx-auto box-border flex w-full max-w-[1440px] flex-col items-center gap-[15px] overflow-hidden px-10 py-24 md:py-[150px]">
+		<h2
+			id="about-heading"
+			class="reveal-item w-full max-w-[600px] text-center font-sans font-normal text-[length:var(--text-work-section-title)] leading-[var(--text-work-section-title--line-height)] tracking-[-0.04em] text-foreground [text-rendering:optimizeLegibility]"
+		>
+			About
+		</h2>
+
+		<div class="h-[50px] w-full max-w-[1358px] shrink-0" aria-hidden />
+
+		<p class:list={[proseClass, "reveal-item"]}>
+			{ABOUT_GREETING}
+		</p>
+
+		{ABOUT_PARAGRAPHS.map((text) => (
+			<p class:list={[proseClass, "reveal-item"]}>
+				{text}
+			</p>
+		))}
+
+		<p class:list={[proseClass, "reveal-item"]}>
+			{ABOUT_SIGNOFF_LINES[0]}
+			<br />
+			{ABOUT_SIGNOFF_LINES[1]}
+		</p>
+	</div>
+</section>
