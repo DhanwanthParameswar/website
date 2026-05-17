@@ -1,8 +1,11 @@
 import { motion, useReducedMotion } from 'framer-motion';
 import { CircleChevronDown } from 'lucide-react';
+import React, { lazy, Suspense } from 'react';
 
 import { Button } from '@/components/Button';
-import { HeroBlobBackdrop } from '@/components/HeroBlobBackdrop';
+const HeroBlobBackdrop = lazy(() =>
+	import('@/components/HeroBlobBackdrop').then((m) => ({ default: m.HeroBlobBackdrop }))
+);
 import { cn } from '@/lib/utils';
 import {
 	heroBlurReveal,
@@ -73,7 +76,9 @@ export function HeroSection() {
 			)}
 			aria-labelledby="hero-heading"
 		>
-			<HeroBlobBackdrop />
+			<Suspense fallback={null}>
+				<HeroBlobBackdrop />
+			</Suspense>
 			<div
 				className={cn(
 					'relative z-[2] flex w-full min-h-0 flex-1 flex-col items-center justify-center',

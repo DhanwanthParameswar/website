@@ -22,6 +22,8 @@ const {
 
 /** Framer marketplace progressive blur ~50px max; Magic UI default curve scaled to cap at 50 */
 const viewportTopBlurLevels = [0.4, 0.8, 1.5, 3, 6, 12.5, 25, 50];
+
+const canonicalURL = new URL(Astro.url.pathname, Astro.site || 'https://dhanwanth.com');
 ---
 
 <!doctype html>
@@ -30,10 +32,27 @@ const viewportTopBlurLevels = [0.4, 0.8, 1.5, 3, 6, 12.5, 25, 50];
 		<meta charset="utf-8" />
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 		<link rel="icon" href="/favicon.ico" />
+		<link rel="preload" href="/logo-light.svg" as="image" type="image/svg+xml" />
+		<link rel="preload" href="/logo-dark.svg" as="image" type="image/svg+xml" />
 		<meta name="viewport" content="width=device-width" />
 		<meta name="generator" content={Astro.generator} />
+		<link rel="canonical" href={canonicalURL} />
 		{description ? <meta name="description" content={description} /> : null}
 		<title>{title}</title>
+
+		<!-- OpenGraph / Facebook -->
+		<meta property="og:type" content="website" />
+		<meta property="og:url" content={canonicalURL} />
+		<meta property="og:title" content={title} />
+		<meta property="og:description" content={description} />
+		<meta property="og:image" content={new URL('/social-preview.png', Astro.site || 'https://dhanwanth.com')} />
+
+		<!-- Twitter -->
+		<meta property="twitter:card" content="summary_large_image" />
+		<meta property="twitter:url" content={canonicalURL} />
+		<meta property="twitter:title" content={title} />
+		<meta property="twitter:description" content={description} />
+		<meta property="twitter:image" content={new URL('/social-preview.png', Astro.site || 'https://dhanwanth.com')} />
 		<ClientRouter />
 		<script is:inline>
 			const applyTheme = () => {
@@ -57,7 +76,6 @@ const viewportTopBlurLevels = [0.4, 0.8, 1.5, 3, 6, 12.5, 25, 50];
 		<CustomCursor client:load transition:persist />
 		<LenisSmoothScroll client:load transition:persist />
 		<ProgressiveBlur
-			client:load
 			position="top"
 			height="60px"
 			blurLevels={viewportTopBlurLevels}
@@ -102,6 +120,23 @@ const viewportTopBlurLevels = [0.4, 0.8, 1.5, 3, 6, 12.5, 25, 50];
 				document.querySelectorAll('.reveal-item, .prose > *').forEach(el => observer.observe(el));
 			}
 
+			function processTaskLists() {
+				document.querySelectorAll('.prose li').forEach(li => {
+					const trimmed = li.innerHTML.trim();
+					if (trimmed.startsWith('[/]')) {
+						const parent = li.parentElement;
+						if (parent && !parent.classList.contains('contains-task-list')) {
+							parent.classList.add('contains-task-list');
+						}
+						li.classList.add('task-list-item');
+						const rawHtml = li.innerHTML;
+						const prefixIndex = rawHtml.indexOf('[/]');
+						const contentWithoutPrefix = rawHtml.substring(prefixIndex + 3).trim();
+						li.innerHTML = `<input type="checkbox" disabled data-progress="in-progress" /> ${contentWithoutPrefix}`;
+					}
+				});
+			}
+
 			// Viewport Bottom Fade Opacity controller based on Work Pagination position
 			function updateFadeOpacity() {
 				const fadeEl = document.querySelector('.viewport-bottom-fade') as HTMLElement;
@@ -129,6 +164,7 @@ const viewportTopBlurLevels = [0.4, 0.8, 1.5, 3, 6, 12.5, 25, 50];
 
 			// Initialize
 			setupReveals();
+			processTaskLists();
 			updateFadeOpacity();
 
 			// Listen for scroll & resize events
@@ -138,6 +174,7 @@ const viewportTopBlurLevels = [0.4, 0.8, 1.5, 3, 6, 12.5, 25, 50];
 			// Handle Astro view transitions if they are added later
 			document.addEventListener('astro:after-swap', () => {
 				setupReveals();
+				processTaskLists();
 				updateFadeOpacity();
 			});
 		</script>

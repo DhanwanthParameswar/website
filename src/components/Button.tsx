@@ -20,6 +20,7 @@ export interface ButtonProps {
 	onClick?: MouseEventHandler<HTMLAnchorElement | HTMLButtonElement>;
 	children: ReactNode;
 	'aria-hidden'?: boolean;
+	'aria-label'?: string;
 }
 
 /**
@@ -43,6 +44,7 @@ function ButtonInstance({
 		onClick,
 		children,
 		'aria-hidden': ariaHidden,
+		'aria-label': ariaLabel,
 	} = props;
 
 	const reduceMotion = useReducedMotion();
@@ -90,6 +92,7 @@ function ButtonInstance({
 		whileHover: disabled ? undefined : { backgroundColor: hoverColor },
 		transition,
 		'aria-hidden': ariaHidden,
+		'aria-label': ariaLabel,
 	};
 
 	if (href) {

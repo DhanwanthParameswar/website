@@ -1,0 +1,76 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import { Button } from '@/components/Button';
+---
+
+<BaseLayout title="404 — Page Not Found" description="The page you are looking for does not exist or has been moved.">
+	<div class="box-border flex h-full min-h-0 flex-1 w-full flex-col items-center justify-center px-10 py-6 text-center">
+		<div class="flex flex-col items-center text-center max-w-[700px] gap-[15px]">
+			<!-- Giant Minimalist Error Code (Matches Section Title Sizing & Proportions) -->
+			<h1 class="reveal-item font-sans font-normal text-[length:var(--text-work-section-title)] leading-[var(--text-work-section-title--line-height)] tracking-[-0.04em] text-foreground select-none [text-rendering:optimizeLegibility]">
+				404
+			</h1>
+
+			<!-- Spacing Gap -->
+			<div class="reveal-item h-[25px] w-full shrink-0" aria-hidden="true"></div>
+
+			<!-- Error Headline (Matches Hero Intro Sizing & Proportions) -->
+			<h2 class="reveal-item font-sans text-[length:var(--text-intro)] leading-[var(--text-intro--line-height)] font-normal text-foreground [text-rendering:optimizeLegibility]">
+				Page not found
+			</h2>
+
+			<!-- Description (Matches Section Body Sizing & Proportions) -->
+			<p class="reveal-item text-pretty text-[length:var(--text-body-md)] leading-[var(--text-body-md--line-height)] text-muted w-full md:w-[80%] [text-rendering:optimizeLegibility]">
+				The page you are looking for has either been moved, deleted, or never existed in the first place.
+			</p>
+
+			<!-- Spacing Gap Before CTA -->
+			<div class="reveal-item h-[40px] w-full shrink-0" aria-hidden="true"></div>
+
+			<!-- Home Navigation CTA -->
+			<div class="reveal-item">
+				<Button client:load href="/" variant="primary" className="!cursor-none">
+					Go Back Home
+				</Button>
+			</div>
+		</div>
+	</div>
+</BaseLayout>
+
+<style is:global>
+	/* Lock the page to exactly 100% of viewport height including the footer and disable vertical scrolling */
+	html,
+	body {
+		height: 100dvh !important;
+		min-height: 100dvh !important;
+		max-height: 100dvh !important;
+		overflow: hidden !important;
+	}
+
+	body {
+		display: flex !important;
+		flex-direction: column !important;
+		justify-content: space-between !important;
+	}
+
+	/* Wrapper div for main content */
+	body > div:has(> main#main-content) {
+		flex: 1 1 auto !important;
+		display: flex !important;
+		flex-direction: column !important;
+		min-height: 0 !important;
+	}
+
+	main#main-content {
+		flex: 1 1 auto !important;
+		display: flex !important;
+		flex-direction: column !important;
+		justify-content: center !important;
+		align-items: center !important;
+		min-height: 0 !important;
+	}
+
+	footer {
+		flex: 0 0 auto !important;
+	}
+</style>

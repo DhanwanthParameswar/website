@@ -156,6 +156,7 @@ export function WorkProjectBrief({ project }: Props) {
 									variant="secondary" 
 									href={project.github} 
 									target="_blank"
+									aria-label="View Source Code on GitHub"
 									className="group !cursor-none !rounded-full w-[42px] h-[42px] !p-0 flex items-center justify-center"
 								>
 									<svg

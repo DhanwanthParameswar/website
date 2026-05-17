@@ -1,7 +1,8 @@
 import { motion, useReducedMotion } from 'framer-motion';
 import { cn } from '@/lib/utils';
 import { useTheme } from '@/lib/use-theme';
-import * as LucideIcons from 'lucide-react';
+import React, { lazy, Suspense } from 'react';
+import dynamicIconImports from 'lucide-react/dynamicIconImports.mjs';
 
 type HighlightCardProps = {
 	title: string;
@@ -9,6 +10,26 @@ type HighlightCardProps = {
 	icon: string;
 	className?: string;
 };
+
+type DynamicIconProps = {
+	name: string;
+	className?: string;
+	strokeWidth?: number;
+};
+
+function DynamicIcon({ name, className, strokeWidth = 1.5 }: DynamicIconProps) {
+	const iconKey = (name in dynamicIconImports)
+		? (name as keyof typeof dynamicIconImports)
+		: 'zap';
+	
+	const LucideIcon = lazy(dynamicIconImports[iconKey]);
+
+	return (
+		<Suspense fallback={<div className="h-6 w-6 animate-pulse bg-white/5 rounded" />}>
+			<LucideIcon className={className} strokeWidth={strokeWidth} />
+		</Suspense>
+	);
+}
 
 function HighlightCardInstance({ 
 	title, 
@@ -23,8 +44,6 @@ function HighlightCardInstance({
 	const springTransition = reduceMotion 
 		? { type: 'spring', duration: 0.15, bounce: 0 } 
 		: { type: 'spring', duration: 0.6, bounce: 0 };
-
-	const IconComponent = (LucideIcons as any)[icon] || LucideIcons.Zap;
 
 	return (
 		<motion.div 
@@ -63,7 +82,7 @@ function HighlightCardInstance({
 				}}
 				transition={springTransition}
 			>
-				<IconComponent className="h-6 w-6" strokeWidth={1.5} />
+				<DynamicIcon name={icon} className="h-6 w-6" strokeWidth={1.5} />
 			</motion.div>
 
 			<div className="flex flex-col gap-3 text-left">

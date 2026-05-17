@@ -1,6 +1,7 @@
 import { motion, useReducedMotion, useScroll, useTransform, useSpring } from 'framer-motion';
 import { useEffect, useRef, useState, useLayoutEffect } from 'react';
 import * as NeatLib from '@firecms/neat';
+const NeatGradient = (NeatLib as any).NeatGradient || (NeatLib as any)['default']?.NeatGradient || (NeatLib as any)['default'] || NeatLib;
 import { cn } from '@/lib/utils';
 import type { WorkProject } from '@/types/work';
 import { useIsDarkMode } from '@/lib/useIsDarkMode';
@@ -172,7 +173,7 @@ export function WorkProjectHero({ project }: Props) {
 	useEffect(() => {
 		if (!canvasRef.current) return;
 
-		const NeatGradientConstructor = (NeatLib as any).NeatGradient || (NeatLib as any).default?.NeatGradient || (NeatLib as any).default;
+		const NeatGradientConstructor = NeatGradient;
 
 		if (!NeatGradientConstructor) return;
 
@@ -371,6 +372,8 @@ export function WorkProjectHero({ project }: Props) {
 										src={project.finalObjectLight?.src}
 										alt={`${project.title} Mockup Light`}
 										draggable="false"
+										fetchPriority="high"
+										decoding="async"
 										className="absolute inset-0 h-auto w-full scale-[1.15] object-contain origin-bottom"
 										style={{
 											filter: 'drop-shadow(0 20px 30px rgba(0,0,0,0.2)) drop-shadow(0 10px 10px rgba(0,0,0,0.1))',
@@ -384,6 +387,8 @@ export function WorkProjectHero({ project }: Props) {
 										src={project.finalObjectDark?.src}
 										alt={`${project.title} Mockup Dark`}
 										draggable="false"
+										fetchPriority="high"
+										decoding="async"
 										className="absolute inset-0 h-auto w-full scale-[1.15] object-contain origin-bottom"
 										style={{
 											filter: 'drop-shadow(0 20px 50px rgba(0,0,0,0.8)) drop-shadow(0 10px 20px rgba(0,0,0,0.4))',

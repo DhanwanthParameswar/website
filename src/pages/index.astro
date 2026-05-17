@@ -1,5 +1,6 @@
 ---
 import { getCollection } from 'astro:content';
+import { getImage } from 'astro:assets';
 import AboutSection from '@/components/AboutSection.astro';
 import ContactSection from '@/components/ContactSection.astro';
 import { HeroSection } from '@/components/HeroSection';
@@ -7,9 +8,30 @@ import WorkSection from '@/components/WorkSection.astro';
 import BaseLayout from '../layouts/BaseLayout.astro';
 
 const projects = await getCollection('work');
-const sortedProjects = projects
-	.sort((a, b) => (a.data.order || 0) - (b.data.order || 0))
-	.map(p => ({ ...p.data, slug: p.id.replace(/\.(md|mdx)$/, '').replace(/\/index$/, '') }));
+const sortedProjects = await Promise.all(
+	projects
+		.sort((a, b) => (a.data.order || 0) - (b.data.order || 0))
+		.map(async p => {
+			const slug = p.id.replace(/\.(md|mdx)$/, '').replace(/\/index$/, '');
+			const optimizedLight = await getImage({ src: p.data.imageLight, format: 'webp', width: 800 });
+			const optimizedDark = await getImage({ src: p.data.imageDark, format: 'webp', width: 800 });
+			
+			return {
+				...p.data,
+				slug,
+				imageLight: {
+					src: optimizedLight.src,
+					width: 800,
+					height: Math.round(800 * (p.data.imageLight.height / p.data.imageLight.width))
+				},
+				imageDark: {
+					src: optimizedDark.src,
+					width: 800,
+					height: Math.round(800 * (p.data.imageDark.height / p.data.imageDark.width))
+				}
+			};
+		})
+);
 ---
 
 <BaseLayout>

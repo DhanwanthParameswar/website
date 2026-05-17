@@ -82,7 +82,7 @@
 
 	/* Text — Framer: /Text, /Text 40%, /Text 10% */
 	--text-primary: rgb(255 255 255);
-	--text-secondary: rgb(245 245 245 / 40%);
+	--text-secondary: rgb(245 245 245 / 62%);
 	--text-tertiary: rgb(245 245 245 / 10%);
 	--text-muted-body: rgb(255 255 255 / 60%);
 

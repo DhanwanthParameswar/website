@@ -147,10 +147,32 @@ export function SiteHeader() {
 
 	useEffect(() => {
 		if (!menuOpen) return;
+
+		const focusableElements = document.querySelectorAll(
+			`#${MOBILE_NAV_ID} a, #${MOBILE_NAV_ID} button`
+		);
+		const firstElement = focusableElements[0] as HTMLElement;
+		const lastElement = focusableElements[focusableElements.length - 1] as HTMLElement;
+
 		const onKeyDown = (e: KeyboardEvent) => {
 			if (e.key === 'Escape') {
 				setMenuOpen(false);
 				queueMicrotask(() => menuButtonRef.current?.focus());
+				return;
+			}
+
+			if (e.key === 'Tab') {
+				if (e.shiftKey) {
+					if (document.activeElement === firstElement || document.activeElement === menuButtonRef.current) {
+						e.preventDefault();
+						lastElement?.focus();
+					}
+				} else {
+					if (document.activeElement === lastElement) {
+						e.preventDefault();
+						firstElement?.focus();
+					}
+				}
 			}
 		};
 		window.addEventListener('keydown', onKeyDown);

@@ -1,5 +1,6 @@
 ---
 import { getCollection, type CollectionEntry, render } from 'astro:content';
+import { getImage } from 'astro:assets';
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import { WorkProjectHero } from '@/components/WorkProjectHero.tsx';
 import { WorkProjectBrief } from '@/components/WorkProjectBrief.tsx';
@@ -52,14 +53,32 @@ if (!project) {
 
 const { title, description } = project.data;
 const { Content } = await render(project);
+
+// Server-side WebP image optimization for high-fidelity mockups
+const optimizedHeroLight = project.data.finalObjectLight 
+	? await getImage({ src: project.data.finalObjectLight, format: 'webp', width: 1400 })
+	: null;
+const optimizedHeroDark = project.data.finalObjectDark 
+	? await getImage({ src: project.data.finalObjectDark, format: 'webp', width: 1400 })
+	: null;
+
+const optimizedProjectData = {
+	...project.data,
+	finalObjectLight: optimizedHeroLight 
+		? { src: optimizedHeroLight.src, width: 1400, height: Math.round(1400 * (project.data.finalObjectLight.height / project.data.finalObjectLight.width)) }
+		: undefined,
+	finalObjectDark: optimizedHeroDark 
+		? { src: optimizedHeroDark.src, width: 1400, height: Math.round(1400 * (project.data.finalObjectDark.height / project.data.finalObjectDark.width)) }
+		: undefined,
+};
 ---
 
 <BaseLayout title={`${title} — Work`} description={description} isFooterInverse={true}>
-	<WorkProjectHero client:load project={project.data} />
+	<WorkProjectHero client:load project={optimizedProjectData} />
 	
 	<main class="relative z-10 bg-background">
-		<WorkProjectBrief client:visible project={project.data} />
-		<WorkTechnicalHighlights client:visible project={project.data} />
+		<WorkProjectBrief client:visible project={optimizedProjectData} />
+		<WorkTechnicalHighlights client:visible project={optimizedProjectData} />
 		
 		{/* Body Content */}
 		<div class="mx-auto max-w-3xl px-6 pb-8">

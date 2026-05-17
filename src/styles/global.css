@@ -54,13 +54,11 @@
 		pointer-events: auto;
 	}
 
-	.skip-link:focus {
-		outline: 2px solid var(--cta-secondary-fg);
-		outline-offset: 2px;
-	}
-
+	.skip-link:focus,
 	.skip-link:focus-visible {
 		clip-path: inset(0 0 0 0);
+		outline: 2px solid var(--cta-secondary-fg);
+		outline-offset: 2px;
 	}
 
 	@media (prefers-reduced-motion: reduce) {
@@ -129,11 +127,15 @@
 		html.has-custom-cursor body,
 		html.has-custom-cursor a,
 		html.has-custom-cursor button,
+		html.has-custom-cursor input,
+		html.has-custom-cursor textarea,
+		html.has-custom-cursor select,
+		html.has-custom-cursor label,
 		html.has-custom-cursor [role='button'],
 		html.has-custom-cursor [role='link'],
 		/* Custom cursor: interactive regions that are not native links (e.g. work cards as article). */
 		html.has-custom-cursor [data-cursor] {
-			cursor: none;
+			cursor: none !important;
 		}
 	}
 
@@ -388,4 +390,83 @@
 /* Custom styling for images inside markdown to match code block rounded corners */
 .prose img {
 	border-radius: 0.5rem !important;
+}
+
+/* 
+ * Premium custom checklist checkbox styling for Markdown content (GFM Task Lists).
+ * Overrides native browser inputs which don't correctly adapt during manual dark/light mode toggles.
+ */
+.prose .contains-task-list {
+	list-style-type: none !important;
+	padding-left: 0 !important;
+}
+
+.prose .contains-task-list li::before {
+	display: none !important;
+}
+
+.prose .task-list-item {
+	display: flex;
+	align-items: flex-start;
+	gap: 0.65rem;
+	margin-top: 0.4em !important;
+	margin-bottom: 0.4em !important;
+	padding-left: 0 !important;
+}
+
+.prose .task-list-item input[type="checkbox"] {
+	appearance: none;
+	-webkit-appearance: none;
+	width: 1.15rem;
+	height: 1.15rem;
+	border: 1.5px solid var(--border-default);
+	border-radius: 0.25rem;
+	background-color: var(--surface-elevated);
+	margin: 0 !important;
+	margin-top: 0.25rem !important; /* Visual alignment with body typography line height */
+	flex-shrink: 0;
+	display: inline-grid;
+	place-content: center;
+	cursor: default;
+	transition: 
+		background-color var(--duration-link) var(--ease-link),
+		border-color var(--duration-link) var(--ease-link),
+		opacity var(--duration-link) var(--ease-link);
+}
+
+.prose .task-list-item input[type="checkbox"]::before {
+	content: "";
+	width: 0.55rem;
+	height: 0.55rem;
+	transform: scale(0);
+	transition: 120ms transform ease-in-out;
+	background-color: var(--surface-page);
+	clip-path: polygon(14% 44%, 0 58%, 38% 96%, 100% 23%, 84% 9%, 38% 68%);
+}
+
+.prose .task-list-item input[type="checkbox"]:checked {
+	background-color: var(--text-primary);
+	border-color: var(--text-primary);
+}
+
+.prose .task-list-item input[type="checkbox"]:checked::before {
+	transform: scale(1);
+}
+
+/* Styling for custom in-progress checklist checkboxes */
+.prose .task-list-item input[data-progress="in-progress"] {
+	border-color: var(--text-primary);
+}
+
+.prose .task-list-item input[data-progress="in-progress"]::before {
+	content: "";
+	width: 0.55rem;
+	height: 0.55rem;
+	transform: scale(1);
+	background-color: var(--text-primary);
+	clip-path: polygon(0 0, 100% 0, 0 100%);
+}
+
+.prose .task-list-item input[type="checkbox"]:disabled {
+	opacity: 0.95;
 }
