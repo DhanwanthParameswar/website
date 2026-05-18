@@ -58,6 +58,18 @@ const pageTitle = `${title} — ${SITE_NAME}`;
 const pageDescription = metaDescription(details || description);
 const { Content } = await render(project);
 
+/** Same scene assets as homepage work cards (light variant for share previews). */
+const CARD_OG_WIDTH = 800;
+const optimizedCardOg = await getImage({
+	src: project.data.imageLight,
+	format: 'webp',
+	width: CARD_OG_WIDTH,
+});
+const ogImageWidth = CARD_OG_WIDTH;
+const ogImageHeight = Math.round(
+	CARD_OG_WIDTH * (project.data.imageLight.height / project.data.imageLight.width),
+);
+
 // Server-side WebP image optimization for high-fidelity mockups
 const optimizedHeroLight = project.data.finalObjectLight 
 	? await getImage({ src: project.data.finalObjectLight, format: 'webp', width: 1400 })
@@ -80,6 +92,10 @@ const optimizedProjectData = {
 <BaseLayout
 	title={pageTitle}
 	description={pageDescription}
+	ogImage={optimizedCardOg.src}
+	ogImageWidth={ogImageWidth}
+	ogImageHeight={ogImageHeight}
+	ogImageAlt={`${title} — ${description}`}
 	isFooterInverse={true}
 	structuredData={creativeWorkJsonLd({
 		title,
