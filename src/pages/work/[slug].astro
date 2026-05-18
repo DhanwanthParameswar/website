@@ -7,6 +7,7 @@ import { WorkProjectBrief } from '@/components/WorkProjectBrief.tsx';
 import { WorkTechnicalHighlights } from '@/components/WorkTechnicalHighlights.tsx';
 import WorkPagination from '@/components/WorkPagination.astro';
 import { Button } from '@/components/Button.tsx';
+import { creativeWorkJsonLd, metaDescription, SITE_NAME } from '@/lib/seo';
 
 export async function getStaticPaths() {
 	const allProjects = await getCollection('work');
@@ -51,7 +52,10 @@ if (!project) {
 	return Astro.redirect('/404');
 }
 
-const { title, description } = project.data;
+const { title, description, details } = project.data;
+const slug = project.id.replace(/\.(md|mdx)$/, '').replace(/\/index$/, '');
+const pageTitle = `${title} — ${SITE_NAME}`;
+const pageDescription = metaDescription(details || description);
 const { Content } = await render(project);
 
 // Server-side WebP image optimization for high-fidelity mockups
@@ -73,10 +77,23 @@ const optimizedProjectData = {
 };
 ---
 
-<BaseLayout title={`${title} — Work`} description={description} isFooterInverse={true}>
-	<WorkProjectHero client:load project={optimizedProjectData} />
+<BaseLayout
+	title={pageTitle}
+	description={pageDescription}
+	isFooterInverse={true}
+	structuredData={creativeWorkJsonLd({
+		title,
+		description,
+		details,
+		year: project.data.year,
+		category: project.data.category,
+		href: project.data.href,
+		slug,
+	})}
+>
+	<WorkProjectHero client:visible project={optimizedProjectData} />
 	
-	<main class="relative z-10 bg-background">
+	<div class="relative z-10 bg-background">
 		<WorkProjectBrief client:visible project={optimizedProjectData} />
 		{/* 
 		  TEMPORARY FOR INITIAL LAUNCH:
@@ -148,7 +165,7 @@ const optimizedProjectData = {
 			</div>
 		</div>
 		*/}
-	</main>
+	</div>
 
 	<WorkPagination prevProject={prevProject} nextProject={nextProject} />
 </BaseLayout>

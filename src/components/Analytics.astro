@@ -2,7 +2,7 @@
 /** Umami Analytics — website ID must match the Umami entry for dhanwanth.com. */
 ---
 
-<!-- Umami Analytics -->
+<!-- Umami Analytics (tracker must load before recorder) -->
 <script
 	is:inline
 	defer
@@ -13,6 +13,18 @@
 	data-auto-track="false"
 	data-do-not-track="true"
 	data-exclude-hash="true"
+></script>
+
+<!-- Umami session replay (requires tracker above) -->
+<script
+	is:inline
+	defer
+	src="/recorder.js"
+	data-website-id="39a3ded7-810e-4bac-9091-e466e0ac5497"
+	data-domains="dhanwanth.com,www.dhanwanth.com"
+	data-sample-rate="0.15"
+	data-mask-level="moderate"
+	data-max-duration="300000"
 ></script>
 
 <script>

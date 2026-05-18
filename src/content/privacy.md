@@ -78,6 +78,7 @@ Depending on your interaction with the Site, analytics may record:
 - Browser, operating system, and device type
 - Approximate location (country/region level, derived from IP)
 - Custom events tied to interactions (for example, which type of link was clicked—such as a social link, project link, or footer link—without requiring you to enter personal details)
+- **Session replays** (for a sample of visits only): anonymized recordings of how pages are used, such as scrolling and clicks. Form inputs are masked; text may be partially masked depending on configuration. Replays are retained for up to 30 days
 
 I configure analytics to avoid unnecessary personal data collection. For more information about Umami's approach, see [Umami's privacy documentation](https://umami.is/docs/privacy).
 

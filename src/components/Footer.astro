@@ -5,13 +5,11 @@
  */
 interface Props {
 	headline?: string;
-	copyrightName?: string;
 	isInverse?: boolean;
 }
 
 const { 
 	headline = 'See you soon!', 
-	copyrightName = 'Dhanwanth Parameswar',
 	isInverse = false
 } = Astro.props;
 const year = new Date().getFullYear();
@@ -90,7 +88,7 @@ const year = new Date().getFullYear();
 						</a>
 					</p>
 					<p class="font-normal leading-none text-footer-copyright text-muted md:hidden">
-						© {year} All rights reserved. •{' '}
+						© {year} •{' '}
 						<a
 							href="/privacy"
 							data-umami-event="Footer Privacy Link Click"
@@ -100,7 +98,7 @@ const year = new Date().getFullYear();
 					</p>
 				</div>
 				<div class="shrink-0 font-normal leading-none text-footer-copyright text-muted hidden md:flex items-center gap-3">
-					<p>© {year} {copyrightName}</p>
+					<p>© {year}</p>
 					<span class="w-[3px] h-[3px] rounded-full bg-muted/40"></span>
 					<a
 						href="/privacy"

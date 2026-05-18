@@ -99,35 +99,45 @@ export function HeroSection() {
 					</motion.span>
 					<motion.span
 						className={cn(
-							'flex w-full max-w-[min(92vw,58rem)] justify-center will-change-[transform,filter]',
+							'relative flex w-full max-w-[min(92vw,58rem)] justify-center will-change-[transform,filter]',
 							'[&_img]:h-auto [&_img]:w-full [&_img]:max-h-[min(20vh,8.75rem)] [&_img]:object-contain md:[&_img]:max-h-[min(22vh,9.25rem)]',
 						)}
 						style={{ perspective: 1200 }}
 						{...blurReveal(0.07, reduceMotion, { blurPx: 11, y: 10 })}
 					>
-						{/**
-						 * Avoid a refresh flash: the theme class is applied by an inline script in `BaseLayout`
-						 * before paint, but React islands can still SSR with a default theme.
-						 * Render both assets and let CSS decide instantly.
-						 */}
-						<img
-							src="/logo-light.svg"
-							alt="Dhanwanth Parameswar"
-							width={500}
-							height={78}
-							className="-rotate-[2deg] select-none dark:hidden md:-rotate-[2.5deg]"
-							draggable={false}
-							decoding="async"
-						/>
-						<img
-							src="/logo-dark.svg"
-							alt="Dhanwanth Parameswar"
-							width={500}
-							height={78}
-							className="-rotate-[2deg] hidden select-none dark:block md:-rotate-[2.5deg]"
-							draggable={false}
-							decoding="async"
-						/>
+						{/* Crawlable name in DOM; logo remains the visual treatment on top */}
+						<span className="pointer-events-none absolute inset-0 z-10 flex items-center justify-center text-center font-sans text-[length:var(--text-intro)] leading-[var(--text-intro--line-height)] text-transparent select-none">
+							Dhanwanth Parameswar
+						</span>
+						<span className="relative z-20 flex w-full justify-center">
+							{/**
+							 * Avoid a refresh flash: the theme class is applied by an inline script in `BaseLayout`
+							 * before paint, but React islands can still SSR with a default theme.
+							 * Render both assets and let CSS decide instantly.
+							 */}
+							<img
+								src="/logo-light.svg"
+								alt=""
+								width={500}
+								height={78}
+								fetchPriority="high"
+								className="-rotate-[2deg] select-none dark:hidden md:-rotate-[2.5deg]"
+								draggable={false}
+								decoding="async"
+								aria-hidden
+							/>
+							<img
+								src="/logo-dark.svg"
+								alt=""
+								width={500}
+								height={78}
+								fetchPriority="high"
+								className="-rotate-[2deg] hidden select-none dark:block md:-rotate-[2.5deg]"
+								draggable={false}
+								decoding="async"
+								aria-hidden
+							/>
+						</span>
 					</motion.span>
 				</h1>
 

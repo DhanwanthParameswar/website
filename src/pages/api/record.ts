@@ -4,9 +4,11 @@ import { buildUmamiProxyHeaders, UMAMI_CORS_HEADERS } from '@/lib/umami-proxy';
 
 export const prerender = false;
 
+const UPSTREAM_RECORD_URL = 'https://stats.dhanwanth.com/api/record';
+
 export const POST: APIRoute = async ({ request }) => {
 	try {
-		const response = await fetch('https://stats.dhanwanth.com/api/magic', {
+		const response = await fetch(UPSTREAM_RECORD_URL, {
 			method: 'POST',
 			headers: buildUmamiProxyHeaders(request),
 			body: await request.arrayBuffer(),
@@ -20,7 +22,7 @@ export const POST: APIRoute = async ({ request }) => {
 			},
 		});
 	} catch (error) {
-		console.error('Umami telemetry proxy error:', error);
+		console.error('Umami replay proxy error:', error);
 		return new Response(JSON.stringify({ error: 'Proxy error' }), {
 			status: 500,
 			headers: {

@@ -6,6 +6,12 @@ import ContactSection from '@/components/ContactSection.astro';
 import { HeroSection } from '@/components/HeroSection';
 import WorkSection from '@/components/WorkSection.astro';
 import BaseLayout from '../layouts/BaseLayout.astro';
+import { metaDescription, personJsonLd, SITE_NAME, websiteJsonLd } from '@/lib/seo';
+
+const HOME_TITLE = `${SITE_NAME} — Computer Engineering Student & Software Developer`;
+const HOME_DESCRIPTION = metaDescription(
+	'Computer Engineering student at the University at Buffalo (Robotics minor), building full-stack software and shipping projects. Explore my portfolio and get in touch.',
+);
 
 const projects = await getCollection('work');
 const sortedProjects = await Promise.all(
@@ -34,7 +40,11 @@ const sortedProjects = await Promise.all(
 );
 ---
 
-<BaseLayout>
+<BaseLayout
+	title={HOME_TITLE}
+	description={HOME_DESCRIPTION}
+	structuredData={[personJsonLd(), websiteJsonLd()]}
+>
 	<HeroSection client:visible />
 	<WorkSection projects={sortedProjects} />
 	<AboutSection />

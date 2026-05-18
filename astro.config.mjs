@@ -5,6 +5,7 @@ import tailwindcss from '@tailwindcss/vite';
 import react from '@astrojs/react';
 
 import cloudflare from '@astrojs/cloudflare';
+import sitemap from '@astrojs/sitemap';
 
 /** Cloudflare's worker dev runtime can fail locally (`module is not defined`). Use Node in dev; Cloudflare on build/deploy. */
 const isDev = process.argv.includes('dev');
@@ -24,7 +25,17 @@ export default defineConfig({
     plugins: [tailwindcss()],
   },
 
-  integrations: [react()],
+  integrations: [
+    react(),
+    sitemap({
+      filter: (page) => {
+        const path = new URL(page).pathname;
+        if (path.startsWith('/api/')) return false;
+        if (path === '/magic.js' || path === '/recorder.js') return false;
+        return true;
+      },
+    }),
+  ],
   adapter: isDev
     ? undefined
     : cloudflare({

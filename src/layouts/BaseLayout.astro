@@ -8,64 +8,124 @@ import { LenisSmoothScroll } from '@/components/LenisSmoothScroll';
 import { SiteHeader } from '@/components/SiteHeader';
 import { ProgressiveBlur } from '@/components/ui/progressive-blur';
 import Analytics from '@/components/Analytics.astro';
+import { CONTACT_SOCIALS } from '@/lib/contact-info';
+import {
+	DEFAULT_OG_IMAGE,
+	OG_IMAGE_HEIGHT,
+	OG_IMAGE_WIDTH,
+	SITE_LOCALE,
+	SITE_NAME,
+	SITE_URL,
+	TWITTER_HANDLE,
+} from '@/lib/seo';
 
 interface Props {
 	title?: string;
 	description?: string;
 	isFooterInverse?: boolean;
+	noindex?: boolean;
+	ogImage?: string;
+	structuredData?: Record<string, unknown> | Record<string, unknown>[];
 }
 
 const {
 	title = 'Dhanwanth Parameswar',
 	description = `Hey! I'm a Computer Engineering student with a passion for building innovative software. On this personal website, you can discover my work, learn more about me, and get in touch with me.`,
-	isFooterInverse = false
+	isFooterInverse = false,
+	noindex = false,
+	ogImage = DEFAULT_OG_IMAGE,
+	structuredData,
 } = Astro.props;
 
 /** Framer marketplace progressive blur ~50px max; Magic UI default curve scaled to cap at 50 */
 const viewportTopBlurLevels = [0.4, 0.8, 1.5, 3, 6, 12.5, 25, 50];
 
-const canonicalURL = new URL(Astro.url.pathname, Astro.site || 'https://dhanwanth.com');
+const canonicalURL = new URL(Astro.url.pathname, Astro.site || SITE_URL);
+const ogImageURL = new URL(ogImage, Astro.site || SITE_URL);
+const jsonLdBlocks = structuredData
+	? Array.isArray(structuredData)
+		? structuredData
+		: [structuredData]
+	: [];
 ---
 
 <!doctype html>
 <html lang="en">
 	<head>
 		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="icon" href="/favicon.ico" />
+		<link id="site-favicon-svg" rel="icon" type="image/svg+xml" href="/favicon-light.svg" />
+		<link id="site-favicon-ico" rel="icon" href="/favicon-light.ico" sizes="any" />
 		<link rel="preload" href="/logo-light.svg" as="image" type="image/svg+xml" />
 		<link rel="preload" href="/logo-dark.svg" as="image" type="image/svg+xml" />
 		<meta name="viewport" content="width=device-width" />
 		<meta name="generator" content={Astro.generator} />
 		<link rel="canonical" href={canonicalURL} />
+		{noindex ? <meta name="robots" content="noindex, follow" /> : null}
 		{description ? <meta name="description" content={description} /> : null}
 		<title>{title}</title>
 
+		<link rel="me" href={CONTACT_SOCIALS.find((s) => s.label === 'GitHub')?.href} />
+		<link rel="me" href={CONTACT_SOCIALS.find((s) => s.label === 'LinkedIn')?.href} />
+
 		<!-- OpenGraph / Facebook -->
 		<meta property="og:type" content="website" />
+		<meta property="og:site_name" content={SITE_NAME} />
+		<meta property="og:locale" content={SITE_LOCALE} />
 		<meta property="og:url" content={canonicalURL} />
 		<meta property="og:title" content={title} />
 		<meta property="og:description" content={description} />
-		<meta property="og:image" content={new URL('/social-preview.png', Astro.site || 'https://dhanwanth.com')} />
+		<meta property="og:image" content={ogImageURL} />
+		<meta property="og:image:width" content={String(OG_IMAGE_WIDTH)} />
+		<meta property="og:image:height" content={String(OG_IMAGE_HEIGHT)} />
 
 		<!-- Twitter -->
-		<meta property="twitter:card" content="summary_large_image" />
-		<meta property="twitter:url" content={canonicalURL} />
-		<meta property="twitter:title" content={title} />
-		<meta property="twitter:description" content={description} />
-		<meta property="twitter:image" content={new URL('/social-preview.png', Astro.site || 'https://dhanwanth.com')} />
+		<meta name="twitter:card" content="summary_large_image" />
+		<meta name="twitter:site" content={TWITTER_HANDLE} />
+		<meta name="twitter:creator" content={TWITTER_HANDLE} />
+		<meta name="twitter:url" content={canonicalURL} />
+		<meta name="twitter:title" content={title} />
+		<meta name="twitter:description" content={description} />
+		<meta name="twitter:image" content={ogImageURL} />
+
+		{
+			jsonLdBlocks.map((block) => (
+				<script type="application/ld+json" set:html={JSON.stringify(block)} />
+			))
+		}
+
 		<ClientRouter />
 		<script is:inline>
-			const applyTheme = () => {
-				const theme = localStorage.getItem('theme');
-				if (theme === 'dark' || (!theme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-					document.documentElement.classList.add('dark');
-				} else {
-					document.documentElement.classList.remove('dark');
-				}
+			const getSiteTheme = () => {
+				const stored = localStorage.getItem('theme');
+				if (stored === 'dark' || stored === 'light') return stored;
+				return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
 			};
+
+			const applyFavicon = (theme) => {
+				const variant = theme === 'dark' ? 'dark' : 'light';
+				const svg = document.getElementById('site-favicon-svg');
+				const ico = document.getElementById('site-favicon-ico');
+				const base = `/favicon-${variant}`;
+				if (svg) svg.setAttribute('href', `${base}.svg`);
+				if (ico) ico.setAttribute('href', `${base}.ico`);
+			};
+
+			const applyTheme = () => {
+				const theme = getSiteTheme();
+				document.documentElement.classList.toggle('dark', theme === 'dark');
+				applyFavicon(theme);
+			};
+
 			applyTheme();
 			document.addEventListener('astro:after-swap', applyTheme);
+
+			window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
+				if (!localStorage.getItem('theme')) applyTheme();
+			});
+
+			new MutationObserver(() => {
+				applyFavicon(document.documentElement.classList.contains('dark') ? 'dark' : 'light');
+			}).observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
 		</script>
 		<Analytics />
 	</head>
@@ -75,8 +135,8 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site || 'https://dhanwant
 			<a class="skip-link" href="#site-nav-first">Skip to navigation</a>
 		</div>
 		<div class="site-grain" aria-hidden="true" transition:persist></div>
-		<CustomCursor client:load transition:persist />
-		<LenisSmoothScroll client:load transition:persist />
+		<CustomCursor client:visible transition:persist />
+		<LenisSmoothScroll client:visible transition:persist />
 		<ProgressiveBlur
 			position="top"
 			height="60px"
@@ -89,7 +149,7 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site || 'https://dhanwant
 			aria-hidden="true"
 			transition:persist
 		/>
-		<SiteHeader client:load transition:persist />
+		<SiteHeader client:visible transition:persist />
 		<div class="pt-[var(--site-header-clearance)]">
 			<main id="main-content" tabindex="-1">
 				<slot />
