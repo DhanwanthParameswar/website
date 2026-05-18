@@ -27,6 +27,27 @@ const TECH_ICON_MAP: Record<string, string> = {
 	'Three.js': 'threedotjs',
 	'Python': 'python',
 	'Whisper': 'openai',
+	'React Native': 'react',
+	'Expo': 'expo',
+	'Supabase': 'supabase',
+	'PostgreSQL': 'postgresql',
+	'TensorFlow.js': 'tensorflow',
+	'TensorFlow': 'tensorflow',
+	'Flask': 'flask',
+	'Docker': 'docker',
+	'MySQL': 'mysql',
+	'Bootstrap': 'bootstrap',
+	'WordPress': 'wordpress',
+	'PHP': 'php',
+	'Oracle Cloud': 'https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/oracle-cloud.svg',
+	'Ubuntu': 'ubuntu',
+	'HISE': 'https://gistcdn.githack.com/DhanwanthParameswar/6a7f493765fdad67d95cd44299162679/raw/c1948a913aed9b6efb5f199d9116f6ea7860227a/hise.svg',
+	'C++': 'cplusplus',
+	'Gemini API': 'googlegemini',
+	'Firestore': 'firebase',
+	'Auth0': 'auth0',
+	'Workers': 'cloudflare',
+	'JavaScript': 'javascript',
 };
 
 // Tech URL Mapping
@@ -45,6 +66,28 @@ const TECH_URL_MAP: Record<string, string> = {
 	'Three.js': 'https://threejs.org',
 	'Python': 'https://python.org',
 	'Whisper': 'https://openai.com/research/whisper',
+	'React Native': 'https://reactnative.dev',
+	'Expo': 'https://expo.dev',
+	'Supabase': 'https://supabase.com',
+	'PostgreSQL': 'https://postgresql.org',
+	'TensorFlow.js': 'https://tensorflow.org/js',
+	'TensorFlow': 'https://tensorflow.org',
+	'Flask': 'https://flask.palletsprojects.com',
+	'Docker': 'https://docker.com',
+	'MySQL': 'https://mysql.com',
+	'Bootstrap': 'https://getbootstrap.com',
+	'WordPress': 'https://wordpress.org',
+	'PHP': 'https://php.net',
+	'Oracle Cloud': 'https://oracle.com/cloud',
+	'Ubuntu': 'https://ubuntu.com',
+	'HISE': 'https://hise.audio',
+	'HiseScript': 'https://hise.audio',
+	'C++': 'https://isocpp.org',
+	'Gemini API': 'https://ai.google.dev',
+	'Firestore': 'https://firebase.google.com/docs/firestore',
+	'Auth0': 'https://auth0.com',
+	'Workers': 'https://workers.cloudflare.com',
+	'JavaScript': 'https://developer.mozilla.org/en-US/docs/Web/JavaScript',
 };
 
 export function WorkProjectBrief({ project }: Props) {
@@ -137,9 +180,17 @@ export function WorkProjectBrief({ project }: Props) {
 					{/* Divider Line */}
 					<div className="h-px w-24 bg-foreground/10" />
 
-					{/* 5. Launch & GitHub CTAs */}
-					{(project.href || project.github) && (
+					{(project.href || project.github || project.comingSoon) && (
 						<div className="flex flex-row flex-wrap items-center justify-center gap-3">
+							{project.comingSoon && (
+								<Button 
+									variant="secondary" 
+									disabled={true}
+									className="group !cursor-none"
+								>
+									{project.status || "Coming Soon"}
+								</Button>
+							)}
 							{project.href && (
 								<Button 
 									variant="primary" 
@@ -147,7 +198,7 @@ export function WorkProjectBrief({ project }: Props) {
 									target="_blank"
 									className="group !cursor-none"
 								>
-									Launch Live Demo
+									{project.hrefLabel || "Launch Live Demo"}
 									<ArrowUpRight strokeWidth={2.5} className="h-[15px] w-[15px] transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
 								</Button>
 							)}

@@ -10,23 +10,23 @@ objectDark: "./iris-final-object-dark.png"
 order: 3
 color1: "#178fff"
 color2: "#5686ff"
-client: "Personal Project"
-year: "2024"
+client: "Co-Creator & Lead AI Engineer"
+year: "2025"
 category: "AI / EdTech"
-href: "https://iris.demo"
+href: "https://irisrecruiter.us"
 github: "https://github.com/DhanwanthParameswar/iris"
-techStack: ["Next.js", "OpenAI", "Whisper", "Tailwind CSS", "Framer Motion"]
-details: "Iris acts as a persistent, AI-powered mentor that listens, evaluates, and coaches you through complex technical scenarios in real-time. It bridges the gap between static practice and the high-pressure environment of a real interview."
+techStack: ["React", "Workers", "Gemini API", "Firestore", "Auth0"]
+details: "An edge-native, multimodal AI recording and coaching platform designed during a UB freshman hackathon to transform recruiter interactions and interview sessions into direct career actions. The system captures live audio recordings, running them concurrently with candidate resumes through the Google Gemini API to return real-time sentiment analysis, transcripts, coaching feedback, and automated follow-up communications."
 highlights:
+  - icon: "Cpu"
+    title: "Edge Aggregation"
+    description: "Engineered an asynchronous serverless pipeline using Cloudflare Workers to ingest raw audio streams and resume PDFs directly at the network edge."
   - icon: "Bot"
-    title: "LLM Orchestration"
-    description: "Architected a custom prompt-chaining engine using GPT-4 to provide contextual follow-up questions."
-  - icon: "Mic"
-    title: "Audio Processing"
-    description: "Implemented real-time speech-to-text with Whisper API and custom noise-cancellation filters."
-  - icon: "Zap"
-    title: "Low Latency"
-    description: "Optimized response times to <2s using edge functions and efficient state management."
+    title: "Multimodal Processing"
+    description: "Integrated the Google Gemini API to analyze concurrent voice recordings and documents inside a unified contextual workspace."
+  - icon: "Database"
+    title: "Deterministic Telemetry"
+    description: "Locked down generative intelligence into deterministic JSON models, synced in real-time with Firestore and secured by Auth0."
 ---
 
 # Typography Kitchen Sink

@@ -10,21 +10,23 @@ objectDark: "./droppua-final-object-dark.png"
 order: 5
 color1: "#3b75f1"
 color2: "#b6cdff"
-client: "Open Source"
-year: "2023"
-category: "Utilities / Networking"
-techStack: ["React", "WebRTC", "Socket.io", "TypeScript", "Node.js"]
-details: "Droppua is a cross-platform file-sharing utility designed to bridge the gap between different operating systems without the need for cloud intermediaries. It prioritizes privacy and speed by leveraging peer-to-peer technology."
+client: "Creator & Lead Developer"
+year: "2024"
+category: "Web Utilities"
+techStack: ["PHP", "MySQL", "JavaScript"]
+details: "A high-performance, single-page web utility engineered for instantaneous, zero-refresh clipboard text and file synchronization between personal devices. Designed as a friction-free alternative to emailing links or files to oneself, the application leverages Server-Sent Events (SSE) to stream real-time database changes directly to the browser UI."
+href: "https://dro.pp.ua"
+github: "https://github.com/DhanwanthParameswar/DROPPUA"
 highlights:
-  - icon: "Share2"
-    title: "P2P Architecture"
-    description: "Built a robust peer-to-peer file transfer system using WebRTC for direct browser-to-browser communication."
-  - icon: "Shield"
-    title: "Secure Transfer"
-    description: "Ensured data privacy through end-to-end encryption and ephemeral session management."
-  - icon: "Smartphone"
-    title: "Cross-platform"
-    description: "Optimized for mobile and desktop using a responsive React architecture and localized storage."
+  - icon: "Zap"
+    title: "Server-Sent Events"
+    description: "Developed a highly efficient server-directed push model utilizing the HTML5 EventSource API to eliminate client-side polling."
+  - icon: "Upload"
+    title: "Asynchronous Uploads"
+    description: "Engineered a modular multi-file upload subsystem with localized server filesystem manipulation and lifecycle state management."
+  - icon: "RefreshCw"
+    title: "Instant Sync"
+    description: "Built a dynamic client synchronization layer that decodes real-time streaming payloads to update local states without refreshing."
 ---
 
 ## Why P2P?

@@ -16,7 +16,9 @@ export type WorkProject = {
 	finalObjectDark?: ImageMetadata;
 	status?: string;
 	href?: string;
+	hrefLabel?: string;
 	github?: string;
+	comingSoon?: boolean;
 	client?: string;
 	year?: string;
 	category?: string;

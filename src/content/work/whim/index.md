@@ -1,7 +1,7 @@
 ---
 title: "Whim"
 description: "Event Discovery Mobile App"
-status: "Building"
+status: "In Development"
 imageLight: "./whim-final-scene-light.png"
 imageDark: "./whim-final-scene-dark.png"
 finalObjectLight: "./whim-final-object-light.png"
@@ -9,11 +9,23 @@ finalObjectDark: "./whim-final-object-dark.png"
 objectLight: "./whim-final-object-light.png"
 objectDark: "./whim-final-object-dark.png"
 order: 2
-category: "Mobile App"
-href: "https://whim.demo"
-github: "https://github.com/DhanwanthParameswar/whim"
 color1: "#846bff"
 color2: "#6287ff"
+client: "Co-Creator & Mobile Lead"
+year: "2026 - Present"
+category: "Mobile Application"
+techStack: ["React Native", "Expo", "Supabase", "TypeScript"]
+details: "A real-time, geolocation-driven mobile application designed for college students to spontaneously discover local events and coordinate gatherings within a rolling 24-hour window. Developed with a co-creator, the platform implements university-domain verification, complex SQL spatial query matching, and native-thread animation rendering to deliver smooth, secure, and immediate localized social discovery."
+href: "https://joinwhim.net"
+hrefLabel: "Visit Site"
+highlights:
+  - icon: "Shield"
+    title: "University Security Gates"
+    description: "Built a defensive validation system matching emails against canonical domain structures, secured database-wide via PostgreSQL Row-Level Security."
+  - icon: "MapPin"
+    title: "Real-Time Geo-Fencing"
+    description: "Engineered real-time proximity matching using Supabase WebSockets and edge functions to trigger attendance check-ins and decay event lifecycles."
+  - icon: "Zap"
+    title: "Native Thread Offloading"
+    description: "Offloaded computationally expensive physics animations and swiping gestures directly to the native thread to guarantee a solid 60 FPS experience."
 ---
-
-Event Discovery Mobile App content.

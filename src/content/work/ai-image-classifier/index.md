@@ -10,4 +10,21 @@ objectDark: "./ai-image-classifier-final-object-dark.png"
 order: 4
 color1: "#a3acff"
 color2: "#454fff"
+client: "Machine Learning Research Intern"
+year: "2024"
+category: "Machine Learning / Research"
+techStack: ["TensorFlow.js", "React", "Flask", "Docker"]
+details: "A privacy-preserving, containerized web platform developed during an RIT research internship to demonstrate and showcase federated learning principles. By combining an asynchronous client-side environment using TensorFlow.js and IndexedDB (Dexie.js) with a Python Flask backend, the system facilitates decentralized model retraining loops directly on edge devices without transmitting user media over the network."
+href: "https://classify.dhanwanth.com"
+github: "https://github.com/DhanwanthParameswar/Federated-Learning-App"
+highlights:
+  - icon: "Cpu"
+    title: "Browser-Side Inference"
+    description: "Orchestrated local visual classification inside React using TensorFlow.js to process raw matrix models on consumer graphics hardware."
+  - icon: "Database"
+    title: "Edge Retraining"
+    description: "Designed a local-first architecture using Dexie.js and IndexedDB to securely persist verification labels and compile browser-based retraining cycles."
+  - icon: "Layers"
+    title: "Containerized Setup"
+    description: "Containerized multi-service services (React frontend, Flask REST API) inside isolated Docker bridge networks served behind NGINX."
 ---

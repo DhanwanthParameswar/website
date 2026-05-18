@@ -1,13 +1,7 @@
 ---
 title: "NEST Canvas"
 description: "VST Audio Plugin Development"
-details: "We utilized iconic Parisian landmarks like the Eiffel Tower and Pont Neuf, all set against the warm hues of sunset, to highlight Louis Vuitton's exclusive Olympic collection. The visuals reflected the spirit of the Olympics while maintaining the brand's signature elegance."
-client: "Louis Vuitton"
-year: "2024"
-category: "Campaign"
-href: "https://nest.demo"
-github: "https://github.com/DhanwanthParameswar/nest-canvas"
-status: "Building"
+status: "In Development"
 imageLight: "./nest-canvas-final-scene-light.png"
 imageDark: "./nest-canvas-final-scene-dark.png"
 finalObjectLight: "./nest-canvas-final-object-light.png"
@@ -15,6 +9,20 @@ finalObjectDark: "./nest-canvas-final-object-dark.png"
 order: 1
 color1: "#daddff"
 color2: "#767c87"
+client: "Freelance Software Engineer"
+year: "2023 - Present"
+category: "Audio Software / DSP"
+comingSoon: true
+techStack: ["HISE", "HiseScript", "C++"]
+details: "A high-performance virtual instrument sampler (VST/AU/AAX) and multi-FX DSP engine custom-engineered for NEST Acoustics to host their commercial instrument libraries. Developed using HISE and HiseScript, the plugin enables real-time mixing, crossfading, and layering of three independent audio channels parsed from dynamic expansion catalogs alongside specialized envelope controls and wave-shaping effects."
+highlights:
+  - icon: "Search"
+    title: "Faceted Search Parser"
+    description: "Engineered an asynchronous relational database parser in HiseScript capable of scanning and filtering massive XML preset databases without blocking the main audio thread."
+  - icon: "Maximize"
+    title: "Row-Recycling Renderer"
+    description: "Programmed a custom rendering pool operating on a 30Hz loop to dynamically recycle UI nodes and layout boundaries, eliminating graphic lag during panel resizes."
+  - icon: "Sliders"
+    title: "DSP Audio Routing Core"
+    description: "Architected a 3-slot sampler core with discrete voice allocation, sample start-point shifting, and custom wave-shaping saturation algorithms."
 ---
-
-Content for the project can go here.
