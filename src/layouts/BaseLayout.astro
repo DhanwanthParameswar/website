@@ -7,6 +7,7 @@ import { CustomCursor } from '@/components/CustomCursor';
 import { LenisSmoothScroll } from '@/components/LenisSmoothScroll';
 import { SiteHeader } from '@/components/SiteHeader';
 import { ProgressiveBlur } from '@/components/ui/progressive-blur';
+import Analytics from '@/components/Analytics.astro';
 
 interface Props {
 	title?: string;
@@ -66,6 +67,7 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site || 'https://dhanwant
 			applyTheme();
 			document.addEventListener('astro:after-swap', applyTheme);
 		</script>
+		<Analytics />
 	</head>
 	<body>
 		<div class="skip-links">
