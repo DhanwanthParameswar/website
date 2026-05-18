@@ -19,7 +19,8 @@ export function WorkProjectCard({ project }: Props) {
 	const isDark = useIsDarkMode();
 	const [hovered, setHovered] = useState(false);
 
-	const themeTransition = { duration: 0.4, ease: 'easeInOut' };
+	const themeTransition = { duration: 0 };
+	const glowOutTransition = { duration: 0.4, ease: 'easeInOut' };
 
 	const { scrollYProgress } = useScroll({
 		target: ref,
@@ -118,7 +119,7 @@ export function WorkProjectCard({ project }: Props) {
 				animate={{ 
 					opacity: !isDark && hovered ? glowOpacity : 0 
 				}}
-				transition={hovered ? glowTransition : themeTransition}
+				transition={hovered ? glowTransition : glowOutTransition}
 			/>
 			{/* Hover Glow - Dark */}
 			<motion.div
@@ -133,7 +134,7 @@ export function WorkProjectCard({ project }: Props) {
 				animate={{ 
 					opacity: isDark && hovered ? glowOpacity : 0 
 				}}
-				transition={hovered ? glowTransition : themeTransition}
+				transition={hovered ? glowTransition : glowOutTransition}
 			/>
 
 			<div className="relative z-[1] aspect-[295/240] w-full overflow-hidden rounded-[20px] border border-solid border-border-footer bg-black">

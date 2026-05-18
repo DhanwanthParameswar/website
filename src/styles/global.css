@@ -148,46 +148,22 @@
 		transition-property: color, opacity, text-decoration-color, border-color, box-shadow, filter, transform;
 	}
 
-	/*
-	 * Theme toggles animate only during an intentional switch. Keep this off for
-	 * first paint so saved/system theme loads immediately without a flash.
-	 */
-	/*
-	 * Site-wide theme transition: animate colors/backgrounds during an intentional switch.
-	 * We exclude the theme toggle icon because it manages its own morphing via Framer Motion;
-	 * overlapping CSS transitions on the same properties (opacity/transform) cause flickering.
-	 */
-	html.theme-transitioning,
-	html.theme-transitioning *:not([data-theme-toggle-icon], [data-theme-toggle-icon] *),
-	html.theme-transitioning *::before,
-	html.theme-transitioning *::after {
-		transition-delay: 0s !important;
-		transition-duration: 320ms !important;
-		transition-timing-function: var(--ease-link) !important;
-		transition-property:
-			background-color,
-			border-color,
-			box-shadow,
-			color,
-			fill,
-			opacity,
-			outline-color,
-			stroke,
-			text-decoration-color !important;
-	}
-
 	@media (prefers-reduced-motion: reduce) {
 		a[href],
 		.link-hover-motion {
 			transition-duration: 0.01ms;
 		}
+	}
 
-		html.theme-transitioning,
-		html.theme-transitioning *,
-		html.theme-transitioning *::before,
-		html.theme-transitioning *::after {
-			transition-duration: 0.01ms !important;
-		}
+	/* 
+	 * Temporarily disable all transitions/animations to ensure a 100% hard static theme toggle.
+	 */
+	html.no-transitions,
+	html.no-transitions *,
+	html.no-transitions *::before,
+	html.no-transitions *::after {
+		transition: none !important;
+		animation: none !important;
 	}
 
 	::selection {
@@ -469,4 +445,41 @@
 
 .prose .task-list-item input[type="checkbox"]:disabled {
 	opacity: 0.95;
+}
+
+/* 
+ * Temporarily disable all standard transitions during the theme transition
+ * to ensure that elements change state instantly in the captured snapshots
+ * (removing individual fades/jumps on links, buttons, and other components).
+ */
+html.theme-transition,
+html.theme-transition *,
+html.theme-transition *::before,
+html.theme-transition *::after {
+	transition: none !important;
+}
+
+/* 
+ * View Transitions circle reveal theme toggle.
+ * Targets ::view-transition snapshots only when theme-transition is active.
+ */
+html.theme-transition::view-transition-old(root),
+html.theme-transition::view-transition-new(root) {
+	animation: none !important;
+	mix-blend-mode: normal !important;
+}
+
+html.theme-transition::view-transition-new(root) {
+	animation: theme-reveal 450ms cubic-bezier(0.4, 0, 0.2, 1) !important;
+	/* Ensure clip path is at final state once the animation finishes */
+	clip-path: circle(var(--theme-transition-radius) at var(--theme-transition-x) var(--theme-transition-y));
+}
+
+@keyframes theme-reveal {
+	from {
+		clip-path: circle(0px at var(--theme-transition-x) var(--theme-transition-y));
+	}
+	to {
+		clip-path: circle(var(--theme-transition-radius) at var(--theme-transition-x) var(--theme-transition-y));
+	}
 }

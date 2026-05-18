@@ -22,6 +22,8 @@ export function LenisSmoothScroll() {
 			stopInertiaOnNavigate: true,
 		});
 
+		(window as any).lenis = lenis;
+
 		let rafId = 0;
 		const raf = (time: number) => {
 			lenis.raf(time);
@@ -148,6 +150,7 @@ export function LenisSmoothScroll() {
 			document.removeEventListener('astro:after-swap', handleAfterSwap);
 			observer.disconnect();
 			cancelAnimationFrame(rafId);
+			delete (window as any).lenis;
 			lenis.destroy();
 		};
 	}, []);

@@ -6,10 +6,6 @@ import { menuToggleTransition } from '@/lib/motion-presets';
 
 const ICON_SIZE = 18;
 const STROKE = 2;
-const THEME_TRANSITION_MS = 320;
-
-let themeTransitionTimeout: ReturnType<typeof setTimeout> | undefined;
-
 export function ThemeToggle({ className, tabIndex }: { className?: string; tabIndex?: number }) {
 	const [theme, setTheme] = useState<'light' | 'dark' | null>(null);
 	const reduceMotion = useReducedMotion();
@@ -36,25 +32,77 @@ export function ThemeToggle({ className, tabIndex }: { className?: string; tabIn
 		return () => observer.disconnect();
 	}, []);
 
-	const toggleTheme = () => {
+	const toggleTheme = async (e: React.MouseEvent<HTMLButtonElement>) => {
 		const newTheme = theme === 'dark' ? 'light' : 'dark';
 		const root = document.documentElement;
 
-		root.classList.add('theme-transitioning');
-		clearTimeout(themeTransitionTimeout);
-		themeTransitionTimeout = setTimeout(() => {
-			root.classList.remove('theme-transitioning');
-		}, THEME_TRANSITION_MS);
-
-		setTheme(newTheme);
-
-		if (newTheme === 'dark') {
-			root.classList.add('dark');
-			localStorage.setItem('theme', 'dark');
-		} else {
-			root.classList.remove('dark');
-			localStorage.setItem('theme', 'light');
+		// Wait for any active smooth scrolling to complete to ensure no abruptions
+		if ((window as any).lenis) {
+			const lenis = (window as any).lenis;
+			if (lenis.isScrolling) {
+				await new Promise<void>((resolve) => {
+					const checkScroll = () => {
+						if (!lenis.isScrolling) {
+							lenis.off('scroll', checkScroll);
+							resolve();
+						}
+					};
+					lenis.on('scroll', checkScroll);
+				});
+			}
 		}
+
+		// Fallback for browsers that don't support View Transitions or if user prefers reduced motion
+		if (!(document as any).startViewTransition || window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+			root.classList.add('no-transitions');
+			setTheme(newTheme);
+			if (newTheme === 'dark') {
+				root.classList.add('dark');
+				localStorage.setItem('theme', 'dark');
+			} else {
+				root.classList.remove('dark');
+				localStorage.setItem('theme', 'light');
+			}
+			const _ = root.offsetHeight;
+			root.classList.remove('no-transitions');
+			return;
+		}
+
+		let x = e.clientX;
+		let y = e.clientY;
+
+		// If click coordinates are 0, 0 (e.g. keyboard triggers), use the center of the button
+		if (x === 0 && y === 0) {
+			const rect = e.currentTarget.getBoundingClientRect();
+			x = rect.left + rect.width / 2;
+			y = rect.top + rect.height / 2;
+		}
+
+		const endRadius = Math.hypot(
+			Math.max(x, window.innerWidth - x),
+			Math.max(y, window.innerHeight - y)
+		);
+
+		root.style.setProperty('--theme-transition-x', `${x}px`);
+		root.style.setProperty('--theme-transition-y', `${y}px`);
+		root.style.setProperty('--theme-transition-radius', `${endRadius}px`);
+
+		root.classList.add('theme-transition');
+
+		const transition = (document as any).startViewTransition(() => {
+			setTheme(newTheme);
+			if (newTheme === 'dark') {
+				root.classList.add('dark');
+				localStorage.setItem('theme', 'dark');
+			} else {
+				root.classList.remove('dark');
+				localStorage.setItem('theme', 'light');
+			}
+		});
+
+		transition.finished.then(() => {
+			root.classList.remove('theme-transition');
+		});
 	};
 
 	// Don't render until mounted to avoid hydration mismatch, but keeping structure steady

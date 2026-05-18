@@ -1,4 +1,4 @@
-import { motion, useReducedMotion, useScroll, useTransform, useSpring } from 'framer-motion';
+import { motion, useReducedMotion, useScroll, useTransform, useSpring, useMotionValue } from 'framer-motion';
 import { useEffect, useRef, useState, useLayoutEffect } from 'react';
 import * as NeatLib from '@firecms/neat';
 const NeatGradient = (NeatLib as any).NeatGradient || (NeatLib as any)['default']?.NeatGradient || (NeatLib as any)['default'] || NeatLib;
@@ -33,6 +33,12 @@ export function WorkProjectHero({ project }: Props) {
 	// Measurement logic to find the dynamic center
 	useLayoutEffect(() => {
 		const calculateOffset = () => {
+			if (typeof document !== 'undefined' && (
+				document.documentElement.classList.contains('theme-transition') ||
+				document.documentElement.classList.contains('no-transitions')
+			)) {
+				return;
+			}
 			if (!mockupRef.current || !innerMockupRef.current) return;
 			
 			const el = mockupRef.current;
@@ -140,8 +146,34 @@ export function WorkProjectHero({ project }: Props) {
 		offset: ["start start", "end end"]
 	});
 
+	const scrollProgress = useMotionValue(scrollYProgress.get());
+
+	useEffect(() => {
+		// Sync initial value if it changed before subscription, but skip during active theme transitions
+		if (typeof document !== 'undefined' && (
+			document.documentElement.classList.contains('theme-transition') ||
+			document.documentElement.classList.contains('no-transitions')
+		)) {
+			// Do not sync during active transitions to prevent jump-to-0 layout collapse artifacts
+		} else {
+			scrollProgress.set(scrollYProgress.get());
+		}
+
+		const unsubscribe = scrollYProgress.on("change", (latest) => {
+			// Skip updating when theme is transitioning to prevent layout collapse artifacts
+			if (typeof document !== 'undefined' && (
+				document.documentElement.classList.contains('theme-transition') ||
+				document.documentElement.classList.contains('no-transitions')
+			)) {
+				return;
+			}
+			scrollProgress.set(latest);
+		});
+		return () => unsubscribe();
+	}, [scrollYProgress, scrollProgress]);
+
 	// Smooth out the scroll progress
-	const smoothProgress = useSpring(scrollYProgress, {
+	const smoothProgress = useSpring(scrollProgress, {
 		stiffness: 120,
 		damping: 25,
 		restDelta: 0.001
@@ -215,19 +247,39 @@ export function WorkProjectHero({ project }: Props) {
 			console.error("Error initializing NeatGradient", e);
 		}
 
+		let rafId: number;
 		const handleScroll = () => {
-			if (gradientRef.current) {
-				gradientRef.current.yOffset = window.scrollY;
-			}
+			if (rafId) cancelAnimationFrame(rafId);
+			rafId = requestAnimationFrame(() => {
+				if (gradientRef.current) {
+					gradientRef.current.yOffset = window.scrollY;
+				}
+			});
 		};
 
-		window.addEventListener("scroll", handleScroll);
+		window.addEventListener("scroll", handleScroll, { passive: true });
+
+		const observer = new IntersectionObserver(
+			([entry]) => {
+				if (gradientRef.current) {
+					// Pause the gradient animation loop when off-screen
+					gradientRef.current.speed = entry.isIntersecting ? 2 : 0;
+				}
+			},
+			{ rootMargin: "100px", threshold: 0 }
+		);
+		
+		if (scrollTrackRef.current) {
+			observer.observe(scrollTrackRef.current);
+		}
 		
 		// Signal that the gradient is initialized
 		setGradientReady(true);
 
 		return () => {
 			window.removeEventListener("scroll", handleScroll);
+			if (rafId) cancelAnimationFrame(rafId);
+			observer.disconnect();
 			if (gradientRef.current && typeof gradientRef.current.destroy === 'function') {
 				gradientRef.current.destroy();
 			}
@@ -278,8 +330,7 @@ export function WorkProjectHero({ project }: Props) {
 	}, [hasMounted]);
 
 	const themeTransition = {
-		duration: 0.32,
-		ease: [0.44, 0, 0.56, 1]
+		duration: 0
 	};
 
 	// Combine Entrance + Scroll for Canvas
