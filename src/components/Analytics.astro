@@ -1,9 +1,5 @@
 ---
-/**
- * Umami Analytics
- * Privacy-first, cookieless analytics self-hosted on Vercel/Supabase.
- * Hardcoded to avoid Cloudflare build-time vs runtime environment conflicts.
- */
+/** Umami Analytics — website ID must match the Umami entry for dhanwanth.com. */
 ---
 
 <!-- Umami Analytics -->
@@ -12,6 +8,15 @@
 	defer
 	src="/magic.js"
 	data-website-id="39a3ded7-810e-4bac-9091-e466e0ac5497"
-	data-domains="dhanwanth.com"
+	data-domains="dhanwanth.com,www.dhanwanth.com"
 	data-performance="true"
+	data-auto-track="false"
+	data-do-not-track="true"
+	data-exclude-hash="true"
 ></script>
+
+<script>
+	import { initUmamiAnalytics } from '@/lib/analytics';
+
+	initUmamiAnalytics();
+</script>

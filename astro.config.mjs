@@ -6,6 +6,9 @@ import react from '@astrojs/react';
 
 import cloudflare from '@astrojs/cloudflare';
 
+/** Cloudflare's worker dev runtime can fail locally (`module is not defined`). Use Node in dev; Cloudflare on build/deploy. */
+const isDev = process.argv.includes('dev');
+
 // https://astro.build/config
 export default defineConfig({
   site: 'https://dhanwanth.com',
@@ -18,11 +21,14 @@ export default defineConfig({
   },
 
   vite: {
-    plugins: [tailwindcss()]
+    plugins: [tailwindcss()],
   },
 
   integrations: [react()],
-  adapter: cloudflare({
-    imageService: 'compile'
-  })
+  adapter: isDev
+    ? undefined
+    : cloudflare({
+        imageService: 'compile',
+        prerenderEnvironment: 'node',
+      }),
 });

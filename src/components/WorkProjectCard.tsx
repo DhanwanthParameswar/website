@@ -194,6 +194,9 @@ export function WorkProjectCard({ project }: Props) {
 			ref={ref}
 			href={targetHref}
 			className={cn(cardShell)}
+			data-umami-event="Project Card Click"
+			data-umami-event-project={project.title}
+			data-umami-event-slug={project.slug}
 			{...cursorChrome}
 			{...hoverHandlers}
 		>

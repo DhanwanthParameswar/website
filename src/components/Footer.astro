@@ -44,6 +44,8 @@ const year = new Date().getFullYear();
 							target="_blank"
 							rel="noreferrer"
 							class="text-muted underline decoration-transparent underline-offset-[3px] transition-[text-decoration-color,opacity,color] hover:decoration-current hover:opacity-100"
+							data-umami-event="Footer Tech Click"
+							data-umami-event-tech="Astro"
 							>Astro</a
 						>,{' '}
 						<a
@@ -51,6 +53,8 @@ const year = new Date().getFullYear();
 							target="_blank"
 							rel="noreferrer"
 							class="text-muted underline decoration-transparent underline-offset-[3px] transition-[text-decoration-color,opacity,color] hover:decoration-current hover:opacity-100"
+							data-umami-event="Footer Tech Click"
+							data-umami-event-tech="Tailwind CSS"
 							>Tailwind CSS</a
 						>, and{' '}
 						<a
@@ -58,6 +62,8 @@ const year = new Date().getFullYear();
 							target="_blank"
 							rel="noreferrer"
 							class="text-muted underline decoration-transparent underline-offset-[3px] transition-[text-decoration-color,opacity,color] hover:decoration-current hover:opacity-100"
+							data-umami-event="Footer Tech Click"
+							data-umami-event-tech="Framer Motion"
 							>Framer Motion</a
 						>.
 						<a
@@ -67,6 +73,7 @@ const year = new Date().getFullYear();
 							aria-label="View Repo"
 							title="View Repo"
 							data-cursor-tooltip="View Repo"
+							data-umami-event="Footer Source Code Click"
 							class="text-muted mt-2 block w-fit transition-colors hover:opacity-100 md:ml-1 md:mt-0 md:inline-flex md:items-center md:translate-y-[2px]"
 						>
 							<svg
@@ -83,12 +90,25 @@ const year = new Date().getFullYear();
 						</a>
 					</p>
 					<p class="font-normal leading-none text-footer-copyright text-muted md:hidden">
-						© {year} All rights reserved.
+						© {year} All rights reserved. •{' '}
+						<a
+							href="/privacy"
+							data-umami-event="Footer Privacy Link Click"
+							class="text-muted underline decoration-transparent underline-offset-[3px] transition-[text-decoration-color,opacity,color] hover:decoration-current hover:opacity-100"
+							>Privacy Policy</a
+						>
 					</p>
 				</div>
-				<p class="shrink-0 font-normal leading-none text-footer-copyright text-muted hidden md:block">
-					© {year} {copyrightName}
-				</p>
+				<div class="shrink-0 font-normal leading-none text-footer-copyright text-muted hidden md:flex items-center gap-3">
+					<p>© {year} {copyrightName}</p>
+					<span class="w-[3px] h-[3px] rounded-full bg-muted/40"></span>
+					<a
+						href="/privacy"
+						data-umami-event="Footer Privacy Link Click"
+						class="text-muted underline decoration-transparent underline-offset-[3px] transition-[text-decoration-color,opacity,color] hover:decoration-current hover:opacity-100"
+						>Privacy Policy</a
+					>
+				</div>
 			</div>
 		</div>
 	</div>

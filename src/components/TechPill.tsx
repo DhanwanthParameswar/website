@@ -31,6 +31,8 @@ export function TechPill({
 			}}
 			transition={springTransition}
 			data-cursor-tooltip="Go"
+			data-umami-event="Tech Pill Click"
+			data-umami-event-skill={tech}
 			className={cn(
 				"flex items-center gap-2.5 rounded-full border border-foreground/[0.08] px-4 py-1.5 text-[0.75rem] font-medium no-underline transition-colors duration-200 !cursor-none",
 				"bg-foreground/[0.03] text-foreground/60 hover:text-foreground hover:border-foreground/20",

@@ -1,4 +1,4 @@
-import type { MouseEventHandler, ReactNode } from 'react';
+import type { ComponentPropsWithoutRef, MouseEventHandler, ReactNode } from 'react';
 import { motion, useReducedMotion } from 'framer-motion';
 
 import { cn } from '@/lib/utils';
@@ -7,7 +7,7 @@ import { useTheme } from '@/lib/use-theme';
 
 export type ButtonVariant = 'primary' | 'secondary';
 
-export interface ButtonProps {
+type ButtonOwnProps = {
 	variant?: ButtonVariant;
 	href?: string;
 	type?: 'button' | 'submit' | 'reset';
@@ -19,9 +19,10 @@ export interface ButtonProps {
 	tabIndex?: number;
 	onClick?: MouseEventHandler<HTMLAnchorElement | HTMLButtonElement>;
 	children: ReactNode;
-	'aria-hidden'?: boolean;
-	'aria-label'?: string;
-}
+};
+
+export type ButtonProps = ButtonOwnProps &
+	Omit<ComponentPropsWithoutRef<'a'>, keyof ButtonOwnProps>;
 
 /**
  * Internal component to handle the actual rendering of a single button instance.
@@ -45,6 +46,7 @@ function ButtonInstance({
 		children,
 		'aria-hidden': ariaHidden,
 		'aria-label': ariaLabel,
+		...rest
 	} = props;
 
 	const reduceMotion = useReducedMotion();
@@ -103,6 +105,7 @@ function ButtonInstance({
 				rel={rel}
 				tabIndex={tabIndex}
 				onClick={onClick}
+				{...rest}
 				{...motionProps}
 			>
 				{children}
@@ -111,7 +114,14 @@ function ButtonInstance({
 	}
 
 	return (
-		<motion.button type={type} disabled={disabled} tabIndex={tabIndex} onClick={onClick} {...motionProps}>
+		<motion.button
+			type={type}
+			disabled={disabled}
+			tabIndex={tabIndex}
+			onClick={onClick}
+			{...rest}
+			{...motionProps}
+		>
 			{children}
 		</motion.button>
 	);

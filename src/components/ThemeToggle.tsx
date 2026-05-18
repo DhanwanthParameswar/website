@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Moon, Sun } from 'lucide-react';
 import { motion, useReducedMotion } from 'framer-motion';
+import { trackUmamiEvent } from '@/lib/analytics';
 import { cn } from '@/lib/utils';
 import { menuToggleTransition } from '@/lib/motion-presets';
 
@@ -34,6 +35,7 @@ export function ThemeToggle({ className, tabIndex }: { className?: string; tabIn
 
 	const toggleTheme = async (e: React.MouseEvent<HTMLButtonElement>) => {
 		const newTheme = theme === 'dark' ? 'light' : 'dark';
+		trackUmamiEvent('Theme Toggle', { theme: newTheme });
 		const root = document.documentElement;
 
 		// Wait for any active smooth scrolling to complete to ensure no abruptions

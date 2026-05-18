@@ -59,6 +59,9 @@ export function ContactSection() {
 										href={href}
 										rel="noopener"
 										data-cursor-tooltip="Go"
+										data-umami-event="Contact Click"
+										data-umami-event-type={label}
+										data-umami-event-value={href}
 									>
 										{value}
 									</a>
@@ -77,6 +80,8 @@ export function ContactSection() {
 										target="_blank"
 										rel="noopener noreferrer"
 										data-cursor-tooltip="Go"
+										data-umami-event="Social Link Click"
+										data-umami-event-platform={label}
 									>
 										{label}
 									</a>

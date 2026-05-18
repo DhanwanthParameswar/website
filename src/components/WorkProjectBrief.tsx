@@ -197,6 +197,9 @@ export function WorkProjectBrief({ project }: Props) {
 									href={project.href} 
 									target="_blank"
 									className="group !cursor-none"
+									data-umami-event="Project Live Demo"
+									data-umami-event-project={project.title}
+									data-umami-event-url={project.href}
 								>
 									{project.hrefLabel || "Launch Live Demo"}
 									<ArrowUpRight strokeWidth={2.5} className="h-[15px] w-[15px] transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
@@ -209,6 +212,8 @@ export function WorkProjectBrief({ project }: Props) {
 									target="_blank"
 									aria-label="View Source Code on GitHub"
 									className="group !cursor-none !rounded-full w-[42px] h-[42px] !p-0 flex items-center justify-center"
+									data-umami-event="Project GitHub Repo"
+									data-umami-event-project={project.title}
 								>
 									<svg
 										xmlns="http://www.w3.org/2000/svg"

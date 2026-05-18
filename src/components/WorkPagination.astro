@@ -29,6 +29,9 @@ const { prevProject, nextProject } = Astro.props;
 			{prevProject && (
 				<a 
 					href={`/work/${prevProject.slug}`}
+					data-umami-event="Project Pagination Click"
+					data-umami-event-direction="previous"
+					data-umami-event-project={prevProject.title}
 					data-cursor
 					data-cursor-tooltip="View"
 					class:list={[
@@ -80,6 +83,9 @@ const { prevProject, nextProject } = Astro.props;
 			{nextProject && (
 				<a 
 					href={`/work/${nextProject.slug}`}
+					data-umami-event="Project Pagination Click"
+					data-umami-event-direction="next"
+					data-umami-event-project={nextProject.title}
 					data-cursor
 					data-cursor-tooltip="View"
 					class:list={[

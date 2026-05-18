@@ -5,15 +5,16 @@ import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
 import { Button } from '@/components/Button';
 import { MenuMorphIcon } from '@/components/MenuMorphIcon';
 import { ThemeToggle } from '@/components/ThemeToggle';
+import { trackUmamiEvent } from '@/lib/analytics';
 import { cn } from '@/lib/utils';
 import { menuToggleTransition } from '@/lib/motion-presets';
 
 const HERO_REVEAL_ID = 'hero-header-reveal';
 
 const NAV_LINKS = [
-	{ href: '/#work', label: 'Work' },
-	{ href: '/#about', label: 'About' },
-	{ href: '/#contact', label: 'Contact' },
+	{ href: '/#work', label: 'Work', section: 'work' },
+	{ href: '/#about', label: 'About', section: 'about' },
+	{ href: '/#contact', label: 'Contact', section: 'contact' },
 ] as const;
 
 const MOBILE_NAV_ID = 'site-header-mobile-nav';
@@ -240,6 +241,7 @@ export function SiteHeader() {
 								href="/#top"
 								tabIndex={chromeTabHidden ? -1 : undefined}
 								className={cn('flex min-w-0 shrink-0 items-center', headerLinkChrome)}
+								data-umami-event="Nav Home Click"
 								onClick={() => setMenuOpen(false)}
 							>
 								<span className="relative block h-[22.7px] w-[min(164px,calc(75vw-8rem))] max-w-full">
@@ -265,8 +267,16 @@ export function SiteHeader() {
 						</div>
 
 						<div className="hidden h-[43px] shrink-0 items-center justify-end gap-[var(--header-column-gap)] lg:flex">
-							{NAV_LINKS.map(({ href, label }) => (
-								<a key={href} href={href} tabIndex={chromeTabHidden ? -1 : undefined} className={navLink}>
+							{NAV_LINKS.map(({ href, label, section }) => (
+								<a
+									key={href}
+									href={href}
+									tabIndex={chromeTabHidden ? -1 : undefined}
+									className={navLink}
+									data-umami-event="Nav Click"
+									data-umami-event-section={section}
+									data-umami-event-device="desktop"
+								>
 									{label}
 								</a>
 							))}
@@ -281,6 +291,8 @@ export function SiteHeader() {
 									rel="noopener noreferrer"
 									tabIndex={chromeTabHidden ? -1 : undefined}
 									className="group h-[75%] min-h-0 py-0 leading-[var(--cta-label-line-height)]"
+									data-umami-event="Resume View"
+									data-umami-event-device="desktop"
 								>
 									Resume
 									<FileDown
@@ -305,7 +317,12 @@ export function SiteHeader() {
 								aria-label={menuOpen ? 'Close menu' : 'Open menu'}
 								aria-expanded={menuOpen}
 								aria-controls={menuOpen ? MOBILE_NAV_ID : undefined}
-								onClick={() => setMenuOpen((o) => !o)}
+								onClick={() => {
+									setMenuOpen((o) => {
+										if (!o) trackUmamiEvent('Mobile Menu Open');
+										return !o;
+									});
+								}}
 							>
 								<MenuMorphIcon open={menuOpen} />
 							</button>
@@ -327,12 +344,15 @@ export function SiteHeader() {
 							style={{ willChange: 'opacity, filter, transform' }}
 						>
 							<ul className="m-0 list-none p-0">
-								{NAV_LINKS.map(({ href, label }, i) => (
+								{NAV_LINKS.map(({ href, label, section }, i) => (
 									<li key={href}>
 										<a
 											ref={i === 0 ? mobileNavFirstLinkRef : undefined}
 											href={href}
 											className={cn(navLink, 'block py-3')}
+											data-umami-event="Nav Click"
+											data-umami-event-section={section}
+											data-umami-event-device="mobile"
 											onClick={() => setMenuOpen(false)}
 										>
 											{label}
@@ -347,6 +367,8 @@ export function SiteHeader() {
 										rel="noopener noreferrer"
 										className="group h-auto min-h-0 w-full justify-center py-3 leading-[var(--cta-label-line-height)]"
 										onClick={() => setMenuOpen(false)}
+										data-umami-event="Resume View"
+										data-umami-event-device="mobile"
 									>
 										Resume
 										<FileDown
