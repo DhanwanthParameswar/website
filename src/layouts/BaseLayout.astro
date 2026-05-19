@@ -9,6 +9,7 @@ import { SiteHeader } from '@/components/SiteHeader';
 import { ProgressiveBlur } from '@/components/ui/progressive-blur';
 import Analytics from '@/components/Analytics.astro';
 import { CONTACT_SOCIALS } from '@/lib/contact-info';
+import { REDUCE_VIEWPORT_EFFECTS_INLINE } from '@/lib/device-capabilities';
 import {
 	DEFAULT_OG_IMAGE,
 	OG_IMAGE_HEIGHT,
@@ -125,7 +126,6 @@ const jsonLdBlocks = structuredData
 
 			applyTheme();
 			document.addEventListener('astro:after-swap', applyTheme);
-
 			window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
 				if (!localStorage.getItem('theme')) applyTheme();
 			});
@@ -134,6 +134,7 @@ const jsonLdBlocks = structuredData
 				applyFavicon(document.documentElement.classList.contains('dark') ? 'dark' : 'light');
 			}).observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
 		</script>
+		<script is:inline set:html={REDUCE_VIEWPORT_EFFECTS_INLINE} />
 		<Analytics />
 	</head>
 	<body>
@@ -142,20 +143,20 @@ const jsonLdBlocks = structuredData
 			<a class="skip-link" href="#site-nav-first">Skip to navigation</a>
 		</div>
 		<div class="site-grain" aria-hidden="true" transition:persist></div>
-		<CustomCursor client:visible transition:persist />
+		<CustomCursor client:media="(pointer: fine)" transition:persist />
 		<LenisSmoothScroll client:load transition:persist />
-		<ProgressiveBlur
-			position="top"
-			height="60px"
-			blurLevels={viewportTopBlurLevels}
-			className="fixed inset-x-0 top-0 z-40"
-			transition:persist
-		/>
-		<div
-			class="viewport-bottom-fade pointer-events-none fixed inset-x-0 bottom-0 z-40 h-[60px]"
-			aria-hidden="true"
-			transition:persist
-		/>
+		<div class="viewport-chrome" transition:persist>
+			<ProgressiveBlur
+				position="top"
+				height="60px"
+				blurLevels={viewportTopBlurLevels}
+				className="fixed inset-x-0 top-0 z-40"
+			/>
+			<div
+				class="viewport-bottom-fade pointer-events-none fixed inset-x-0 bottom-0 z-40 h-[60px]"
+				aria-hidden="true"
+			/>
+		</div>
 		<SiteHeader client:visible transition:persist />
 		<div class="pt-[var(--site-header-clearance)]">
 			<main id="main-content" tabindex="-1">
@@ -208,6 +209,8 @@ const jsonLdBlocks = structuredData
 
 			// Viewport Bottom Fade Opacity controller based on Work Pagination position
 			function updateFadeOpacity() {
+				if (document.documentElement.classList.contains('reduce-viewport-effects')) return;
+
 				const fadeEl = document.querySelector('.viewport-bottom-fade') as HTMLElement;
 				const paginationEl = document.getElementById('work-pagination');
 				if (!fadeEl) return;
@@ -231,20 +234,23 @@ const jsonLdBlocks = structuredData
 				}
 			}
 
+			const reduceViewportEffects = () =>
+				document.documentElement.classList.contains('reduce-viewport-effects');
+
 			// Initialize
 			setupReveals();
 			processTaskLists();
-			updateFadeOpacity();
-
-			// Listen for scroll & resize events
-			window.addEventListener('scroll', updateFadeOpacity, { passive: true });
-			window.addEventListener('resize', updateFadeOpacity, { passive: true });
+			if (!reduceViewportEffects()) {
+				updateFadeOpacity();
+				window.addEventListener('scroll', updateFadeOpacity, { passive: true });
+				window.addEventListener('resize', updateFadeOpacity, { passive: true });
+			}
 
 			// Handle Astro view transitions if they are added later
 			document.addEventListener('astro:after-swap', () => {
 				setupReveals();
 				processTaskLists();
-				updateFadeOpacity();
+				if (!reduceViewportEffects()) updateFadeOpacity();
 			});
 		</script>
 	</body>

@@ -34,7 +34,7 @@ export function TechPill({
 			data-umami-event="Tech Pill Click"
 			data-umami-event-skill={tech}
 			className={cn(
-				"flex items-center gap-2.5 rounded-full border border-foreground/[0.08] px-4 py-1.5 text-[0.75rem] font-medium no-underline transition-colors duration-200 !cursor-none",
+				'type-ui-xs flex items-center gap-2.5 rounded-full border border-foreground/[0.08] px-4 py-1.5 no-underline transition-colors duration-200 !cursor-none',
 				"bg-foreground/[0.03] text-foreground/60 hover:text-foreground hover:border-foreground/20",
 				"focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-foreground/30",
 				className

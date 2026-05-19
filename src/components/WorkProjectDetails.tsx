@@ -19,7 +19,7 @@ export function WorkProjectDetails({ project }: Props) {
 				{...reveal}
 			>
 				{/* Long Description */}
-				<p className="font-sans text-[length:var(--text-subtitle)] leading-relaxed text-foreground/90">
+				<p className="type-subtitle text-foreground/90">
 					{project.details || project.description}
 				</p>
 
@@ -27,20 +27,20 @@ export function WorkProjectDetails({ project }: Props) {
 				<div className="flex flex-col gap-8">
 					{project.client && (
 						<div className="flex flex-col gap-1">
-							<span className="font-sans text-sm font-normal text-muted/60 uppercase tracking-wider">Client</span>
-							<span className="font-sans text-lg font-normal text-foreground">{project.client}</span>
+							<span className="type-overline-muted text-muted/60">Client</span>
+							<span className="type-body-sm text-foreground">{project.client}</span>
 						</div>
 					)}
 					{project.year && (
 						<div className="flex flex-col gap-1">
-							<span className="font-sans text-sm font-normal text-muted/60 uppercase tracking-wider">Year</span>
-							<span className="font-sans text-lg font-normal text-foreground">{project.year}</span>
+							<span className="type-overline-muted text-muted/60">Year</span>
+							<span className="type-body-sm text-foreground">{project.year}</span>
 						</div>
 					)}
 					{project.category && (
 						<div className="flex flex-col gap-1">
-							<span className="font-sans text-sm font-normal text-muted/60 uppercase tracking-wider">Category</span>
-							<span className="font-sans text-lg font-normal text-foreground">{project.category}</span>
+							<span className="type-overline-muted text-muted/60">Category</span>
+							<span className="type-body-sm text-foreground">{project.category}</span>
 						</div>
 					)}
 				</div>

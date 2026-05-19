@@ -60,7 +60,7 @@ function ButtonInstance({
 	const rel = relProp ?? relDefault;
 
 	const base = cn(
-		'inline-flex w-min shrink-0 items-center justify-center gap-[var(--cta-gap)] rounded-[var(--cta-radius)] px-[var(--cta-padding-x)] py-[var(--cta-padding-y)] font-sans text-[length:var(--cta-label-size)] font-normal leading-[var(--cta-label-line-height)] whitespace-nowrap',
+		'type-cta inline-flex w-min shrink-0 items-center justify-center gap-[var(--cta-gap)] rounded-[var(--cta-radius)] px-[var(--cta-padding-x)] py-[var(--cta-padding-y)] whitespace-nowrap',
 		'focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2',
 		// Light Mode Styles
 		theme === 'light' && [

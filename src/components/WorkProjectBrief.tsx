@@ -110,33 +110,33 @@ export function WorkProjectBrief({ project }: Props) {
 	});
 
 	return (
-		<section className="relative z-30 mx-auto w-full max-w-5xl px-6 pb-12 pt-8 md:pb-16 md:pt-12">
+		<section className="relative z-30 mx-auto w-full max-w-5xl px-6 pb-12 pt-8 max-sm:px-4 max-sm:pb-10 max-sm:pt-6 md:pb-16 md:pt-12">
 			<div className="flex flex-col items-center text-center">
 				{/* 1. Context Metadata - Top Labeling */}
-				<motion.div 
-					className="mb-10 flex flex-wrap items-center justify-center gap-y-4"
+				<motion.div
+					className="mb-10 flex w-full flex-nowrap items-center justify-center max-sm:mb-6 max-sm:grid max-sm:grid-cols-3 max-sm:flex-wrap max-sm:gap-x-1 max-sm:gap-y-3"
 					{...rowReveal(0)}
 				>
 					{metadata.map((item, idx) => (
-						<div key={idx} className="flex items-center">
-							<div className="flex flex-col items-center px-6 md:px-8">
-								<span className="text-[0.6rem] font-bold uppercase tracking-[0.3em] text-muted/30">
+						<div key={item.label} className="flex items-center max-sm:contents">
+							<div className="flex flex-col items-center px-6 md:px-8 max-sm:px-1">
+								<span className="type-overline-xs text-muted/30">
 									{item.label}
 								</span>
-								<span className="mt-1 text-body-sm font-medium text-foreground/80">
+								<span className="type-work-brief-meta mt-1 text-foreground/80 max-sm:mt-0.5">
 									{item.value}
 								</span>
 							</div>
 							{idx < metadata.length - 1 && (
-								<div className="hidden sm:block h-4 w-px bg-foreground/10" />
+								<div className="hidden h-4 w-px bg-foreground/10 sm:block max-sm:hidden" />
 							)}
 						</div>
 					))}
 				</motion.div>
 
 				{/* 2. Headline - The Heart of the Section */}
-				<motion.h2 
-					className="max-w-4xl text-display-lg font-normal tracking-[var(--tracking-display)] text-foreground md:text-[4.5rem] lg:text-[5.5rem] leading-[0.95]"
+				<motion.h2
+					className="type-work-brief-headline max-w-4xl text-foreground max-sm:max-w-[min(100%,24rem)]"
 					{...rowReveal(1)}
 				>
 					{project.description}
@@ -144,8 +144,8 @@ export function WorkProjectBrief({ project }: Props) {
 
 				{/* Tech Stack Chips (placed directly under the headline/tagline) */}
 				{project.techStack && project.techStack.length > 0 && (
-					<motion.div 
-						className="mt-6 flex flex-wrap justify-center gap-2"
+					<motion.div
+						className="mt-6 flex flex-wrap justify-center gap-2 max-sm:mt-4 max-sm:gap-1.5"
 						{...rowReveal(1.5)}
 					>
 						{project.techStack.map((tech, idx) => {
@@ -153,11 +153,12 @@ export function WorkProjectBrief({ project }: Props) {
 							const url = TECH_URL_MAP[tech] || '#';
 
 							return (
-								<TechPill 
+								<TechPill
 									key={idx}
 									tech={tech}
 									url={url}
 									iconSlug={iconSlug}
+									className="max-sm:gap-2 max-sm:px-3 max-sm:py-1"
 								/>
 							);
 						})}
@@ -165,26 +166,26 @@ export function WorkProjectBrief({ project }: Props) {
 				)}
 
 				{/* 3. Narrative Intro - Deep Dive */}
-				<motion.p 
-					className="mt-8 max-w-3xl text-body-md font-normal leading-[1.5] text-muted/70 md:text-[1.6rem] lg:text-[1.8rem] [text-wrap:balance]"
+				<motion.p
+					className="type-work-brief-body mt-8 max-w-3xl text-muted/70 max-sm:mt-5 max-sm:max-w-[min(100%,22rem)]"
 					{...rowReveal(2)}
 				>
 					{project.details || "Developing innovative solutions with a focus on performance and user experience."}
 				</motion.p>
 
 				{/* 4. Technical Summary - The "Specs" Footer */}
-				<motion.div 
-					className="mt-12 flex flex-col items-center gap-8 w-full"
+				<motion.div
+					className="mt-12 flex w-full flex-col items-center gap-8 max-sm:mt-8 max-sm:gap-6"
 					{...rowReveal(3)}
 				>
 					{/* Divider Line */}
-					<div className="h-px w-24 bg-foreground/10" />
+					<div className="h-px w-24 bg-foreground/10 max-sm:w-16" />
 
 					{(project.href || project.github || project.comingSoon) && (
-						<div className="flex flex-row flex-wrap items-center justify-center gap-3">
+						<div className="flex flex-row flex-nowrap items-center justify-center gap-3 max-sm:gap-2.5">
 							{project.comingSoon && (
-								<Button 
-									variant="secondary" 
+								<Button
+									variant="secondary"
 									disabled={true}
 									className="group !cursor-none"
 								>
@@ -192,9 +193,9 @@ export function WorkProjectBrief({ project }: Props) {
 								</Button>
 							)}
 							{project.href && (
-								<Button 
-									variant="primary" 
-									href={project.href} 
+								<Button
+									variant="primary"
+									href={project.href}
 									target="_blank"
 									className="group !cursor-none"
 									data-umami-event="Project Live Demo"
@@ -206,12 +207,12 @@ export function WorkProjectBrief({ project }: Props) {
 								</Button>
 							)}
 							{project.github && (
-								<Button 
-									variant="secondary" 
-									href={project.github} 
+								<Button
+									variant="secondary"
+									href={project.github}
 									target="_blank"
 									aria-label="View Source Code on GitHub"
-									className="group !cursor-none !rounded-full w-[42px] h-[42px] !p-0 flex items-center justify-center"
+									className="group !cursor-none flex h-[42px] w-[42px] items-center justify-center !rounded-full !p-0 max-sm:h-11 max-sm:w-11"
 									data-umami-event="Project GitHub Repo"
 									data-umami-event-project={project.title}
 								>

@@ -23,12 +23,12 @@ export function WorkProjectNext({ nextProject }: Props) {
 					className="flex flex-col gap-4 lg:w-[420px]"
 					{...reveal}
 				>
-					<span className="font-sans text-base font-normal text-muted/80">Next Project</span>
+					<span className="type-overline text-muted/80">Next Project</span>
 					<a 
 						href={`/work/${nextProject.slug}`}
 						className="group inline-flex flex-col gap-2 no-underline outline-none"
 					>
-						<h3 className="font-sans text-[clamp(2rem,5vw,3.5rem)] font-normal leading-tight text-foreground transition-opacity group-hover:opacity-70">
+						<h3 className="type-pagination-title text-foreground transition-opacity group-hover:opacity-70">
 							{nextProject.title}
 						</h3>
 					</a>

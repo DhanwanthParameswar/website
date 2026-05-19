@@ -48,9 +48,7 @@ const { prevProject, nextProject } = Astro.props;
 						}}
 					/>
 					
-					<div 
-						class="flex items-center gap-2 text-sm font-medium tracking-widest uppercase text-[#474747] dark:text-[#666666]"
-					>
+					<div class="type-overline flex items-center gap-2 text-muted">
 						<svg
 							xmlns="http://www.w3.org/2000/svg"
 							width="16"
@@ -70,7 +68,7 @@ const { prevProject, nextProject } = Astro.props;
 						<span>Previous Project</span>
 					</div>
 					
-					<h3 class="font-sans text-3xl font-normal tracking-tight text-foreground md:text-5xl">
+					<h3 class="type-pagination-title text-foreground">
 						{prevProject.title}
 					</h3>
 
@@ -103,9 +101,7 @@ const { prevProject, nextProject } = Astro.props;
 						}}
 					/>
 
-					<div 
-						class="flex items-center gap-2 text-sm font-medium tracking-widest uppercase text-[#474747] dark:text-[#666666]"
-					>
+					<div class="type-overline flex items-center gap-2 text-muted">
 						<span>Next Project</span>
 						<svg
 							xmlns="http://www.w3.org/2000/svg"
@@ -125,7 +121,7 @@ const { prevProject, nextProject } = Astro.props;
 						</svg>
 					</div>
 					
-					<h3 class="font-sans text-3xl font-normal tracking-tight text-foreground md:text-5xl">
+					<h3 class="type-pagination-title text-foreground">
 						{nextProject.title}
 					</h3>
 
@@ -138,26 +134,12 @@ const { prevProject, nextProject } = Astro.props;
 </section>
 
 <style>
-	#work-pagination::before,
-	#work-pagination::after {
-		content: "";
-		position: absolute;
-		inset: 0;
-		pointer-events: none;
-	}
-
-	#work-pagination::before {
-		z-index: -20;
-		background: linear-gradient(to bottom, rgb(250 250 250), rgb(255 255 255));
-	}
-
-	#work-pagination::after {
-		z-index: -19;
-		background: linear-gradient(to bottom, rgb(0 0 0), rgb(15 15 15));
-		opacity: 0;
-	}
-
-	:global(.dark) #work-pagination::after {
-		opacity: 1;
+	/* Smooth handoff: brief (page bg) → footer (elevated surface). Single layer avoids seam lines from stacked pseudo-elements. */
+	#work-pagination {
+		background: linear-gradient(
+			180deg,
+			var(--surface-page) 0%,
+			var(--surface-elevated) 100%
+		);
 	}
 </style>

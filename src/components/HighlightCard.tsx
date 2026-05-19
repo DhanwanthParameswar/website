@@ -86,10 +86,10 @@ function HighlightCardInstance({
 			</motion.div>
 
 			<div className="flex flex-col gap-3 text-left">
-				<h3 className={cn("text-body-lg font-medium md:text-[1.25rem]", isLight ? "text-black" : "text-white")}>
+				<h3 className={cn('type-body-lg font-medium', isLight ? 'text-black' : 'text-white')}>
 					{title}
 				</h3>
-				<p className={cn("text-body-sm leading-relaxed md:text-[1rem]", isLight ? "text-black/60" : "text-white/60")}>
+				<p className={cn('type-body-sm', isLight ? 'text-black/60' : 'text-white/60')}>
 					{description}
 				</p>
 			</div>

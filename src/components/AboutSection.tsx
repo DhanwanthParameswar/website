@@ -4,7 +4,7 @@ import { ABOUT_GREETING, ABOUT_PARAGRAPHS, ABOUT_SIGNOFF_LINES } from '@/lib/abo
 import { scrollRevealItemMotionProps } from '@/lib/scroll-reveal-variants';
 
 const proseClass =
-	'm-0 typography-portfolio w-full max-w-[1086px] text-pretty text-body-md leading-[var(--text-body-md--line-height)] text-foreground md:w-[80%]';
+	'type-body m-0 typography-portfolio w-full max-w-[1086px] text-foreground md:w-[80%]';
 
 export function AboutSection() {
 	const reduceMotion = useReducedMotion();
@@ -15,7 +15,7 @@ export function AboutSection() {
 			<div className="mx-auto box-border flex w-full max-w-[1440px] flex-col items-center gap-[15px] overflow-hidden px-10 py-24 md:py-[150px]">
 				<motion.h2
 					id="about-heading"
-					className="w-full max-w-[600px] text-center font-sans font-normal text-[length:var(--text-work-section-title)] leading-[var(--text-work-section-title--line-height)] tracking-[-0.04em] text-foreground [text-rendering:optimizeLegibility]"
+					className="type-section-title w-full max-w-[600px] text-center text-foreground"
 					{...reveal}
 				>
 					About

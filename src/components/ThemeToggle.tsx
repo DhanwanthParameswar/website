@@ -112,7 +112,7 @@ export function ThemeToggle({ className, tabIndex }: { className?: string; tabIn
 		return (
 			<div
 				className={cn(
-					'inline-flex shrink-0 items-center justify-center rounded-sm font-medium leading-[var(--text-nav-link--line-height)] text-nav-link text-foreground',
+					'type-nav inline-flex shrink-0 items-center justify-center rounded-sm text-foreground',
 					className,
 				)}
 				aria-hidden
@@ -128,7 +128,7 @@ export function ThemeToggle({ className, tabIndex }: { className?: string; tabIn
 			onClick={toggleTheme}
 			tabIndex={tabIndex}
 			className={cn(
-				'link-hover-motion inline-flex shrink-0 items-center justify-center rounded-sm font-medium leading-[var(--text-nav-link--line-height)] text-nav-link text-foreground no-underline hover:opacity-60 dark:hover:opacity-80 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-foreground/40',
+				'type-nav link-hover-motion inline-flex shrink-0 items-center justify-center rounded-sm text-foreground no-underline hover:opacity-60 dark:hover:opacity-80 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-foreground/40',
 				className,
 			)}
 			aria-label={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}

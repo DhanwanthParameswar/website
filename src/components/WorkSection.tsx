@@ -11,7 +11,7 @@ export function WorkSection({ projects }: { projects: any[] }) {
 			<div className="mx-auto box-border grid w-full max-w-[1440px] grid-cols-1 gap-[25px] px-10 py-24 md:grid-cols-2 md:py-[150px] md:mx-auto md:w-[80%]">
 				<motion.h2
 					id="work-heading"
-					className="col-span-full mb-[100px] w-full text-center font-sans font-normal text-[length:var(--text-work-section-title)] leading-[var(--text-work-section-title--line-height)] tracking-[-0.04em] text-foreground [text-rendering:optimizeLegibility]"
+					className="type-section-title col-span-full mb-[100px] w-full text-center text-foreground"
 					{...reveal}
 				>
 					Work

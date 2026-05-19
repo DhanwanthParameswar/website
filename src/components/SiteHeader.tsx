@@ -65,10 +65,7 @@ const mobileOverlayVariants = {
 const headerLinkChrome =
 	'rounded-sm hover:opacity-60 dark:hover:opacity-80 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-foreground/40';
 
-const navLink = cn(
-	'font-medium text-nav-link leading-[var(--text-nav-link--line-height)] text-foreground no-underline',
-	headerLinkChrome,
-);
+const navLink = cn('type-nav text-foreground no-underline', headerLinkChrome);
 
 const menuToggle = cn(
 	'link-hover-motion flex shrink-0 items-center justify-center rounded-sm p-2 text-foreground hover:opacity-60 dark:hover:opacity-80 lg:hidden',
@@ -307,7 +304,10 @@ export function SiteHeader() {
 						</div>
 
 						<div className="flex shrink-0 items-center gap-2 lg:hidden">
-							<ThemeToggle tabIndex={chromeTabHidden ? -1 : undefined} />
+							<ThemeToggle
+								className="hidden min-[431px]:inline-flex"
+								tabIndex={chromeTabHidden ? -1 : undefined}
+							/>
 
 							<button
 								ref={menuButtonRef}
@@ -359,6 +359,12 @@ export function SiteHeader() {
 										</a>
 									</li>
 								))}
+								<li className="min-[431px]:hidden">
+									<ThemeToggle
+										tabIndex={chromeTabHidden ? -1 : undefined}
+										className={cn(navLink, 'flex w-full justify-start py-3')}
+									/>
+								</li>
 								<li className="pt-2">
 									<Button
 										href="https://resume.dhanwanth.com"

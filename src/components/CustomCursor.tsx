@@ -1,6 +1,8 @@
 import { AnimatePresence, motion, useMotionValue, useReducedMotion } from 'framer-motion';
 import { useEffect, useMemo, useState } from 'react';
 
+import { isPointerFineDevice } from '@/lib/device-capabilities';
+
 const SPRING = { type: 'spring', stiffness: 500, damping: 60, mass: 1 } as const;
 
 function isInteractive(el: Element | null) {
@@ -34,6 +36,8 @@ function getTooltip(el: Element | null): string | null {
 
 export function CustomCursor() {
 	const reduceMotion = useReducedMotion();
+	const pointerFine = isPointerFineDevice();
+
 	const x = useMotionValue(0);
 	const y = useMotionValue(0);
 
@@ -49,7 +53,7 @@ export function CustomCursor() {
 	const pressedSize = isBig ? 24 : 16;
 
 	useEffect(() => {
-		if (reduceMotion) return;
+		if (reduceMotion || !pointerFine) return;
 
 		const applyCustomCursor = () => {
 			document.documentElement.classList.add('has-custom-cursor');
@@ -63,10 +67,10 @@ export function CustomCursor() {
 			document.documentElement.classList.remove('has-custom-cursor');
 			document.removeEventListener('astro:after-swap', applyCustomCursor);
 		};
-	}, [reduceMotion]);
+	}, [pointerFine, reduceMotion]);
 
 	useEffect(() => {
-		if (reduceMotion) return;
+		if (reduceMotion || !pointerFine) return;
 
 		const onPointerMove = (e: PointerEvent) => {
 			if (e.pointerType !== 'mouse') return;
@@ -118,7 +122,9 @@ export function CustomCursor() {
 			document.removeEventListener('mouseout', onMouseOut);
 			window.removeEventListener('blur', onMouseLeaveWindow);
 		};
-	}, [reduceMotion, visible, x, y]);
+	}, [pointerFine, reduceMotion, visible, x, y]);
+
+	if (!pointerFine || reduceMotion) return null;
 
 	const targetSize = pressed ? pressedSize : baseSize;
 
@@ -149,7 +155,7 @@ export function CustomCursor() {
 					{tooltip ? (
 						<motion.div
 							key="tooltip"
-							className="absolute left-[35px] top-1/2 flex min-h-[29px] -translate-y-1/2 items-center justify-center rounded-[19px] bg-white/20 px-3 py-[5px] text-center text-[0.9rem] font-medium leading-[1] tracking-[-0.01em] text-white mix-blend-normal backdrop-blur-[12px] [-webkit-backdrop-filter:blur(12px)] shadow-[0_10px_30px_rgba(0,0,0,0.28)]"
+							className="type-ui-sm absolute left-[35px] top-1/2 flex min-h-[29px] -translate-y-1/2 items-center justify-center rounded-[19px] bg-white/20 px-3 py-[5px] text-center font-medium tracking-[-0.01em] text-white mix-blend-normal backdrop-blur-[12px] [-webkit-backdrop-filter:blur(12px)] shadow-[0_10px_30px_rgba(0,0,0,0.28)]"
 							style={{ mixBlendMode: 'normal', textShadow: '0 1px 10px rgba(0,0,0,0.35)' }}
 							initial={{ opacity: 0, filter: 'blur(8px)', x: -4 }}
 							animate={{ opacity: 1, filter: 'blur(0px)', x: 0 }}

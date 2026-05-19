@@ -170,18 +170,18 @@ export function WorkProjectCard({ project }: Props) {
 	const copy = (
 		<div className="flex w-full flex-col items-start justify-center gap-0.5">
 			<div className="flex w-full min-w-0 flex-row flex-wrap items-center gap-2.5">
-				<p className="min-w-0 font-sans text-[length:var(--text-heading-md)] leading-[1.2] font-normal break-words text-foreground [text-rendering:optimizeLegibility]">
+				<p className="type-heading-md min-w-0 break-words text-foreground">
 					{project.title}
 				</p>
 				{project.status ? (
 					<span
-						className="inline-flex shrink-0 items-center justify-center whitespace-nowrap rounded-[13px] border border-solid border-black/20 dark:border-[rgb(245_245_245/0.4)] bg-transparent px-[10px] py-[5px] font-sans text-[length:var(--text-work-status)] leading-[var(--text-work-status--line-height)] font-normal text-muted [text-rendering:optimizeLegibility]"
+						className="type-work-status inline-flex shrink-0 items-center justify-center whitespace-nowrap rounded-[13px] border border-solid border-black/20 dark:border-[rgb(245_245_245/0.4)] bg-transparent px-[10px] py-[5px] text-muted"
 					>
 						{project.status}
 					</span>
 				) : null}
 			</div>
-			<p className="w-full min-w-0 font-sans text-[length:var(--text-subtitle)] leading-[var(--text-subtitle--line-height)] font-normal break-words text-muted [text-rendering:optimizeLegibility]">
+			<p className="type-subtitle w-full min-w-0 break-words text-muted">
 				{project.description}
 			</p>
 		</div>

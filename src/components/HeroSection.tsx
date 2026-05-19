@@ -72,7 +72,7 @@ export function HeroSection() {
 				'relative isolate z-[1] mx-auto box-border flex min-h-dvh w-full max-w-[1440px] flex-col overflow-visible',
 				/* Pull into layout `pt` from BaseLayout, then mirror top/bottom inset so flex centering aligns with viewport midline (top-only pt shifts the cluster down by ~clearance/2). */
 				'-mt-[var(--site-header-clearance)] py-[var(--site-header-clearance)]',
-				'px-10',
+				'px-10 max-sm:px-4',
 			)}
 			aria-labelledby="hero-heading"
 		>
@@ -83,16 +83,15 @@ export function HeroSection() {
 				className={cn(
 					'relative z-[2] flex w-full min-h-0 flex-1 flex-col items-center justify-center',
 					'gap-2.5 px-[clamp(1rem,5vw,4.375rem)] py-[clamp(1.5rem,5.5vh,4.375rem)]',
+					'max-sm:gap-3 max-sm:px-4 max-sm:py-[clamp(1rem,4vh,2.5rem)]',
 				)}
 			>
 				<h1
 					id="hero-heading"
-					className={cn(
-						'm-0 flex w-full flex-col items-center gap-2.5 font-normal text-foreground [text-rendering:optimizeLegibility]',
-					)}
+					className="m-0 flex w-full flex-col items-center gap-2.5 text-foreground max-sm:max-w-[20rem] max-sm:gap-3"
 				>
 					<motion.span
-						className="block w-[70%] max-w-[53rem] text-center font-sans text-[length:var(--text-intro)] leading-[var(--text-intro--line-height)] text-foreground will-change-[transform,filter]"
+						className="type-intro block w-[70%] max-w-[53rem] text-center text-foreground will-change-[transform,filter] max-sm:w-full max-sm:max-w-none max-sm:tracking-normal"
 						{...blurReveal(0, reduceMotion, { blurPx: 8, y: 8 })}
 					>
 						Hey! I&apos;m
@@ -101,12 +100,13 @@ export function HeroSection() {
 						className={cn(
 							'relative flex w-full max-w-[min(92vw,58rem)] justify-center will-change-[transform,filter]',
 							'[&_img]:h-auto [&_img]:w-full [&_img]:max-h-[min(20vh,8.75rem)] [&_img]:object-contain md:[&_img]:max-h-[min(22vh,9.25rem)]',
+							'max-sm:max-w-[min(100%,17.5rem)] max-sm:[&_img]:max-h-[min(9.5rem,46vw)]',
 						)}
 						style={{ perspective: 1200 }}
 						{...blurReveal(0.07, reduceMotion, { blurPx: 11, y: 10 })}
 					>
 						{/* Crawlable name in DOM; logo remains the visual treatment on top */}
-						<span className="pointer-events-none absolute inset-0 z-10 flex items-center justify-center text-center font-sans text-[length:var(--text-intro)] leading-[var(--text-intro--line-height)] text-transparent select-none">
+						<span className="type-intro pointer-events-none absolute inset-0 z-10 flex items-center justify-center text-center text-transparent select-none">
 							Dhanwanth Parameswar
 						</span>
 						<span className="relative z-20 flex w-full justify-center">
@@ -142,22 +142,26 @@ export function HeroSection() {
 				</h1>
 
 				<motion.p
-					className="w-[80%] max-w-[61rem] text-center font-sans text-[length:var(--text-subtitle)] leading-[var(--text-subtitle--line-height)] font-normal text-foreground [text-rendering:optimizeLegibility]"
+					className="type-subtitle w-[80%] max-w-[61rem] text-center text-foreground max-sm:w-full max-sm:max-w-[18.5rem]"
 					{...blurReveal(0.18, reduceMotion, { blurPx: 8, y: 8 })}
 				>
 					A Computer Engineering student turning ideas into reality.
 				</motion.p>
 
-				<div className="h-6 shrink-0 md:h-7" aria-hidden />
+				<div className="h-6 shrink-0 max-sm:h-4 md:h-7" aria-hidden />
 
 				<motion.div
-					className="flex flex-row flex-wrap items-center justify-center gap-3 md:gap-[15px]"
+					className="flex flex-row flex-nowrap items-center justify-center gap-3 max-sm:gap-2.5 md:gap-[15px]"
 					{...blurReveal(0.32, reduceMotion, { blurPx: 7, y: 8 })}
 				>
 					<Button href="#work" variant="primary">
 						View My Work
 					</Button>
-					<Button href="https://resume.dhanwanth.com" variant="secondary" target="_blank">
+					<Button
+						href="https://resume.dhanwanth.com"
+						variant="secondary"
+						target="_blank"
+					>
 						Download Resume
 					</Button>
 				</motion.div>
@@ -172,15 +176,15 @@ export function HeroSection() {
 			<motion.div
 				className={cn(
 					'pointer-events-none absolute inset-x-0 z-[2] flex flex-row items-center justify-center gap-2.5',
-					'font-sans text-base leading-[1.2] font-normal will-change-[transform,filter]',
-					'bottom-[calc(4.25rem+env(safe-area-inset-bottom,_0px))] md:bottom-[calc(5rem+env(safe-area-inset-bottom,_0px))]',
+					'type-ui-sm will-change-[transform,filter]',
+					'bottom-[calc(4.25rem+env(safe-area-inset-bottom,_0px))] max-sm:bottom-[calc(3.5rem+env(safe-area-inset-bottom,_0px))] md:bottom-[calc(5rem+env(safe-area-inset-bottom,_0px))]',
 				)}
 				{...scrollHintMotion(reduceMotion)}
 				aria-hidden
 			>
-				<span className="text-center font-sans font-normal text-foreground opacity-25">Scroll Down</span>
+				<span className="text-center text-foreground opacity-25">Scroll Down</span>
 				<CircleChevronDown
-					className="size-6 shrink-0 text-foreground opacity-25"
+					className="size-6 shrink-0 text-foreground opacity-25 max-sm:size-5"
 					strokeWidth={1.5}
 					aria-hidden
 				/>

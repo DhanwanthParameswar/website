@@ -1,15 +1,20 @@
 import { useEffect } from 'react';
 import Lenis from 'lenis';
 
+import { isTouchPrimaryDevice } from '@/lib/device-capabilities';
+
 const defaultEasing = (t: number) => Math.min(1, 1.001 - Math.pow(2, -10 * t));
 
 /**
- * Site-wide smooth scrolling (Lenis).
+ * Site-wide smooth scrolling (Lenis) on pointer-fine devices (desktop / trackpad).
+ * Skipped on touch-primary devices so scrolling stays native.
  * Same-document `#` links: align the target section’s top edge with the viewport top
  * (`getBoundingClientRect().top + scrollY` → `scrollTo` that value).
  */
 export function LenisSmoothScroll() {
 	useEffect(() => {
+		if (isTouchPrimaryDevice()) return;
+
 		const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
 		const lenis = new Lenis({

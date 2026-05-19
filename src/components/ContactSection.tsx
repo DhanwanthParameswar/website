@@ -13,12 +13,11 @@ import { cn } from '@/lib/utils';
 const contactLink =
 	'rounded-sm text-foreground no-underline hover:opacity-50 dark:hover:opacity-70 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-foreground/40';
 
-const labelType = 'font-sans font-normal text-[1.225rem] leading-[0.9] md:text-[1.4rem]';
-const valueType =
-	'font-sans font-normal text-[0.875rem] leading-[var(--text-body-sm--line-height)] md:text-body-sm';
+const labelType = 'type-label text-foreground';
+const valueType = 'type-value text-foreground';
 
 const introClass =
-	'm-0 w-full max-w-[1018px] text-pretty text-center font-sans font-normal text-body-md leading-[var(--text-body-md--line-height)] text-foreground md:w-[75%] md:text-body-lg md:leading-[var(--text-body-lg--line-height)] [text-rendering:optimizeLegibility]';
+	'type-body-intro m-0 w-full max-w-[1018px] text-center text-foreground md:w-[75%]';
 
 export function ContactSection() {
 	const reduceMotion = useReducedMotion();
@@ -29,7 +28,7 @@ export function ContactSection() {
 			<div className="mx-auto box-border flex w-full max-w-[1440px] flex-col items-center gap-[15px] overflow-hidden px-10 py-24 md:py-[150px]">
 				<motion.h2
 					id="contact-heading"
-					className="w-full max-w-[600px] text-center font-sans font-normal text-[length:var(--text-work-section-title)] leading-[var(--text-work-section-title--line-height)] tracking-[-0.04em] text-foreground [text-rendering:optimizeLegibility]"
+					className="type-section-title w-full max-w-[600px] text-center text-foreground"
 					{...reveal}
 				>
 					{CONTACT_HEADING}
