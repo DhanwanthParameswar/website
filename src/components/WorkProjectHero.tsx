@@ -13,10 +13,9 @@ import type { WorkProject } from '@/types/work';
 import { useIsDarkMode } from '@/lib/useIsDarkMode';
 import {
 	WORK_HERO,
+	computeScrollEndAssetScale,
 	computeBottomPeekPx,
-	computeAssetScale,
-	computeHorizontalGutterPx,
-	computeMockupScale,
+	lerpAssetScale,
 	computeTitleFitScale,
 	computeTitleRem,
 	computeTitleScrollFadeEnds,
@@ -55,24 +54,10 @@ export function WorkProjectHero({ project }: Props) {
 		yEnd: WORK_HERO.titleFadeOpacityEndWide,
 	});
 	const [tiltDeg, setTiltDeg] = useState(WORK_HERO.tiltDegMin);
-	const [horizontalGutterPx, setHorizontalGutterPx] = useState(() =>
-		typeof window !== 'undefined'
-			? computeHorizontalGutterPx(window.innerWidth)
-			: WORK_HERO.horizontalGutter,
-	);
-	const [mockupColumnScale, setMockupColumnScale] = useState(() =>
-		typeof window !== 'undefined'
-			? computeMockupScale(window.innerWidth)
-			: WORK_HERO.mockupScaleMin,
-	);
-	const [assetScale, setAssetScale] = useState(() =>
-		typeof window !== 'undefined'
-			? computeAssetScale(window.innerWidth)
-			: WORK_HERO.assetScaleMin,
-	);
 	const tiltMotion = useMotionValue(tiltDeg);
 	const [dynamicCenterOriginY, setDynamicCenterOriginY] = useState('50%');
 	const scrollEndCenterRef = useRef({ x: 0, y: 0 });
+	const scrollEndAssetScaleMotion = useMotionValue(WORK_HERO.scrollEndAssetScaleMin);
 
 	const isAtTopOnMount = useRef(typeof window !== 'undefined' ? window.scrollY < 50 : true);
 
@@ -89,7 +74,6 @@ export function WorkProjectHero({ project }: Props) {
 
 			const mockupLayoutH = innerEl.offsetHeight;
 			const viewportW = window.innerWidth;
-			const nextMockupScale = computeMockupScale(viewportW);
 			const peek = computeBottomPeekPx(mockupLayoutH, viewportW);
 			const nextTitleRem = computeTitleRem(viewportW);
 			const titleEl = titleBlock?.querySelector('h1');
@@ -97,9 +81,8 @@ export function WorkProjectHero({ project }: Props) {
 				titleEl.style.fontSize = `${nextTitleRem}rem`;
 			}
 			setBottomPeekPx(peek);
-			setHorizontalGutterPx(computeHorizontalGutterPx(viewportW));
-			setMockupColumnScale(nextMockupScale);
-			setAssetScale(computeAssetScale(viewportW));
+			const nextScrollEndAssetScale = computeScrollEndAssetScale(viewportW);
+			scrollEndAssetScaleMotion.set(nextScrollEndAssetScale);
 			setTiltDeg(computeTiltDeg(viewportW));
 			setTitleFontRem(nextTitleRem);
 			setTitleScrollFade(computeTitleScrollFadeEnds(viewportW));
@@ -110,7 +93,6 @@ export function WorkProjectHero({ project }: Props) {
 					mockupLayoutH,
 					readHeaderClearancePx(),
 					peek,
-					nextMockupScale,
 				),
 			);
 
@@ -121,8 +103,16 @@ export function WorkProjectHero({ project }: Props) {
 			);
 
 			const originalTransform = mockupEl.style.transform;
+			const assetWrappers = innerEl.querySelectorAll<HTMLElement>('[data-mockup-asset]');
+			const savedAssetTransforms = [...assetWrappers].map((el) => el.style.transform);
+			const applyAssetScale = (scale: number) => {
+				for (const el of assetWrappers) {
+					el.style.transform = `scale(${scale})`;
+				}
+			};
 
 			// Rest pose: origin only (scroll start stays x/y=0, tilted).
+			applyAssetScale(WORK_HERO.restAssetScale);
 			mockupEl.style.transform = 'none';
 			const restRect = innerEl.getBoundingClientRect();
 			const elRect = mockupEl.getBoundingClientRect();
@@ -138,6 +128,7 @@ export function WorkProjectHero({ project }: Props) {
 			const transformOrigin = `50% ${originY}`;
 			mockupEl.style.transformOrigin = transformOrigin;
 
+			applyAssetScale(nextScrollEndAssetScale);
 			scrollEndCenterRef.current = measureScrollEndCenterOffsets(
 				innerEl,
 				mockupEl,
@@ -147,6 +138,9 @@ export function WorkProjectHero({ project }: Props) {
 			);
 
 			mockupEl.style.transform = originalTransform;
+			assetWrappers.forEach((el, i) => {
+				el.style.transform = savedAssetTransforms[i] ?? '';
+			});
 		};
 
 		measure();
@@ -198,6 +192,10 @@ export function WorkProjectHero({ project }: Props) {
 	const mockupScale = useTransform(smoothProgress, [0, 1], [1, WORK_HERO.scrollEndScale]);
 	const mockupX = useTransform(smoothProgress, (p) => p * scrollEndCenterRef.current.x);
 	const mockupY = useTransform(smoothProgress, (p) => p * scrollEndCenterRef.current.y);
+	const mockupAssetScale = useTransform(
+		[smoothProgress, scrollEndAssetScaleMotion],
+		([p, endScale]) => lerpAssetScale(p as number, endScale as number),
+	);
 
 	const mockupDepthMaskLight = useTransform([smoothProgress, tiltMotion], ([progress, tilt]) =>
 		buildMockupDepthMask(computeDepthFadeIntensity(progress as number, tilt as number), 'light'),
@@ -383,7 +381,7 @@ export function WorkProjectHero({ project }: Props) {
 				{/* Bottom-anchored title + mockup cluster */}
 				<div
 					className="relative z-10 flex h-full w-full items-end justify-center pb-0"
-					style={{ paddingInline: horizontalGutterPx / 2 }}
+					style={{ paddingInline: WORK_HERO.horizontalGutter / 2 }}
 				>
 					<motion.div
 						ref={clusterRef}
@@ -426,13 +424,13 @@ export function WorkProjectHero({ project }: Props) {
 								className="relative z-20 flex w-full shrink-0 items-end justify-center overflow-visible"
 								style={{
 									perspective: '1400px',
-									scale: mockupColumnScale,
+									scale: WORK_HERO.mockupScale,
 									transformOrigin: 'bottom center',
 								}}
 							>
 								<motion.div
 									ref={mockupRef}
-									className="pointer-events-none relative mx-auto flex h-auto w-full max-w-full items-end justify-center overflow-visible select-none"
+									className="pointer-events-none relative flex h-auto w-full items-end justify-center overflow-visible select-none"
 									style={{
 										transformStyle: 'preserve-3d',
 										transformPerspective: 1400,
@@ -461,9 +459,10 @@ export function WorkProjectHero({ project }: Props) {
 											style={{ aspectRatio: mockupObjectAspect }}
 										>
 											<motion.div
+												data-mockup-asset
 												className="absolute inset-0 overflow-visible"
 												style={{
-													transform: `scale(${assetScale})`,
+													scale: mockupAssetScale,
 													transformOrigin: 'bottom center',
 													filter:
 														'drop-shadow(0 20px 30px rgba(0,0,0,0.2)) drop-shadow(0 10px 10px rgba(0,0,0,0.1))',
@@ -488,9 +487,10 @@ export function WorkProjectHero({ project }: Props) {
 												/>
 											</motion.div>
 											<motion.div
+												data-mockup-asset
 												className="absolute inset-0 overflow-visible"
 												style={{
-													transform: `scale(${assetScale})`,
+													scale: mockupAssetScale,
 													transformOrigin: 'bottom center',
 													filter:
 														'drop-shadow(0 20px 50px rgba(0,0,0,0.8)) drop-shadow(0 10px 20px rgba(0,0,0,0.4))',

@@ -2,23 +2,19 @@
 export const WORK_HERO = {
 	/** Viewport width at which mockup width / peek stop growing. */
 	layoutCapPx: 1200,
-	/** Max horizontal inset on the hero anchor at layoutCapPx (paddingInline × 2). */
+	/** Horizontal inset on the hero anchor (paddingInline × 2). */
 	horizontalGutter: 32,
-	/** Below this width, hero side padding is 0. */
-	horizontalGutterZeroBelowPx: 720,
-	/** Mockup scale/asset scale floor — nothing narrower than this width's proportions. */
-	mockupLayoutMinPx: 820,
 	titleGap: 136,
 	/** Extra lift on the title block (px up from the mockup). */
 	titleLiftPx: 160,
-	/** Layout scale on the mockup column at layoutCapPx (title stays 1×). */
+	/** Layout scale on the mockup column only (title stays 1×). */
 	mockupScale: 1.12,
-	/** Layout scale on the mockup column at mockupLayoutMinPx. */
-	mockupScaleMin: 1.198,
-	/** PNG scale at layoutCapPx (crops baked-in transparent padding). */
-	assetScale: 1.18,
-	/** PNG scale at mockupLayoutMinPx. */
-	assetScaleMin: 1.301,
+	/** PNG scale at scroll start (tilted rest pose). */
+	restAssetScale: 1.18,
+	/** Scroll-end asset scale at layoutCapPx. */
+	scrollEndAssetScaleMin: 1.18,
+	/** Scroll-end asset scale at tiltViewportMin (fills transparent padding on narrow viewports). */
+	scrollEndAssetScaleMax: 1.5,
 	/** Fraction of scaled mockup height that sits below the viewport bottom. */
 	peekRatioOfMockup: 0.54,
 	/** Minimum peek at layoutCapPx. */
@@ -51,56 +47,9 @@ export type TitleScrollFadeEnds = {
 	yEnd: number;
 };
 
-/** Max cluster content width at layoutCapPx (cap minus max side gutter). */
+/** Max cluster content width (layout cap minus side gutter). */
 export function getClusterMaxWidthPx(): number {
 	return WORK_HERO.layoutCapPx - WORK_HERO.horizontalGutter;
-}
-
-/** 0 at narrow reference width → 1 at layoutCapPx. */
-export function getHeroLayoutWidthT(viewportW: number): number {
-	const w = Math.min(
-		WORK_HERO.layoutCapPx,
-		Math.max(WORK_HERO.tiltViewportMin, viewportW),
-	);
-	const span = WORK_HERO.layoutCapPx - WORK_HERO.tiltViewportMin;
-	return span > 0 ? (w - WORK_HERO.tiltViewportMin) / span : 1;
-}
-
-/** 0 at mockupLayoutMinPx → 1 at layoutCapPx (mockup scale / asset scale only). */
-export function getMockupLayoutWidthT(viewportW: number): number {
-	const w = Math.min(
-		WORK_HERO.layoutCapPx,
-		Math.max(WORK_HERO.mockupLayoutMinPx, viewportW),
-	);
-	const span = WORK_HERO.layoutCapPx - WORK_HERO.mockupLayoutMinPx;
-	return span > 0 ? (w - WORK_HERO.mockupLayoutMinPx) / span : 1;
-}
-
-/** Side gutter: 0 below horizontalGutterZeroBelowPx, then ramps to max at layoutCapPx. */
-export function computeHorizontalGutterPx(viewportW: number): number {
-	const w = Math.min(
-		WORK_HERO.layoutCapPx,
-		Math.max(WORK_HERO.tiltViewportMin, viewportW),
-	);
-	if (w <= WORK_HERO.horizontalGutterZeroBelowPx) return 0;
-	const span = WORK_HERO.layoutCapPx - WORK_HERO.horizontalGutterZeroBelowPx;
-	const t = span > 0 ? (w - WORK_HERO.horizontalGutterZeroBelowPx) / span : 1;
-	return Math.round(WORK_HERO.horizontalGutter * t);
-}
-
-/** Mockup column scale — ramps 820px → layoutCapPx; capped below 820px. */
-export function computeMockupScale(viewportW: number): number {
-	const t = getMockupLayoutWidthT(viewportW);
-	const scale =
-		WORK_HERO.mockupScaleMin + t * (WORK_HERO.mockupScale - WORK_HERO.mockupScaleMin);
-	return Math.round(scale * 1000) / 1000;
-}
-
-/** PNG scale inside aspect box — ramps 820px → layoutCapPx; capped below 820px. */
-export function computeAssetScale(viewportW: number): number {
-	const t = getMockupLayoutWidthT(viewportW);
-	const scale = WORK_HERO.assetScaleMin + t * (WORK_HERO.assetScale - WORK_HERO.assetScaleMin);
-	return Math.round(scale * 1000) / 1000;
 }
 
 export type ScrollEndCenterOffsets = { x: number; y: number };
@@ -179,6 +128,26 @@ export function measureScrollEndCenterOffsets(
 	};
 }
 
+/** Scroll-end PNG scale inside the aspect box (grows as viewport width decreases). */
+export function computeScrollEndAssetScale(viewportW: number): number {
+	const w = Math.min(
+		WORK_HERO.layoutCapPx,
+		Math.max(WORK_HERO.tiltViewportMin, viewportW),
+	);
+	const span = WORK_HERO.layoutCapPx - WORK_HERO.tiltViewportMin;
+	const narrowT = span > 0 ? (WORK_HERO.layoutCapPx - w) / span : 0;
+	const scale =
+		WORK_HERO.scrollEndAssetScaleMin +
+		narrowT * (WORK_HERO.scrollEndAssetScaleMax - WORK_HERO.scrollEndAssetScaleMin);
+	return Math.round(scale * 1000) / 1000;
+}
+
+/** Interpolate rest → scroll-end asset scale by scroll progress (0 = rest, 1 = end). */
+export function lerpAssetScale(scrollProgress: number, scrollEndScale: number): number {
+	const t = Math.min(1, Math.max(0, scrollProgress));
+	return WORK_HERO.restAssetScale + t * (scrollEndScale - WORK_HERO.restAssetScale);
+}
+
 /** Scroll-rest tilt: increases as viewport width decreases. */
 export function computeTiltDeg(viewportW: number): number {
 	const w = Math.min(
@@ -192,7 +161,7 @@ export function computeTiltDeg(viewportW: number): number {
 
 /** How far to push the cluster down so the enlarged mockup peeks below the fold. */
 export function computeBottomPeekPx(mockupLayoutHeight: number, viewportW: number): number {
-	const scaledH = mockupLayoutHeight * computeMockupScale(viewportW);
+	const scaledH = mockupLayoutHeight * WORK_HERO.mockupScale;
 	const fromMockup = scaledH * WORK_HERO.peekRatioOfMockup;
 	const widthT = Math.min(1, viewportW / WORK_HERO.layoutCapPx);
 	const basePeek = Math.max(WORK_HERO.peekMinPx * widthT, fromMockup);
@@ -237,9 +206,8 @@ export function computeTitleFitScale(
 	mockupLayoutHeight: number,
 	headerClearancePx: number,
 	bottomPeekPx: number,
-	mockupScale: number,
 ): number {
-	const scaledMockupH = mockupLayoutHeight * mockupScale;
+	const scaledMockupH = mockupLayoutHeight * WORK_HERO.mockupScale;
 	const stackHeight =
 		titleBlockHeight +
 		WORK_HERO.titleGap +
