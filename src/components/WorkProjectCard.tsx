@@ -49,6 +49,11 @@ export function WorkProjectCard({ project }: Props) {
 	/** Stronger than the last pass, still capped so hover doesn’t blow out the card. */
 	const glowOpacity = 0.62;
 
+	const glowVariants = {
+		idle: { opacity: 0, transition: glowOutTransition },
+		hover: { opacity: glowOpacity, transition: glowTransition },
+	} as const;
+
 	const activeImage = isDark ? project.imageDark : project.imageLight;
 
 	useEffect(() => {
@@ -92,6 +97,7 @@ export function WorkProjectCard({ project }: Props) {
 	const hoverHandlers = {
 		onHoverStart: () => setHovered(true),
 		onHoverEnd: handleMouseLeave,
+		onMouseLeave: handleMouseLeave,
 		onMouseMove: handleMouseMove,
 	};
 
@@ -113,15 +119,16 @@ export function WorkProjectCard({ project }: Props) {
 		>
 			<motion.div
 				className="pointer-events-none absolute inset-0 z-0 scale-[1.02] rounded-[20px] bg-cover bg-center blur-[56px] saturate-175 brightness-95"
+				variants={glowVariants}
+				initial="idle"
+				animate={hovered ? 'hover' : 'idle'}
 				style={{
-					backgroundImage: hovered ? `url('${activeImage.src}')` : undefined,
+					/* Keep URL during opacity exit so the glow can fade out (not snap off). */
+					backgroundImage: `url('${activeImage.src}')`,
 					x: reduceMotion ? 0 : glowX,
 					y: reduceMotion ? 0 : glowY,
 				}}
 				aria-hidden
-				initial={false}
-				animate={{ opacity: hovered ? glowOpacity : 0 }}
-				transition={hovered ? glowTransition : glowOutTransition}
 			/>
 
 			<div className="relative z-[1] aspect-[295/240] w-full overflow-hidden rounded-[20px] border border-solid border-border-footer bg-black">
