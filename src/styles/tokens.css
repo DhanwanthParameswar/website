@@ -243,9 +243,9 @@
 	--text-pagination-title: clamp(1.875rem, 4vw + 0.5rem, 3rem);
 	--text-pagination-title--line-height: 1.1;
 
-	/* Nav text — Framer header links */
-	--text-nav-link: 14px;
-	--text-nav-link--line-height: 1.2;
+	/* Nav text — keep synced with CTA label sizing */
+	--text-nav-link: var(--cta-label-size);
+	--text-nav-link--line-height: var(--cta-label-line-height);
 
 	/* Letter-spacing roles */
 	--tracking-display: -0.04em;
