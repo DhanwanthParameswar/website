@@ -1,0 +1,13 @@
+---
+import { HeroBlobIsland } from '@/components/HeroBlobIsland';
+import { HeroSection } from '@/components/HeroSection';
+---
+
+<section
+	id="top"
+	class="relative isolate z-[1] mx-auto box-border flex min-h-dvh w-full max-w-[1440px] flex-col overflow-visible -mt-[var(--site-header-clearance)] py-[var(--site-header-clearance)] px-10 max-sm:px-4"
+	aria-labelledby="hero-heading"
+>
+	<HeroBlobIsland client:idle />
+	<HeroSection client:visible />
+</section>

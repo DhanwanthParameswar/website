@@ -192,10 +192,11 @@ export function HeroBlobBackdrop() {
 			} satisfies CSSProperties)
 		: null;
 
+	/* Hero section uses matching -mt / py on --site-header-clearance; extend backdrop into that inset. */
 	return (
 		<motion.div
 			ref={backdropRef}
-			className="pointer-events-none absolute inset-0 z-0 overflow-hidden"
+			className="pointer-events-none absolute inset-x-0 bottom-0 top-[calc(-1*var(--site-header-clearance))] z-0 overflow-hidden"
 			aria-hidden
 			initial={skipAmbient ? false : { opacity: 0 }}
 			animate={{ opacity: 1 }}

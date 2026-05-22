@@ -25,20 +25,54 @@ export const linkHoverTransition: Transition = {
  */
 export const menuToggleTransition: Transition = linkHoverTransition;
 
+/** Shared editorial ease — ease-out enter, no bounce (cinematic, not UI-snappy). */
+export const heroRevealEase: Transition['ease'] = [0.16, 1, 0.3, 1];
+
 /**
- * Hero blur-reveal — tweened opacity + blur + slight lift (no spring bounce).
- * Calm editorial ease-out; duration sits between “micro” and sluggish for a premium hero.
+ * Hero blur-reveal tiers — staggered beats, not one shared duration.
+ * Lead-in is quick; brand mark lingers; body/actions tighten so the arc resolves.
  */
-export const heroBlurReveal: Transition = {
-	duration: 0.78,
-	ease: [0.16, 1, 0.3, 1],
+export const heroBlurRevealLead: Transition = {
+	duration: 0.56,
+	ease: heroRevealEase,
 };
+
+export const heroBlurRevealBrand: Transition = {
+	duration: 0.94,
+	ease: heroRevealEase,
+};
+
+export const heroBlurRevealBody: Transition = {
+	duration: 0.8,
+	ease: heroRevealEase,
+};
+
+export const heroBlurRevealAction: Transition = {
+	duration: 0.66,
+	ease: heroRevealEase,
+};
+
+/** Default tier when no override is passed. */
+export const heroBlurReveal: Transition = heroBlurRevealBody;
 
 /** `prefers-reduced-motion`: opacity-only, short and linear-feeling ease (no blur choreography). */
 export const heroBlurRevealReduced: Transition = {
 	duration: 0.42,
 	ease: [0.22, 1, 0.36, 1],
 };
+
+/**
+ * Hero copy stagger (seconds) — story: greet → name/logo → role → act → scroll affordance.
+ * Visual DOM stays “Hey!” above logo; timing follows spoken “Hey, I’m [name]”.
+ */
+export const heroStagger = {
+	hey: 0,
+	logo: 0.12,
+	subtitle: 0.54,
+	cta: 0.82,
+	/** After CTA beat begins resolving; scroll hint is epilogue, not part of the headline cluster. */
+	scrollHint: 1.36,
+} as const;
 
 /**
  * WebGPU hero backdrop — long opacity fade so the wash appears after layout, without competing with type.
@@ -59,9 +93,9 @@ export const heroAmbientBackdropReduced: Transition = {
  * Scroll hint — enters after headline cluster finishes (blurReveal max delay + duration), same motion language.
  */
 export const heroScrollHintReveal: Transition = {
-	duration: 0.72,
-	ease: [0.16, 1, 0.3, 1],
-	delay: 1.22,
+	duration: 0.68,
+	ease: heroRevealEase,
+	delay: heroStagger.scrollHint,
 };
 
 export const heroScrollHintRevealReduced: Transition = {

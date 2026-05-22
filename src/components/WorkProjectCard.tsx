@@ -1,9 +1,10 @@
-import { useState, useRef } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { motion, useReducedMotion, useTransform, useSpring, useMotionValue } from 'framer-motion';
 
 import { cn } from '@/lib/utils';
 import type { WorkProject } from '@/types/work';
 import { useIsDarkMode } from '@/lib/useIsDarkMode';
+import { registerWorkCardThemeImages } from '@/lib/work-card-theme-preload';
 import { workCardGlowHover, workCardGlowHoverReduced } from '@/lib/motion-presets';
 
 const cardShell =
@@ -19,7 +20,6 @@ export function WorkProjectCard({ project }: Props) {
 	const isDark = useIsDarkMode();
 	const [hovered, setHovered] = useState(false);
 
-	const themeTransition = { duration: 0 };
 	const glowOutTransition = { duration: 0.4, ease: 'easeInOut' };
 
 	/** Mouse tilt logic - made more subtle */
@@ -48,6 +48,31 @@ export function WorkProjectCard({ project }: Props) {
 	const glowTransition = reduceMotion ? workCardGlowHoverReduced : workCardGlowHover;
 	/** Stronger than the last pass, still capped so hover doesn’t blow out the card. */
 	const glowOpacity = 0.62;
+
+	const activeImage = isDark ? project.imageDark : project.imageLight;
+
+	useEffect(() => {
+		return registerWorkCardThemeImages({
+			light: {
+				src: project.imageLight.src,
+				srcSet: project.imageLight.srcSet,
+				sizes: project.imageLight.sizes,
+			},
+			dark: {
+				src: project.imageDark.src,
+				srcSet: project.imageDark.srcSet,
+				sizes: project.imageDark.sizes,
+			},
+		});
+	}, [
+		project.slug,
+		project.imageLight.src,
+		project.imageLight.srcSet,
+		project.imageLight.sizes,
+		project.imageDark.src,
+		project.imageDark.srcSet,
+		project.imageDark.sizes,
+	]);
 
 	const handleMouseMove = (e: React.MouseEvent) => {
 		if (reduceMotion || !ref.current) return;
@@ -86,65 +111,31 @@ export function WorkProjectCard({ project }: Props) {
 				transformPerspective: 1500,
 			}}
 		>
-			{/* Hover Glow - Light */}
 			<motion.div
 				className="pointer-events-none absolute inset-0 z-0 scale-[1.02] rounded-[20px] bg-cover bg-center blur-[56px] saturate-175 brightness-95"
 				style={{
-					backgroundImage: `url('${project.imageLight.src}')`,
+					backgroundImage: hovered ? `url('${activeImage.src}')` : undefined,
 					x: reduceMotion ? 0 : glowX,
 					y: reduceMotion ? 0 : glowY,
 				}}
 				aria-hidden
 				initial={false}
-				animate={{ 
-					opacity: !isDark && hovered ? glowOpacity : 0 
-				}}
-				transition={hovered ? glowTransition : glowOutTransition}
-			/>
-			{/* Hover Glow - Dark */}
-			<motion.div
-				className="pointer-events-none absolute inset-0 z-0 scale-[1.02] rounded-[20px] bg-cover bg-center blur-[56px] saturate-175 brightness-95"
-				style={{
-					backgroundImage: `url('${project.imageDark.src}')`,
-					x: reduceMotion ? 0 : glowX,
-					y: reduceMotion ? 0 : glowY,
-				}}
-				aria-hidden
-				initial={false}
-				animate={{ 
-					opacity: isDark && hovered ? glowOpacity : 0 
-				}}
+				animate={{ opacity: hovered ? glowOpacity : 0 }}
 				transition={hovered ? glowTransition : glowOutTransition}
 			/>
 
 			<div className="relative z-[1] aspect-[295/240] w-full overflow-hidden rounded-[20px] border border-solid border-border-footer bg-black">
 				<motion.img
 					className="absolute inset-0 h-full w-full object-cover object-center"
-					src={project.imageLight.src}
-					srcSet={project.imageLight.srcSet}
-					sizes={project.imageLight.sizes}
+					src={activeImage.src}
+					srcSet={activeImage.srcSet}
+					sizes={activeImage.sizes}
 					alt={project.title}
-					width={project.imageLight.width}
-					height={project.imageLight.height}
+					width={activeImage.width}
+					height={activeImage.height}
 					loading="lazy"
 					decoding="async"
 					initial={false}
-					animate={{ opacity: isDark ? 0 : 1 }}
-					transition={themeTransition}
-				/>
-				<motion.img
-					className="absolute inset-0 h-full w-full object-cover object-center"
-					src={project.imageDark.src}
-					srcSet={project.imageDark.srcSet}
-					sizes={project.imageDark.sizes}
-					alt={project.title}
-					width={project.imageDark.width}
-					height={project.imageDark.height}
-					loading="lazy"
-					decoding="async"
-					initial={false}
-					animate={{ opacity: isDark ? 1 : 0 }}
-					transition={themeTransition}
 				/>
 			</div>
 		</motion.div>

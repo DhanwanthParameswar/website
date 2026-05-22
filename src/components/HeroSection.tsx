@@ -1,11 +1,7 @@
 import { motion, useReducedMotion } from 'framer-motion';
 import { CircleChevronDown } from 'lucide-react';
-import React, { lazy, Suspense } from 'react';
 
 import { Button } from '@/components/Button';
-const HeroBlobBackdrop = lazy(() =>
-	import('@/components/HeroBlobBackdrop').then((m) => ({ default: m.HeroBlobBackdrop }))
-);
 import { cn } from '@/lib/utils';
 import {
 	heroBlurReveal,
@@ -47,6 +43,14 @@ function blurReveal(delay: number, reduceMotion: boolean | null, opts: BlurRevea
 	};
 }
 
+/** Blur-reveal delays (s) — logo leads as the focal point, then supporting copy. */
+const HERO_REVEAL_DELAY = {
+	logo: 0,
+	intro: 0.07,
+	subtitle: 0.18,
+	cta: 0.32,
+} as const;
+
 function scrollHintMotion(reduceMotion: boolean | null) {
 	if (reduceMotion) {
 		return {
@@ -66,19 +70,7 @@ export function HeroSection() {
 	const reduceMotion = useReducedMotion();
 
 	return (
-		<section
-			id="top"
-			className={cn(
-				'relative isolate z-[1] mx-auto box-border flex min-h-dvh w-full max-w-[1440px] flex-col overflow-visible',
-				/* Pull into layout `pt` from BaseLayout, then mirror top/bottom inset so flex centering aligns with viewport midline (top-only pt shifts the cluster down by ~clearance/2). */
-				'-mt-[var(--site-header-clearance)] py-[var(--site-header-clearance)]',
-				'px-10 max-sm:px-4',
-			)}
-			aria-labelledby="hero-heading"
-		>
-			<Suspense fallback={null}>
-				<HeroBlobBackdrop />
-			</Suspense>
+		<>
 			<div
 				className={cn(
 					'relative z-[2] flex w-full min-h-0 flex-1 flex-col items-center justify-center',
@@ -92,7 +84,7 @@ export function HeroSection() {
 				>
 					<motion.span
 						className="type-intro block w-[70%] max-w-[53rem] text-center text-foreground will-change-[transform,filter] max-sm:w-full max-sm:max-w-none max-sm:tracking-normal"
-						{...blurReveal(0, reduceMotion, { blurPx: 8, y: 8 })}
+						{...blurReveal(HERO_REVEAL_DELAY.intro, reduceMotion, { blurPx: 8, y: 8 })}
 					>
 						Hey! I&apos;m
 					</motion.span>
@@ -103,7 +95,7 @@ export function HeroSection() {
 							'max-sm:max-w-[min(100%,17.5rem)] max-sm:[&_img]:max-h-[min(9.5rem,46vw)]',
 						)}
 						style={{ perspective: 1200 }}
-						{...blurReveal(0.07, reduceMotion, { blurPx: 11, y: 10 })}
+						{...blurReveal(HERO_REVEAL_DELAY.logo, reduceMotion, { blurPx: 11, y: 10 })}
 					>
 						{/* Crawlable name in DOM; logo remains the visual treatment on top */}
 						<span className="type-intro pointer-events-none absolute inset-0 z-10 flex items-center justify-center text-center text-transparent select-none">
@@ -143,7 +135,7 @@ export function HeroSection() {
 
 				<motion.p
 					className="type-subtitle w-[80%] max-w-[61rem] text-center text-foreground max-sm:w-full max-sm:max-w-[18.5rem]"
-					{...blurReveal(0.18, reduceMotion, { blurPx: 8, y: 8 })}
+					{...blurReveal(HERO_REVEAL_DELAY.subtitle, reduceMotion, { blurPx: 8, y: 8 })}
 				>
 					A Computer Engineering student turning ideas into reality.
 				</motion.p>
@@ -151,16 +143,20 @@ export function HeroSection() {
 				<div className="h-6 shrink-0 max-sm:h-4 md:h-7" aria-hidden />
 
 				<motion.div
-					className="flex flex-row flex-nowrap items-center justify-center gap-3 max-sm:gap-2.5 md:gap-[15px]"
-					{...blurReveal(0.32, reduceMotion, { blurPx: 7, y: 8 })}
+					className={cn(
+						'flex flex-row flex-nowrap items-center justify-center gap-3 md:gap-[15px]',
+						'max-sm:w-full max-sm:max-w-[18.5rem] max-sm:flex-col max-sm:items-stretch max-sm:gap-2.5',
+					)}
+					{...blurReveal(HERO_REVEAL_DELAY.cta, reduceMotion, { blurPx: 7, y: 8 })}
 				>
-					<Button href="#work" variant="primary">
+					<Button href="#work" variant="primary" className="max-sm:w-full">
 						View My Work
 					</Button>
 					<Button
 						href="https://resume.dhanwanth.com"
 						variant="secondary"
 						target="_blank"
+						className="max-sm:w-full"
 					>
 						Download Resume
 					</Button>
@@ -189,6 +185,6 @@ export function HeroSection() {
 					aria-hidden
 				/>
 			</motion.div>
-		</section>
+		</>
 	);
 }

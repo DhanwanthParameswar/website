@@ -1,0 +1,273 @@
+/**
+ * Markdown / typography styles — loaded only on routes that render `.prose` content
+ * (work detail, privacy) so the main bundle stays smaller for the homepage.
+ */
+@import "./tokens.css";
+@import "tailwindcss";
+@plugin "@tailwindcss/typography";
+@custom-variant dark (&:is(.dark *));
+
+@layer base {
+	.prose hr {
+		border: none !important;
+		height: 1px !important;
+		background-color: var(--border-default) !important;
+		border-radius: 9999px !important;
+	}
+
+	.prose > * {
+		opacity: 0;
+		transform: translateY(20px);
+		filter: blur(9px);
+		transition:
+			opacity var(--duration-reveal) var(--ease-reveal),
+			transform var(--duration-reveal) var(--ease-reveal),
+			filter var(--duration-reveal) var(--ease-reveal);
+		will-change: opacity, transform, filter;
+	}
+
+	.prose > *[data-visible="true"] {
+		opacity: 1;
+		transform: translateY(0);
+		filter: blur(0px);
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.prose > * {
+			transform: none !important;
+			filter: none !important;
+			transition-duration: 0.38s;
+		}
+	}
+}
+
+/*
+ * Theme-matching overrides for `@tailwindcss/typography` (outside `@layer` for cascade precedence).
+ */
+.prose,
+.prose-invert,
+.dark .prose {
+	--tw-prose-body: var(--text-primary);
+	--tw-prose-headings: var(--text-primary);
+	--tw-prose-lead: var(--text-secondary);
+	--tw-prose-links: var(--text-primary);
+	--tw-prose-bold: var(--text-primary);
+	--tw-prose-counters: var(--text-secondary);
+	--tw-prose-bullets: var(--text-secondary);
+	--tw-prose-hr: var(--border-default);
+	--tw-prose-quotes: var(--text-primary);
+	--tw-prose-quote-borders: var(--border-default);
+	--tw-prose-captions: var(--text-secondary);
+	--tw-prose-kbd: var(--text-primary);
+	--tw-prose-kbd-shadows: var(--text-primary);
+	--tw-prose-code: var(--text-primary);
+	--tw-prose-pre-code: var(--text-primary);
+	--tw-prose-pre-bg: var(--surface-elevated);
+	--tw-prose-th-borders: var(--border-default);
+	--tw-prose-td-borders: var(--border-default);
+
+	--tw-prose-invert-body: var(--text-primary);
+	--tw-prose-invert-headings: var(--text-primary);
+	--tw-prose-invert-lead: var(--text-secondary);
+	--tw-prose-invert-links: var(--text-primary);
+	--tw-prose-invert-bold: var(--text-primary);
+	--tw-prose-invert-counters: var(--text-secondary);
+	--tw-prose-invert-bullets: var(--text-secondary);
+	--tw-prose-invert-hr: var(--border-default);
+	--tw-prose-invert-quotes: var(--text-primary);
+	--tw-prose-invert-quote-borders: var(--border-default);
+	--tw-prose-invert-captions: var(--text-secondary);
+	--tw-prose-invert-kbd: var(--text-primary);
+	--tw-prose-invert-kbd-shadows: var(--text-primary);
+	--tw-prose-invert-code: var(--text-primary);
+	--tw-prose-invert-pre-code: var(--text-primary);
+	--tw-prose-invert-pre-bg: var(--surface-elevated);
+	--tw-prose-invert-th-borders: var(--border-default);
+	--tw-prose-invert-td-borders: var(--border-default);
+	font-family: var(--font-family-sans) !important;
+	font-size: var(--text-body-sm) !important;
+	line-height: var(--text-body-sm--line-height) !important;
+}
+
+.prose :where(p, li, td, th) {
+	font-size: var(--text-body-sm) !important;
+	line-height: var(--text-body-sm--line-height) !important;
+}
+
+.prose h1 {
+	font-size: var(--text-heading-lg) !important;
+	line-height: var(--text-heading-lg--line-height) !important;
+}
+
+.prose h2 {
+	font-size: var(--text-heading-md) !important;
+	line-height: var(--text-heading-md--line-height) !important;
+}
+
+.prose h3 {
+	font-size: var(--text-body-lg) !important;
+	line-height: var(--text-body-lg--line-height) !important;
+}
+
+.prose h4,
+.prose h5,
+.prose h6 {
+	font-size: var(--text-body-md) !important;
+	line-height: var(--text-body-md--line-height) !important;
+}
+
+.prose h1,
+.prose h2,
+.prose h3,
+.prose h4,
+.prose h5,
+.prose h6 {
+	font-weight: var(--font-weight-ui) !important;
+	letter-spacing: var(--tracking-heading) !important;
+	color: var(--text-primary) !important;
+	text-wrap: balance;
+}
+
+.prose p,
+.prose li,
+.prose table,
+.prose figcaption {
+	color: var(--text-muted-body) !important;
+}
+
+.prose .lead {
+	font-size: var(--text-body-md) !important;
+	line-height: var(--text-body-md--line-height) !important;
+}
+
+.prose a {
+	color: var(--text-primary) !important;
+	text-underline-offset: 4px !important;
+	text-decoration-thickness: 1px !important;
+	font-weight: var(--font-weight-ui) !important;
+	transition: opacity var(--duration-link) var(--ease-link) !important;
+}
+
+.prose a:hover {
+	opacity: 0.7 !important;
+}
+
+.prose blockquote {
+	position: relative !important;
+	font-style: italic !important;
+	border-left: none !important;
+	color: var(--text-muted-body) !important;
+	padding-left: 1.5rem !important;
+}
+
+.prose blockquote::before {
+	content: "" !important;
+	position: absolute !important;
+	left: 0 !important;
+	top: 2px !important;
+	bottom: 2px !important;
+	width: 3px !important;
+	background-color: var(--text-muted-body) !important;
+	border-radius: 9999px !important;
+}
+
+.prose code::before,
+.prose code::after {
+	content: "" !important;
+}
+
+.prose :not(pre) > code {
+	background-color: var(--surface-elevated) !important;
+	color: var(--text-primary) !important;
+	border: 0.5px solid var(--border-footer) !important;
+	padding: 0.2em 0.4em !important;
+	border-radius: 0.25rem !important;
+	font-size: 0.85em !important;
+	font-weight: 500 !important;
+}
+
+.prose pre {
+	background-color: var(--surface-elevated) !important;
+	border: 0.5px solid var(--border-footer) !important;
+	border-radius: 0.5rem !important;
+	padding: 1.25rem !important;
+	box-shadow: none !important;
+}
+
+.prose img {
+	border-radius: 0.5rem !important;
+}
+
+.prose .contains-task-list {
+	list-style-type: none !important;
+	padding-left: 0 !important;
+}
+
+.prose .contains-task-list li::before {
+	display: none !important;
+}
+
+.prose .task-list-item {
+	display: flex;
+	align-items: flex-start;
+	gap: 0.65rem;
+	margin-top: 0.4em !important;
+	margin-bottom: 0.4em !important;
+	padding-left: 0 !important;
+}
+
+.prose .task-list-item input[type="checkbox"] {
+	appearance: none;
+	-webkit-appearance: none;
+	width: 1.15rem;
+	height: 1.15rem;
+	border: 1.5px solid var(--border-default);
+	border-radius: 0.25rem;
+	background-color: var(--surface-elevated);
+	margin: 0 !important;
+	margin-top: 0.25rem !important;
+	flex-shrink: 0;
+	display: inline-grid;
+	place-content: center;
+	cursor: default;
+	transition:
+		background-color var(--duration-link) var(--ease-link),
+		border-color var(--duration-link) var(--ease-link),
+		opacity var(--duration-link) var(--ease-link);
+}
+
+.prose .task-list-item input[type="checkbox"]::before {
+	content: "";
+	width: 0.55rem;
+	height: 0.55rem;
+	transform: scale(0);
+	transition: 120ms transform ease-in-out;
+	background-color: var(--surface-page);
+	clip-path: polygon(14% 44%, 0 58%, 38% 96%, 100% 23%, 84% 9%, 38% 68%);
+}
+
+.prose .task-list-item input[type="checkbox"]:checked {
+	background-color: var(--text-primary);
+	border-color: var(--text-primary);
+}
+
+.prose .task-list-item input[type="checkbox"]:checked::before {
+	transform: scale(1);
+}
+
+.prose .task-list-item input[data-progress="in-progress"] {
+	border-color: var(--text-primary);
+}
+
+.prose .task-list-item input[data-progress="in-progress"]::before {
+	content: "";
+	width: 0.55rem;
+	height: 0.55rem;
+	transform: scale(1);
+	background-color: var(--text-primary);
+	clip-path: polygon(0 0, 100% 0, 0 100%);
+}
+
+.prose .task-list-item input[type="checkbox"]:disabled {
+	opacity: 0.95;
+}

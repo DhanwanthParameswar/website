@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { Moon, Sun } from 'lucide-react';
 import { motion, useReducedMotion } from 'framer-motion';
 import { trackUmamiEvent } from '@/lib/analytics';
+import { preloadWorkCardTheme } from '@/lib/work-card-theme-preload';
 import { cn } from '@/lib/utils';
 import { menuToggleTransition } from '@/lib/motion-presets';
 
@@ -53,6 +54,8 @@ export function ThemeToggle({ className, tabIndex }: { className?: string; tabIn
 				});
 			}
 		}
+
+		await preloadWorkCardTheme(newTheme);
 
 		// Fallback for browsers that don't support View Transitions or if user prefers reduced motion
 		if (!(document as any).startViewTransition || window.matchMedia('(prefers-reduced-motion: reduce)').matches) {

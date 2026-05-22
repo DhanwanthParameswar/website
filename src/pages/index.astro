@@ -3,7 +3,7 @@ import { getCollection } from 'astro:content';
 import { getImage } from 'astro:assets';
 import AboutSection from '@/components/AboutSection.astro';
 import ContactSection from '@/components/ContactSection.astro';
-import { HeroSection } from '@/components/HeroSection';
+import Hero from '@/components/Hero.astro';
 import WorkSection from '@/components/WorkSection.astro';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { metaDescription, personJsonLd, SITE_NAME, websiteJsonLd } from '@/lib/seo';
@@ -65,7 +65,7 @@ const sortedProjects = await Promise.all(
 	description={HOME_DESCRIPTION}
 	structuredData={[personJsonLd(), websiteJsonLd()]}
 >
-	<HeroSection client:visible />
+	<Hero />
 	<WorkSection projects={sortedProjects} />
 	<AboutSection />
 	<ContactSection />

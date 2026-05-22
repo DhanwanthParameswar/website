@@ -14,6 +14,11 @@ const isDev = process.argv.includes('dev');
 export default defineConfig({
   site: 'https://dhanwanth.com',
   prefetch: true,
+  compressHTML: true,
+
+  build: {
+    inlineStylesheets: 'auto',
+  },
 
   markdown: {
     shikiConfig: {
