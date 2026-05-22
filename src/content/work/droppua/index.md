@@ -1,12 +1,12 @@
 ---
 title: "Droppua"
 description: "Cross-platform File Sharing"
-imageLight: "./droppua-final-scene-light.png"
-imageDark: "./droppua-final-scene-dark.png"
-finalObjectLight: "./droppua-final-object-light.png"
-finalObjectDark: "./droppua-final-object-dark.png"
-objectLight: "./droppua-final-object-light.png"
-objectDark: "./droppua-final-object-dark.png"
+imageLight: "./droppua-final-scene-light.webp"
+imageDark: "./droppua-final-scene-dark.webp"
+finalObjectLight: "./droppua-final-object-light.webp"
+finalObjectDark: "./droppua-final-object-dark.webp"
+objectLight: "./droppua-final-object-light.webp"
+objectDark: "./droppua-final-object-dark.webp"
 order: 5
 color1: "#3b75f1"
 color2: "#b6cdff"

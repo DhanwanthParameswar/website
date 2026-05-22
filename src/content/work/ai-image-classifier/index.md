@@ -1,12 +1,12 @@
 ---
 title: "AI Image Classifier"
 description: "TensorFlow Image Recognition"
-imageLight: "./ai-image-classifier-final-scene-light.png"
-imageDark: "./ai-image-classifier-final-scene-dark.png"
-finalObjectLight: "./ai-image-classifier-final-object-light.png"
-finalObjectDark: "./ai-image-classifier-final-object-dark.png"
-objectLight: "./ai-image-classifier-final-object-light.png"
-objectDark: "./ai-image-classifier-final-object-dark.png"
+imageLight: "./ai-image-classifier-final-scene-light.webp"
+imageDark: "./ai-image-classifier-final-scene-dark.webp"
+finalObjectLight: "./ai-image-classifier-final-object-light.webp"
+finalObjectDark: "./ai-image-classifier-final-object-dark.webp"
+objectLight: "./ai-image-classifier-final-object-light.webp"
+objectDark: "./ai-image-classifier-final-object-dark.webp"
 order: 4
 color1: "#a3acff"
 color2: "#454fff"

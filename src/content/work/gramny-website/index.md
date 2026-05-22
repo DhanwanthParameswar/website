@@ -1,12 +1,12 @@
 ---
 title: "GramNY Website"
 description: "Non-Profit WordPress Development"
-imageLight: "./gramny-website-final-scene-light.png"
-imageDark: "./gramny-website-final-scene-dark.png"
-finalObjectLight: "./gramny-website-final-object-light.png"
-finalObjectDark: "./gramny-website-final-object-dark.png"
-objectLight: "./gramny-website-final-object-light.png"
-objectDark: "./gramny-website-final-object-dark.png"
+imageLight: "./gramny-website-final-scene-light.webp"
+imageDark: "./gramny-website-final-scene-dark.webp"
+finalObjectLight: "./gramny-website-final-object-light.webp"
+finalObjectDark: "./gramny-website-final-object-dark.webp"
+objectLight: "./gramny-website-final-object-light.webp"
+objectDark: "./gramny-website-final-object-dark.webp"
 order: 7
 color1: "#74a3ff"
 color2: "#c3d9ff"

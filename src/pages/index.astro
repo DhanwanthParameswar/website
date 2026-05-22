@@ -19,8 +19,18 @@ const sortedProjects = await Promise.all(
 		.sort((a, b) => (a.data.order || 0) - (b.data.order || 0))
 		.map(async p => {
 			const slug = p.id.replace(/\.(md|mdx)$/, '').replace(/\/index$/, '');
-			const optimizedLight = await getImage({ src: p.data.imageLight, format: 'webp', width: 800 });
-			const optimizedDark = await getImage({ src: p.data.imageDark, format: 'webp', width: 800 });
+			const optimizedLight = await getImage({
+				src: p.data.imageLight,
+				format: 'webp',
+				width: 800,
+				quality: 72,
+			});
+			const optimizedDark = await getImage({
+				src: p.data.imageDark,
+				format: 'webp',
+				width: 800,
+				quality: 72,
+			});
 			
 			return {
 				...p.data,
@@ -28,15 +38,15 @@ const sortedProjects = await Promise.all(
 				imageLight: {
 					src: optimizedLight.src,
 					width: 800,
-					height: Math.round(800 * (p.data.imageLight.height / p.data.imageLight.width))
+					height: Math.round(800 * (p.data.imageLight.height / p.data.imageLight.width)),
 				},
 				imageDark: {
 					src: optimizedDark.src,
 					width: 800,
-					height: Math.round(800 * (p.data.imageDark.height / p.data.imageDark.width))
-				}
+					height: Math.round(800 * (p.data.imageDark.height / p.data.imageDark.width)),
+				},
 			};
-		})
+		}),
 );
 ---
 

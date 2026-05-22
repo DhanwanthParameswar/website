@@ -64,6 +64,7 @@ const optimizedCardOg = await getImage({
 	src: project.data.imageLight,
 	format: 'webp',
 	width: CARD_OG_WIDTH,
+	quality: 74,
 });
 const ogImageWidth = CARD_OG_WIDTH;
 const ogImageHeight = Math.round(
@@ -71,20 +72,34 @@ const ogImageHeight = Math.round(
 );
 
 // Server-side WebP image optimization for high-fidelity mockups
-const optimizedHeroLight = project.data.finalObjectLight 
-	? await getImage({ src: project.data.finalObjectLight, format: 'webp', width: 1400 })
+const optimizedHeroLight = project.data.finalObjectLight
+	? await getImage({ src: project.data.finalObjectLight, format: 'webp', width: 1400, quality: 72 })
 	: null;
-const optimizedHeroDark = project.data.finalObjectDark 
-	? await getImage({ src: project.data.finalObjectDark, format: 'webp', width: 1400 })
+const optimizedHeroDark = project.data.finalObjectDark
+	? await getImage({ src: project.data.finalObjectDark, format: 'webp', width: 1400, quality: 72 })
 	: null;
 
 const optimizedProjectData = {
 	...project.data,
-	finalObjectLight: optimizedHeroLight 
-		? { src: optimizedHeroLight.src, width: 1400, height: Math.round(1400 * (project.data.finalObjectLight.height / project.data.finalObjectLight.width)) }
+	finalObjectLight: optimizedHeroLight
+		? {
+				src: optimizedHeroLight.src,
+				width: 1400,
+				height: Math.round(
+					1400 *
+						(project.data.finalObjectLight.height / project.data.finalObjectLight.width),
+				),
+			}
 		: undefined,
-	finalObjectDark: optimizedHeroDark 
-		? { src: optimizedHeroDark.src, width: 1400, height: Math.round(1400 * (project.data.finalObjectDark.height / project.data.finalObjectDark.width)) }
+	finalObjectDark: optimizedHeroDark
+		? {
+				src: optimizedHeroDark.src,
+				width: 1400,
+				height: Math.round(
+					1400 *
+						(project.data.finalObjectDark.height / project.data.finalObjectDark.width),
+				),
+			}
 		: undefined,
 };
 ---

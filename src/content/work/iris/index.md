@@ -1,12 +1,12 @@
 ---
 title: "Iris"
 description: "AI Interview Coach"
-imageLight: "./iris-final-scene-light.png"
-imageDark: "./iris-final-scene-dark.png"
-finalObjectLight: "./iris-final-object-light.png"
-finalObjectDark: "./iris-final-object-dark.png"
-objectLight: "./iris-final-object-light.png"
-objectDark: "./iris-final-object-dark.png"
+imageLight: "./iris-final-scene-light.webp"
+imageDark: "./iris-final-scene-dark.webp"
+finalObjectLight: "./iris-final-object-light.webp"
+finalObjectDark: "./iris-final-object-dark.webp"
+objectLight: "./iris-final-object-light.webp"
+objectDark: "./iris-final-object-dark.webp"
 order: 3
 color1: "#178fff"
 color2: "#5686ff"
@@ -131,7 +131,7 @@ Tables are used to display structured information clearly.
 ## Media Integration
 Testing local image resolution and captioning.
 
-![Iris Mockup Interface](./iris-final-scene-dark.png)
+![Iris Mockup Interface](./iris-final-scene-dark.webp)
 *Figure 1: The Iris AI dashboard showing real-time feedback loops.*
 
 ## Conclusion
