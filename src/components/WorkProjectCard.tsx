@@ -1,5 +1,5 @@
 import { useState, useRef } from 'react';
-import { motion, useReducedMotion, useScroll, useTransform, useSpring, useMotionValue } from 'framer-motion';
+import { motion, useReducedMotion, useTransform, useSpring, useMotionValue } from 'framer-motion';
 
 import { cn } from '@/lib/utils';
 import type { WorkProject } from '@/types/work';
@@ -22,21 +22,6 @@ export function WorkProjectCard({ project }: Props) {
 	const themeTransition = { duration: 0 };
 	const glowOutTransition = { duration: 0.4, ease: 'easeInOut' };
 
-	const { scrollYProgress } = useScroll({
-		target: ref,
-		offset: ['start end', 'end start'],
-	});
-
-	/**
-	 * Tilt logic:
-	 * - At progress 0 (top of card at bottom of viewport): rotateX is positive (tilts back)
-	 * - At progress 0.5 (center of viewport): rotateX is 0 (flat)
-	 * - At progress 1 (bottom of card at top of viewport): rotateX is negative (tilts forward)
-	 * Professional range: 6 to -6 degrees.
-	 */
-	const rotateXRaw = useTransform(scrollYProgress, [0, 1], [6, -6]);
-	const rotateX = useSpring(rotateXRaw, { stiffness: 90, damping: 25, restDelta: 0.001 });
-
 	/** Mouse tilt logic - made more subtle */
 	const mouseX = useMotionValue(0);
 	const mouseY = useMotionValue(0);
@@ -48,11 +33,6 @@ export function WorkProjectCard({ project }: Props) {
 	const mouseRotateY = useSpring(useTransform(mouseX, [-0.5, 0.5], [-4, 4]), {
 		stiffness: 120,
 		damping: 25,
-	});
-
-	/** Combine scroll and mouse tilt */
-	const combinedRotateX = useTransform([rotateX, mouseRotateX], ([scroll, mouse]) => {
-		return (scroll as number) + (mouse as number);
 	});
 
 	/** Shimmer/Glow shift - more subtle at 5% */
@@ -101,7 +81,7 @@ export function WorkProjectCard({ project }: Props) {
 		<motion.div
 			className="relative isolate w-full [will-change:transform]"
 			style={{
-				rotateX: reduceMotion ? 0 : combinedRotateX,
+				rotateX: reduceMotion ? 0 : mouseRotateX,
 				rotateY: reduceMotion ? 0 : mouseRotateY,
 				transformPerspective: 1500,
 			}}
