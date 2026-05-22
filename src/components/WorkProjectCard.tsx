@@ -141,6 +141,8 @@ export function WorkProjectCard({ project }: Props) {
 				<motion.img
 					className="absolute inset-0 h-full w-full object-cover object-center"
 					src={project.imageLight.src}
+					srcSet={project.imageLight.srcSet}
+					sizes={project.imageLight.sizes}
 					alt={project.title}
 					width={project.imageLight.width}
 					height={project.imageLight.height}
@@ -153,6 +155,8 @@ export function WorkProjectCard({ project }: Props) {
 				<motion.img
 					className="absolute inset-0 h-full w-full object-cover object-center"
 					src={project.imageDark.src}
+					srcSet={project.imageDark.srcSet}
+					sizes={project.imageDark.sizes}
 					alt={project.title}
 					width={project.imageDark.width}
 					height={project.imageDark.height}

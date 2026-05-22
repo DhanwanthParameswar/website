@@ -1,5 +1,10 @@
 import type { ImageMetadata } from 'astro';
 
+type ResponsiveImageMetadata = ImageMetadata & {
+	srcSet?: string;
+	sizes?: string;
+};
+
 export type WorkHighlight = {
 	icon: string;
 	title: string;
@@ -10,10 +15,10 @@ export type WorkProject = {
 	slug: string;
 	title: string;
 	description: string;
-	imageLight: ImageMetadata;
-	imageDark: ImageMetadata;
-	finalObjectLight?: ImageMetadata;
-	finalObjectDark?: ImageMetadata;
+	imageLight: ResponsiveImageMetadata;
+	imageDark: ResponsiveImageMetadata;
+	finalObjectLight?: ResponsiveImageMetadata;
+	finalObjectDark?: ResponsiveImageMetadata;
 	status?: string;
 	href?: string;
 	hrefLabel?: string;

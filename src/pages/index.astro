@@ -19,29 +19,39 @@ const sortedProjects = await Promise.all(
 		.sort((a, b) => (a.data.order || 0) - (b.data.order || 0))
 		.map(async p => {
 			const slug = p.id.replace(/\.(md|mdx)$/, '').replace(/\/index$/, '');
-			const optimizedLight = await getImage({
-				src: p.data.imageLight,
-				format: 'webp',
-				width: 800,
-				quality: 72,
-			});
-			const optimizedDark = await getImage({
-				src: p.data.imageDark,
-				format: 'webp',
-				width: 800,
-				quality: 72,
-			});
+			const cardWidths = [480, 800] as const;
+			const [optimizedLightVariants, optimizedDarkVariants] = await Promise.all([
+				Promise.all(
+					cardWidths.map((width) =>
+						getImage({ src: p.data.imageLight, format: 'webp', width, quality: 72 }),
+					),
+				),
+				Promise.all(
+					cardWidths.map((width) =>
+						getImage({ src: p.data.imageDark, format: 'webp', width, quality: 72 }),
+					),
+				),
+			]);
+			const cardSizes = '(max-width: 768px) 92vw, (max-width: 1200px) 46vw, 560px';
 			
 			return {
 				...p.data,
 				slug,
 				imageLight: {
-					src: optimizedLight.src,
+					src: optimizedLightVariants[optimizedLightVariants.length - 1].src,
+					srcSet: optimizedLightVariants
+						.map((image, index) => `${image.src} ${cardWidths[index]}w`)
+						.join(', '),
+					sizes: cardSizes,
 					width: 800,
 					height: Math.round(800 * (p.data.imageLight.height / p.data.imageLight.width)),
 				},
 				imageDark: {
-					src: optimizedDark.src,
+					src: optimizedDarkVariants[optimizedDarkVariants.length - 1].src,
+					srcSet: optimizedDarkVariants
+						.map((image, index) => `${image.src} ${cardWidths[index]}w`)
+						.join(', '),
+					sizes: cardSizes,
 					width: 800,
 					height: Math.round(800 * (p.data.imageDark.height / p.data.imageDark.width)),
 				},

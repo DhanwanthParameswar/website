@@ -54,10 +54,32 @@ Post-change files (fresh preview process per run):
 - Phase 2 removed that upstream source risk by replacing referenced PNGs with compressed WebPs and deleting unused PNG assets from the content pipeline.
 - Final validation should be done against deployed production (`dhanwanth.com`) after deployment, because the Phase 1 issue was specifically on production responses.
 
-## Recommended next check (post-deploy)
+## Post-deploy production verification (completed)
 
-1. Deploy this branch.
-2. Re-run production Lighthouse:
-   - mobile: `npx lighthouse https://dhanwanth.com --only-categories=performance ...`
-   - desktop: `npx lighthouse https://dhanwanth.com --only-categories=performance --preset=desktop ...`
-3. Confirm top requests are no longer multi-MB work images.
+Baseline files:
+- `.perf/baseline/prod-mobile.json`
+- `.perf/baseline/prod-desktop.json`
+
+Post-deploy files:
+- `.perf/baseline/prod-mobile-phase2-final.json`
+- `.perf/baseline/prod-desktop-phase2-final.json`
+
+### Production Mobile
+
+- Score: `61 -> 68`
+- FCP: `2651ms -> 2428ms`
+- LCP: `56454ms -> 7990ms`
+- TBT: `43ms -> 25ms`
+- CLS: `0.000 -> 0.000`
+- Transfer: `30517KB -> 1377KB`
+- Requests: `47 -> 45`
+
+### Production Desktop
+
+- Score: `98 -> 100`
+- FCP: `410ms -> 346ms`
+- LCP: `1064ms -> 719ms`
+- TBT: `0ms -> 0ms`
+- CLS: `0.000 -> 0.000`
+- Transfer: `30519KB -> 1386KB`
+- Requests: `49 -> 49`

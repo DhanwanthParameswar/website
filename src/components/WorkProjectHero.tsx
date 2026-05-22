@@ -473,6 +473,8 @@ export function WorkProjectHero({ project }: Props) {
 											>
 												<motion.img
 													src={project.finalObjectLight?.src}
+													srcSet={project.finalObjectLight?.srcSet}
+													sizes={project.finalObjectLight?.sizes}
 													alt={`${project.title} Mockup Light`}
 													draggable="false"
 													fetchPriority="high"
@@ -501,6 +503,8 @@ export function WorkProjectHero({ project }: Props) {
 											>
 												<motion.img
 													src={project.finalObjectDark?.src}
+													srcSet={project.finalObjectDark?.srcSet}
+													sizes={project.finalObjectDark?.sizes}
 													alt={`${project.title} Mockup Dark`}
 													draggable="false"
 													fetchPriority="high"

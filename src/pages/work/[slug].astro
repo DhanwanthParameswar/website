@@ -72,18 +72,33 @@ const ogImageHeight = Math.round(
 );
 
 // Server-side WebP image optimization for high-fidelity mockups
+const heroWidths = [900, 1400] as const;
+const heroSizes = '(max-width: 768px) 94vw, (max-width: 1200px) 88vw, 1100px';
+
 const optimizedHeroLight = project.data.finalObjectLight
-	? await getImage({ src: project.data.finalObjectLight, format: 'webp', width: 1400, quality: 72 })
+	? await Promise.all(
+			heroWidths.map((width) =>
+				getImage({ src: project.data.finalObjectLight, format: 'webp', width, quality: 72 }),
+			),
+		)
 	: null;
 const optimizedHeroDark = project.data.finalObjectDark
-	? await getImage({ src: project.data.finalObjectDark, format: 'webp', width: 1400, quality: 72 })
+	? await Promise.all(
+			heroWidths.map((width) =>
+				getImage({ src: project.data.finalObjectDark, format: 'webp', width, quality: 72 }),
+			),
+		)
 	: null;
 
 const optimizedProjectData = {
 	...project.data,
 	finalObjectLight: optimizedHeroLight
 		? {
-				src: optimizedHeroLight.src,
+				src: optimizedHeroLight[optimizedHeroLight.length - 1].src,
+				srcSet: optimizedHeroLight
+					.map((image, index) => `${image.src} ${heroWidths[index]}w`)
+					.join(', '),
+				sizes: heroSizes,
 				width: 1400,
 				height: Math.round(
 					1400 *
@@ -93,7 +108,11 @@ const optimizedProjectData = {
 		: undefined,
 	finalObjectDark: optimizedHeroDark
 		? {
-				src: optimizedHeroDark.src,
+				src: optimizedHeroDark[optimizedHeroDark.length - 1].src,
+				srcSet: optimizedHeroDark
+					.map((image, index) => `${image.src} ${heroWidths[index]}w`)
+					.join(', '),
+				sizes: heroSizes,
 				width: 1400,
 				height: Math.round(
 					1400 *
