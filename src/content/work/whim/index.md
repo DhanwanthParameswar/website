@@ -18,6 +18,8 @@ techStack: ["React Native", "Expo", "Supabase", "TypeScript"]
 details: "A real-time, geolocation-driven mobile application designed for college students to spontaneously discover local events and coordinate gatherings within a rolling 24-hour window. Developed with a co-creator, the platform implements university-domain verification, complex SQL spatial query matching, and native-thread animation rendering to deliver smooth, secure, and immediate localized social discovery."
 href: "https://joinwhim.net"
 hrefLabel: "Visit Site"
+appleStore: "https://apps.apple.com/us/app/whim-swipe-join-go/id6763829686"
+playStore: "https://play.google.com/store/apps/details?id=net.joinwhim.app"
 highlights:
   - icon: "Shield"
     title: "University Security Gates"

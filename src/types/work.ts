@@ -23,6 +23,8 @@ export type WorkProject = {
 	href?: string;
 	hrefLabel?: string;
 	github?: string;
+	appleStore?: string;
+	playStore?: string;
 	comingSoon?: boolean;
 	client?: string;
 	year?: string;

@@ -14,6 +14,8 @@ const work = defineCollection({
 		href: z.string().optional(),
 		hrefLabel: z.string().optional(),
 		github: z.string().optional(),
+		appleStore: z.string().optional(),
+		playStore: z.string().optional(),
 		comingSoon: z.boolean().optional(),
 		client: z.string().optional(),
 		year: z.string().optional(),
