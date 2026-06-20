@@ -7,6 +7,11 @@ import { MenuMorphIcon } from '@/components/MenuMorphIcon';
 import { ThemeToggle } from '@/components/ThemeToggle';
 import { trackUmamiEvent } from '@/lib/analytics';
 import { cn } from '@/lib/utils';
+import {
+	drawerOverlayMotionVariants,
+	drawerPanelMotionVariants,
+	drawerPanelSurface,
+} from '@/lib/drawer-surface';
 import { menuToggleTransition } from '@/lib/motion-presets';
 
 const HERO_REVEAL_ID = 'hero-header-reveal';
@@ -30,37 +35,11 @@ const barPillSurface = cn(
 	'bg-[color:var(--surface-header-bar)] [backdrop-filter:blur(var(--header-backdrop-blur))] [-webkit-backdrop-filter:blur(var(--header-backdrop-blur))]',
 );
 
-const mobilePanel = cn(
-	'flex w-full flex-col gap-1 overflow-hidden rounded-[var(--header-radius)] border-[0.5px] border-solid border-border-footer bg-[color:var(--surface-header-bar)] p-4 [backdrop-filter:blur(var(--header-backdrop-blur))] [-webkit-backdrop-filter:blur(var(--header-backdrop-blur))] lg:hidden',
-);
+const mobilePanel = cn(drawerPanelSurface, 'gap-1 lg:hidden');
 
-const mobileMenuVariants = {
-	hidden: {
-		opacity: 0,
-		filter: 'blur(10px)',
-		y: -8,
-		scale: 0.99,
-		transition: { duration: 0.2, ease: 'easeIn' },
-	},
-	shown: {
-		opacity: 1,
-		filter: 'blur(0px)',
-		y: 0,
-		scale: 1,
-		transition: { duration: 0.2, ease: [0.44, 0, 0.56, 1] },
-	},
-} as const;
+const mobileMenuVariants = drawerPanelMotionVariants;
 
-const mobileOverlayVariants = {
-	hidden: {
-		opacity: 0,
-		transition: { duration: 0.2, ease: 'easeIn' },
-	},
-	shown: {
-		opacity: 1,
-		transition: { duration: 0.2, ease: [0.44, 0, 0.56, 1] },
-	},
-} as const;
+const mobileOverlayVariants = drawerOverlayMotionVariants;
 
 const headerLinkChrome =
 	'rounded-sm hover:opacity-60 dark:hover:opacity-80 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-foreground/40';

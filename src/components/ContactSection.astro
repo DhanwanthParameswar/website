@@ -5,6 +5,7 @@ import {
 	CONTACT_INTRO_LINES,
 	CONTACT_SOCIALS,
 } from '@/lib/contact-info';
+import { ContactAddButton } from '@/components/ContactAddButton';
 import { cn } from '@/lib/utils';
 
 const contactLink =
@@ -74,6 +75,10 @@ const introClass =
 					</li>
 				))}
 			</ul>
+		</div>
+
+		<div class="reveal-item mt-10">
+			<ContactAddButton client:visible />
 		</div>
 	</div>
 </section>
