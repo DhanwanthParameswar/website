@@ -23,6 +23,8 @@ const VCF_PATH = '/add-to-contacts.vcf';
 const VCF_FILENAME = 'dhanwanth.vcf';
 const VCF_URL = `${SITE_URL}${VCF_PATH}`;
 const CONTACT_QR_DIALOG_ID = 'contact-qr-dialog';
+/** Desktop with mouse/trackpad — QR popup; touch phones/tablets get direct download. */
+const DESKTOP_QR_MEDIA = '[@media(hover:hover)_and_(pointer:fine)]';
 const QR_SIZE = 200;
 
 function focusDesktopTrigger(container: HTMLDivElement | null) {
@@ -105,6 +107,11 @@ export function ContactAddButton() {
 			window.removeEventListener('keydown', onKeyDown);
 		};
 	}, [open]);
+
+	const openQrDialog = () => {
+		if (!window.matchMedia('(hover: hover) and (pointer: fine)').matches) return;
+		setOpen(true);
+	};
 
 	const closeDialog = () => {
 		setOpen(false);
@@ -196,7 +203,7 @@ export function ContactAddButton() {
 	return (
 		<>
 			<Button
-				className="lg:hidden"
+				className={`${DESKTOP_QR_MEDIA}:hidden`}
 				href={VCF_PATH}
 				download={VCF_FILENAME}
 				variant="secondary"
@@ -204,14 +211,14 @@ export function ContactAddButton() {
 				Add to contacts
 			</Button>
 
-			<div ref={desktopTriggerWrapRef} className="hidden lg:block">
+			<div ref={desktopTriggerWrapRef} className={`hidden ${DESKTOP_QR_MEDIA}:block`}>
 				<Button
 					type="button"
 					variant="secondary"
 					aria-expanded={open}
 					aria-controls={open ? CONTACT_QR_DIALOG_ID : undefined}
 					aria-haspopup="dialog"
-					onClick={() => setOpen(true)}
+					onClick={openQrDialog}
 				>
 					Add to contacts
 				</Button>
