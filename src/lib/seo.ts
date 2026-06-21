@@ -11,10 +11,12 @@ export const OG_IMAGE_WIDTH = 1200;
 export const OG_IMAGE_HEIGHT = 630;
 
 export const WIKIDATA_URL = 'https://www.wikidata.org/wiki/Q140305476';
+export const CRUNCHBASE_URL = 'https://www.crunchbase.com/person/dhanwanth-parameswar';
 
 export const PERSON_SAME_AS = [
 	...CONTACT_SOCIALS.map((s) => s.href),
 	WIKIDATA_URL,
+	CRUNCHBASE_URL,
 ];
 
 /** Truncate to ~155 chars on a word boundary for meta descriptions. */
@@ -36,7 +38,7 @@ export function personJsonLd() {
 		'@type': 'Person',
 		name: SITE_NAME,
 		url: SITE_URL,
-		jobTitle: 'Computer Engineering Student',
+		jobTitle: 'Technology Strategist',
 		alumniOf: {
 			'@type': 'CollegeOrUniversity',
 			name: 'University at Buffalo',
