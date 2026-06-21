@@ -1,4 +1,4 @@
-import { useEffect, useId, useRef, useState } from 'react';
+import { useEffect, useId, useRef, useState, useSyncExternalStore } from 'react';
 import { createPortal } from 'react-dom';
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
 
@@ -14,6 +14,10 @@ import {
 	drawerOverlayMotionVariants,
 	drawerPanelFadeMotionVariants,
 } from '@/lib/drawer-surface';
+import {
+	getTouchPrimarySnapshot,
+	subscribeTouchPrimary,
+} from '@/lib/device-capabilities';
 import { menuToggleTransition } from '@/lib/motion-presets';
 import { SITE_URL } from '@/lib/seo';
 import { useTheme } from '@/lib/use-theme';
@@ -23,8 +27,6 @@ const VCF_PATH = '/add-to-contacts.vcf';
 const VCF_FILENAME = 'dhanwanth.vcf';
 const VCF_URL = `${SITE_URL}${VCF_PATH}`;
 const CONTACT_QR_DIALOG_ID = 'contact-qr-dialog';
-/** Desktop with mouse/trackpad — QR popup; touch phones/tablets get direct download. */
-const DESKTOP_QR_MEDIA = '[@media(hover:hover)_and_(pointer:fine)]';
 const QR_SIZE = 200;
 
 function focusDesktopTrigger(container: HTMLDivElement | null) {
@@ -34,7 +36,16 @@ function focusDesktopTrigger(container: HTMLDivElement | null) {
 	button?.focus();
 }
 
+function useTouchPrimaryDevice() {
+	return useSyncExternalStore(
+		subscribeTouchPrimary,
+		getTouchPrimarySnapshot,
+		() => false,
+	);
+}
+
 export function ContactAddButton() {
+	const isTouchPrimary = useTouchPrimaryDevice();
 	const [open, setOpen] = useState(false);
 	const [qrDataUrl, setQrDataUrl] = useState<string | null>(null);
 	const [mounted, setMounted] = useState(false);
@@ -108,18 +119,13 @@ export function ContactAddButton() {
 		};
 	}, [open]);
 
-	const openQrDialog = () => {
-		if (!window.matchMedia('(hover: hover) and (pointer: fine)').matches) return;
-		setOpen(true);
-	};
-
 	const closeDialog = () => {
 		setOpen(false);
 		queueMicrotask(() => focusDesktopTrigger(desktopTriggerWrapRef.current));
 	};
 
 	const dialog =
-		mounted
+		mounted && !isTouchPrimary
 			? createPortal(
 					<AnimatePresence initial={false}>
 						{open ? (
@@ -200,25 +206,24 @@ export function ContactAddButton() {
 				)
 			: null;
 
-	return (
-		<>
-			<Button
-				className={`${DESKTOP_QR_MEDIA}:hidden`}
-				href={VCF_PATH}
-				download={VCF_FILENAME}
-				variant="secondary"
-			>
+	if (isTouchPrimary) {
+		return (
+			<Button href={VCF_PATH} download={VCF_FILENAME} variant="secondary">
 				Add to contacts
 			</Button>
+		);
+	}
 
-			<div ref={desktopTriggerWrapRef} className={`hidden ${DESKTOP_QR_MEDIA}:block`}>
+	return (
+		<>
+			<div ref={desktopTriggerWrapRef}>
 				<Button
 					type="button"
 					variant="secondary"
 					aria-expanded={open}
 					aria-controls={open ? CONTACT_QR_DIALOG_ID : undefined}
 					aria-haspopup="dialog"
-					onClick={openQrDialog}
+					onClick={() => setOpen(true)}
 				>
 					Add to contacts
 				</Button>

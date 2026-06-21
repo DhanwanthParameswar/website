@@ -1,7 +1,20 @@
 /** Phones/tablets: coarse pointer, no hover. */
+export const TOUCH_PRIMARY_MEDIA = '(hover: none) and (pointer: coarse)';
+
+/** Phones/tablets: coarse pointer, no hover. */
 export function isTouchPrimaryDevice(): boolean {
 	if (typeof window === 'undefined') return false;
-	return window.matchMedia('(hover: none) and (pointer: coarse)').matches;
+	return window.matchMedia(TOUCH_PRIMARY_MEDIA).matches;
+}
+
+export function getTouchPrimarySnapshot(): boolean {
+	return isTouchPrimaryDevice();
+}
+
+export function subscribeTouchPrimary(onStoreChange: () => void): () => void {
+	const mq = window.matchMedia(TOUCH_PRIMARY_MEDIA);
+	mq.addEventListener('change', onStoreChange);
+	return () => mq.removeEventListener('change', onStoreChange);
 }
 
 /** Mouse / trackpad primary — custom cursor and Lenis apply here. */
