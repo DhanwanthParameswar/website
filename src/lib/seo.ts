@@ -10,7 +10,12 @@ export const DEFAULT_OG_IMAGE = '/social-preview.webp';
 export const OG_IMAGE_WIDTH = 1200;
 export const OG_IMAGE_HEIGHT = 630;
 
-export const PERSON_SAME_AS = CONTACT_SOCIALS.map((s) => s.href);
+export const WIKIDATA_URL = 'https://www.wikidata.org/wiki/Q140305476';
+
+export const PERSON_SAME_AS = [
+	...CONTACT_SOCIALS.map((s) => s.href),
+	WIKIDATA_URL,
+];
 
 /** Truncate to ~155 chars on a word boundary for meta descriptions. */
 export function metaDescription(text: string, maxLength = 155): string {
